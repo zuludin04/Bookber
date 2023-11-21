@@ -48,8 +48,10 @@ class DashboardActivity : AppCompatActivity() {
                     is Result.Success -> {
                         if (result.data.isEmpty()) {
                             binding.emptyMessage.visibility = View.VISIBLE
+                            binding.recyclerBook.visibility = View.GONE
                         } else {
                             binding.emptyMessage.visibility = View.GONE
+                            binding.recyclerBook.visibility = View.VISIBLE
                             adapter.setBookStore(result.data)
                         }
                     }
