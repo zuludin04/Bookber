@@ -1,0 +1,48 @@
+package com.app.zuludin.bookber.ui.create
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.app.zuludin.bookber.MainCoroutineRule
+import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.domain.BookberRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
+
+@ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
+class BookCreateViewModelTest {
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainCoroutineRule = MainCoroutineRule()
+
+    @Mock
+    private lateinit var repository: BookberRepository
+
+    private lateinit var viewModel: BookCreateViewModel
+    private val bookDummy = BookEntity(title = "Title 1", genre = "Genre 1")
+
+    @Before
+    fun setup() {
+        viewModel = BookCreateViewModel(repository)
+    }
+
+    @Test
+    fun saveBook_SuccessSaveToDatabase() = runTest {
+        viewModel.saveBook(bookDummy)
+        Mockito.verify(repository).saveBook(bookDummy)
+    }
+
+    @Test
+    fun updateBook_SuccessUpdateToDatabase() = runTest {
+        viewModel.updateBook(bookDummy)
+        Mockito.verify(repository).updateBook(bookDummy)
+    }
+}

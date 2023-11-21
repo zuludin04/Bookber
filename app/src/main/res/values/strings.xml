@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Bookber</string>
+    <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+</resources>
