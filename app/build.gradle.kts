@@ -52,6 +52,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
     val kotlinVersion = "1.9.0"
     val roomVersion = "2.5.0"
     val lifecycleVersion = "2.6.2"

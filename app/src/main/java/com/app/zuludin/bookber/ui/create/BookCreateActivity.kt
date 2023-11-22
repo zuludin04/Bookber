@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
+import com.app.zuludin.bookber.ui.create.components.PickImageSheet
 import com.app.zuludin.bookber.util.ViewModelFactory
 
 class BookCreateActivity : AppCompatActivity() {
@@ -42,6 +43,10 @@ class BookCreateActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        binding.ivBookImage.setOnClickListener {
+            PickImageSheet().show(supportFragmentManager, "PickImageSheetTag")
         }
 
         binding.btnCreateBook.setOnClickListener {
