@@ -1,7 +1,10 @@
 package com.app.zuludin.bookber.ui.create
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Base64
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.zuludin.bookber.data.Result
@@ -10,6 +13,7 @@ import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.PickImageSheet
 import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
 import com.app.zuludin.bookber.util.ViewModelFactory
+import java.io.ByteArrayOutputStream
 
 class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
 
@@ -19,6 +23,7 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
     }
 
     private var bookId: String? = null
+    private var bookCoverImage = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +62,7 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                     BookEntity(
                         id = bookId!!,
                         title = binding.etBookTitle.text.toString(),
-                        cover = "#432312",
+                        cover = bookCoverImage,
                         genre = binding.etBookGenre.text.toString(),
                         category = "Fiction"
                     )
@@ -66,7 +71,7 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                 viewModel.saveBook(
                     BookEntity(
                         title = binding.etBookTitle.text.toString(),
-                        cover = "#432312",
+                        cover = bookCoverImage,
                         genre = binding.etBookGenre.text.toString(),
                         category = "Fiction"
                     )
@@ -79,6 +84,11 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
     override fun showImage(uri: Uri?) {
         if (uri != null) {
             binding.ivBookImage.setImageURI(uri)
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            val bytes = stream.toByteArray()
+            bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
         }
     }
 }
