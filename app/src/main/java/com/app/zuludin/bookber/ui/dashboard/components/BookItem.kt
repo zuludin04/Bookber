@@ -63,14 +63,14 @@ fun BookItem(
                 text = book.title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
                 text = book.genre,
                 fontSize = 14.sp,
-                maxLines = 2,
+                maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 color = Color.Gray
             )
