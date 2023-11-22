@@ -1,5 +1,6 @@
 package com.app.zuludin.bookber.ui.create
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -7,9 +8,10 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.PickImageSheet
+import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
 import com.app.zuludin.bookber.util.ViewModelFactory
 
-class BookCreateActivity : AppCompatActivity() {
+class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
 
     private lateinit var binding: ActivityBookCreateBinding
     private val viewModel: BookCreateViewModel by viewModels {
@@ -71,6 +73,12 @@ class BookCreateActivity : AppCompatActivity() {
                 )
             }
             finish()
+        }
+    }
+
+    override fun showImage(uri: Uri?) {
+        if (uri != null) {
+            binding.ivBookImage.setImageURI(uri)
         }
     }
 }
