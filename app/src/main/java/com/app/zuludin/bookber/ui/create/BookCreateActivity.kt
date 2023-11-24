@@ -64,7 +64,6 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                         title = binding.etBookTitle.text.toString(),
                         cover = bookCoverImage,
                         genre = binding.etBookGenre.text.toString(),
-                        category = "Fiction"
                     )
                 )
             } else {
@@ -73,7 +72,6 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                         title = binding.etBookTitle.text.toString(),
                         cover = bookCoverImage,
                         genre = binding.etBookGenre.text.toString(),
-                        category = "Fiction"
                     )
                 )
             }

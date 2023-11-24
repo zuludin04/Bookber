@@ -12,7 +12,6 @@ object DataMapper {
                 title = it.title,
                 cover = it.cover,
                 genre = it.genre,
-                category = it.category
             )
             books.add(b)
         }
