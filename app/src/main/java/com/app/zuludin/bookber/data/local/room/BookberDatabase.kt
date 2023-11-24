@@ -7,4 +7,8 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 @Database(entities = [BookEntity::class], version = 1, exportSchema = false)
 abstract class BookberDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
+
+    abstract fun categoryDao(): CategoryDao
+
+    abstract fun quoteDao(): QuoteDao
 }

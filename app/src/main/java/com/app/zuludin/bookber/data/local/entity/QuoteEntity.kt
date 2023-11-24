@@ -6,23 +6,17 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 @Entity
-data class BookEntity(
+data class QuoteEntity(
     @PrimaryKey
-    @ColumnInfo(name = "bookId")
+    @ColumnInfo(name = "quoteId")
     var id: String = UUID.randomUUID().toString(),
 
-    @ColumnInfo(name = "title")
-    var title: String = "",
-
-    @ColumnInfo(name = "cover")
-    var cover: String = "",
-
-    @ColumnInfo(name = "author")
-    var author: String = "",
-
-    @ColumnInfo(name = "genre")
-    var genre: String = "",
+    @ColumnInfo(name = "quotes")
+    var quotes: String = "",
 
     @ColumnInfo(name = "categoryId")
     var categoryId: String = "",
+
+    @ColumnInfo(name = "bookId")
+    var bookId: String = "",
 )
