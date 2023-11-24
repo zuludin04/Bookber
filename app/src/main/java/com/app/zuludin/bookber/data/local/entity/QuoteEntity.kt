@@ -14,6 +14,9 @@ data class QuoteEntity(
     @ColumnInfo(name = "quotes")
     var quotes: String = "",
 
+    @ColumnInfo(name = "author")
+    var author: String = "",
+
     @ColumnInfo(name = "categoryId")
     var categoryId: String = "",
 
