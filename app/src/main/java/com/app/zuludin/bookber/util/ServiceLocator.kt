@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.app.zuludin.bookber.data.BookberRepositoryImpl
 import com.app.zuludin.bookber.data.local.BookberLocalDataSource
-import com.app.zuludin.bookber.data.local.room.BookberDatabase
 import com.app.zuludin.bookber.data.local.BookberLocalDataSourceImpl
+import com.app.zuludin.bookber.data.local.room.BookberDatabase
 import com.app.zuludin.bookber.domain.BookberRepository
 
 object ServiceLocator {
@@ -16,7 +16,11 @@ object ServiceLocator {
 
     private fun createBookLocalDataSource(context: Context): BookberLocalDataSource {
         val database = createDatabase(context)
-        return BookberLocalDataSourceImpl(database.bookDao())
+        return BookberLocalDataSourceImpl(
+            database.bookDao(),
+            database.quoteDao(),
+            database.categoryDao()
+        )
     }
 
     private fun createDatabase(context: Context): BookberDatabase {

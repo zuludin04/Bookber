@@ -4,8 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.zuludin.bookber.data.local.BookberLocalDataSource
 import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 
-class BookberFakeDataSource(var books: MutableList<BookEntity>? = mutableListOf()) :
+class BookberFakeDataSource(
+    var books: MutableList<BookEntity>? = mutableListOf(),
+    var quotes: MutableList<QuoteEntity>? = mutableListOf(),
+    var categories: MutableList<CategoryEntity>? = mutableListOf()
+) :
     BookberLocalDataSource {
     override fun loadBookStore(): LiveData<Result<List<BookEntity>>> {
         val observableBooks = MutableLiveData<Result<List<BookEntity>>>()
@@ -13,9 +19,16 @@ class BookberFakeDataSource(var books: MutableList<BookEntity>? = mutableListOf(
         return observableBooks
     }
 
+    override fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>> {
+        val observableBooks = MutableLiveData<Result<List<BookEntity>>>()
+        books?.filter { it.categoryId == categoryId }
+            ?.let { observableBooks.value = Result.Success(it) }
+        return observableBooks
+    }
+
     override fun loadBookDetail(bookId: String): LiveData<Result<BookEntity>> {
         val observableBook = MutableLiveData<Result<BookEntity>>()
-        observableBook.value = Result.Success(books!![0])
+        books?.firstOrNull { it.id == bookId }?.let { observableBook.value = Result.Success(it) }
         return observableBook
     }
 
@@ -29,5 +42,55 @@ class BookberFakeDataSource(var books: MutableList<BookEntity>? = mutableListOf(
 
     override suspend fun deleteBookById(bookId: String) {
         books?.removeIf { it.id == bookId }
+    }
+
+    override fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
+        val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
+        quotes?.let { observableQuotes.value = Result.Success(it) }
+        return observableQuotes
+    }
+
+    override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
+        val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
+        quotes?.filter { it.bookId == bookId }?.let { observableQuotes.value = Result.Success(it) }
+        return observableQuotes
+    }
+
+    override fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>> {
+        val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
+        quotes?.filter { it.categoryId == categoryId }
+            ?.let { observableQuotes.value = Result.Success(it) }
+        return observableQuotes
+    }
+
+    override suspend fun saveQuote(quote: QuoteEntity) {
+        quotes?.add(quote)
+    }
+
+    override suspend fun updateQuote(quote: QuoteEntity) {
+        quotes?.firstOrNull { it.id == quote.id }?.let { it.quotes = quote.quotes }
+    }
+
+    override suspend fun deleteQuoteById(quoteId: String) {
+        quotes?.removeIf { it.id == quoteId }
+    }
+
+    override fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>> {
+        val observableCategories = MutableLiveData<Result<List<CategoryEntity>>>()
+        categories?.filter { it.type == type }
+            ?.let { observableCategories.value = Result.Success(it) }
+        return observableCategories
+    }
+
+    override suspend fun saveCategory(category: CategoryEntity) {
+        categories?.add(category)
+    }
+
+    override suspend fun updateCategory(category: CategoryEntity) {
+        categories?.firstOrNull { it.id == category.id }?.let { it.category = category.category }
+    }
+
+    override suspend fun deleteCategoryById(categoryId: String) {
+        categories?.removeIf { it.id == categoryId }
     }
 }
