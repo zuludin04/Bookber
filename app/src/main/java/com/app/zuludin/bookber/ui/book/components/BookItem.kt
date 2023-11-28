@@ -84,7 +84,7 @@ fun BookItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "10", color = Color.Gray, fontSize = 13.sp, maxLines = 1)
                     Image(
-                        painter = painterResource(id = R.drawable.ic_quotes),
+                        painter = painterResource(id = R.drawable.ic_quote),
                         contentDescription = "",
                         colorFilter = ColorFilter.tint(Color.DarkGray, BlendMode.SrcIn),
                         modifier = Modifier.size(18.dp)

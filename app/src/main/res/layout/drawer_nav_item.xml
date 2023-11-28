@@ -12,11 +12,11 @@
 
     <ImageView
         android:id="@+id/navigation_icon"
-        android:layout_width="35sp"
-        android:layout_height="35sp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:scaleType="centerInside"
-        android:src="@android:drawable/btn_star_big_on"
+        android:src="@drawable/ic_quote"
         tools:ignore="ContentDescription" />
 
     <TextView

@@ -49,7 +49,7 @@ fun QuoteItem(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_quotes),
+                painter = painterResource(id = R.drawable.ic_quote),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.clip(RoundedCornerShape(5.dp))

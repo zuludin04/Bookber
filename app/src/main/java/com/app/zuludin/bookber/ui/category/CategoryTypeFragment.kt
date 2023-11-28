@@ -47,7 +47,7 @@ class CategoryTypeFragment : Fragment() {
     }
 
     private fun setupView() {
-        categoryAdapter = CategoryTypeAdapter(categoryType!!)
+        categoryAdapter = CategoryTypeAdapter()
         val errorMessage = if (categoryType == "Quote") "Quote is Empty" else "Book is Empty"
         binding.emptyMessage.text = errorMessage
     }

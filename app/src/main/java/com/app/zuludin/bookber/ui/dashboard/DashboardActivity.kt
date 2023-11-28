@@ -23,12 +23,12 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
     private lateinit var drawerAdapter: DrawerNavigationAdapter
     private var items = arrayListOf(
-        NavigationDrawer(R.drawable.ic_quotes, "Quotes"),
-        NavigationDrawer(R.drawable.ic_quotes, "Books"),
-        NavigationDrawer(R.drawable.ic_quotes, "Category"),
-        NavigationDrawer(R.drawable.ic_quotes, "Favorite"),
-        NavigationDrawer(R.drawable.ic_quotes, "Widget"),
-        NavigationDrawer(R.drawable.ic_quotes, "Settings"),
+        NavigationDrawer(R.drawable.ic_quote, "Quotes"),
+        NavigationDrawer(R.drawable.ic_books, "Books"),
+        NavigationDrawer(R.drawable.ic_category, "Category"),
+        NavigationDrawer(R.drawable.ic_favorite, "Favorite"),
+        NavigationDrawer(R.drawable.ic_widgets, "Widget"),
+        NavigationDrawer(R.drawable.ic_settings, "Settings"),
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
