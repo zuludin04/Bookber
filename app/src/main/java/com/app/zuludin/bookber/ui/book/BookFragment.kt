@@ -38,6 +38,7 @@ class BookFragment : Fragment() {
     }
 
     private fun setupView() {
+        binding.emptyLayout.emptyMessage.text = "Book is Empty"
         bookAdapter = BookAdapter()
         binding.composeFilter.setContent {
             CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
@@ -52,10 +53,10 @@ class BookFragment : Fragment() {
                     is Result.Error -> {}
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
-                            binding.emptyMessage.visibility = View.GONE
+                            binding.emptyLayout.emptyMessage.visibility = View.GONE
                             bookAdapter.setBookStore(result.data)
                         } else {
-                            binding.emptyMessage.visibility = View.VISIBLE
+                            binding.emptyLayout.emptyMessage.visibility = View.VISIBLE
                         }
                     }
                 }

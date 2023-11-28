@@ -38,6 +38,7 @@ class QuoteFragment : Fragment() {
     }
 
     private fun setupView() {
+        binding.emptyLayout.emptyMessage.text = "Quote is Empty"
         quoteAdapter = QuoteAdapter()
         binding.composeFilter.setContent {
             CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
@@ -52,10 +53,10 @@ class QuoteFragment : Fragment() {
                     is Result.Error -> {}
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
-                            binding.emptyMessage.visibility = View.GONE
+                            binding.emptyLayout.emptyMessage.visibility = View.GONE
                             quoteAdapter.setBookStore(result.data)
                         } else {
-                            binding.emptyMessage.visibility = View.VISIBLE
+                            binding.emptyLayout.emptyMessage.visibility = View.VISIBLE
                         }
                     }
                 }
