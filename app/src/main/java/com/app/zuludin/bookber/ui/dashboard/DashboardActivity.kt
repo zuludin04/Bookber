@@ -15,7 +15,7 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.databinding.ActivityDashboardBinding
 import com.app.zuludin.bookber.domain.model.NavigationDrawer
 import com.app.zuludin.bookber.ui.book.BookFragment
-import com.app.zuludin.bookber.ui.category.CaregoryFragment
+import com.app.zuludin.bookber.ui.category.CategoryFragment
 import com.app.zuludin.bookber.ui.quote.QuoteFragment
 
 class DashboardActivity : AppCompatActivity() {
@@ -49,7 +49,7 @@ class DashboardActivity : AppCompatActivity() {
                         when (position) {
                             0 -> changeSelectedFragment(QuoteFragment.newInstance())
                             1 -> changeSelectedFragment(BookFragment.newInstance())
-                            2 -> changeSelectedFragment(CaregoryFragment())
+                            2 -> changeSelectedFragment(CategoryFragment.newInstance())
                         }
                         if (position == 3 || position == 4) {
                             binding.appBar.fabAddItems.hide()
