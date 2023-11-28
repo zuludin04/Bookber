@@ -1,8 +1,8 @@
 package com.app.zuludin.bookber.util
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.ui.book.BookViewModel
 import com.app.zuludin.bookber.ui.category.CategoryTypeViewModel
@@ -35,8 +35,9 @@ class ViewModelFactory constructor(
     companion object {
         @Volatile
         private var instance: ViewModelFactory? = null
-        fun getInstance(context: Context): ViewModelFactory = instance ?: synchronized(this) {
-            instance ?: ViewModelFactory(ServiceLocator.provideBookberRepository(context))
-        }.also { instance = it }
+        fun getInstance(application: BookberApplication): ViewModelFactory =
+            instance ?: synchronized(this) {
+                instance ?: ViewModelFactory(application.repository)
+            }.also { instance = it }
     }
 }

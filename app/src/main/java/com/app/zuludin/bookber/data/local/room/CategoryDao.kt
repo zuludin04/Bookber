@@ -21,4 +21,7 @@ interface CategoryDao {
 
     @Query("delete from categoryentity where categoryId = :categoryId")
     suspend fun deleteCategoryById(categoryId: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertInitialCategory(categories: List<CategoryEntity>)
 }

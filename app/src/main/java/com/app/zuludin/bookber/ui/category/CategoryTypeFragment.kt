@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentCategoryTypeBinding
 import com.app.zuludin.bookber.util.ViewModelFactory
@@ -20,7 +21,7 @@ class CategoryTypeFragment : Fragment() {
     private var categoryType: String? = null
 
     private val viewModel by viewModels<CategoryTypeViewModel> {
-        ViewModelFactory.getInstance(requireContext())
+        ViewModelFactory.getInstance(requireActivity().application as BookberApplication)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

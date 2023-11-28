@@ -2,6 +2,8 @@ package com.app.zuludin.bookber.util
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.app.zuludin.bookber.data.BookberRepositoryImpl
 import com.app.zuludin.bookber.data.local.BookberLocalDataSource
 import com.app.zuludin.bookber.data.local.BookberLocalDataSourceImpl
@@ -28,7 +30,14 @@ object ServiceLocator {
             context.applicationContext,
             BookberDatabase::class.java,
             DB_NAME
-        ).build()
+        )
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    super.onCreate(db)
+
+                }
+            })
+            .build()
     }
 }
 

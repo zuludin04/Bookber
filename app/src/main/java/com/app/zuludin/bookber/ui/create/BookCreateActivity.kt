@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import android.util.Base64
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
@@ -19,7 +20,7 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
 
     private lateinit var binding: ActivityBookCreateBinding
     private val viewModel: BookCreateViewModel by viewModels {
-        ViewModelFactory.getInstance(applicationContext)
+        ViewModelFactory.getInstance(application as BookberApplication)
     }
 
     private var bookId: String? = null

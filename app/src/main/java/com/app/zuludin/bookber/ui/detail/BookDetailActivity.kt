@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.databinding.ActivityBookDetailBinding
 import com.app.zuludin.bookber.ui.create.BookCreateActivity
@@ -15,7 +16,7 @@ class BookDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookDetailBinding
     private val viewModel by viewModels<BookDetailViewModel> {
-        ViewModelFactory.getInstance(applicationContext)
+        ViewModelFactory.getInstance(application as BookberApplication)
     }
 
     private var bookId: String? = null
