@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.category.components.CategoryItem
 
-class CategoryTypeAdapter(private val type: String) :
-    RecyclerView.Adapter<CategoryTypeAdapter.CategoryTypeViewHolder>() {
+class CategoryTypeAdapter : RecyclerView.Adapter<CategoryTypeAdapter.CategoryTypeViewHolder>() {
     private val categories = ArrayList<CategoryEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryTypeViewHolder {
@@ -19,7 +18,7 @@ class CategoryTypeAdapter(private val type: String) :
     override fun getItemCount(): Int = categories.size
 
     override fun onBindViewHolder(holder: CategoryTypeViewHolder, position: Int) {
-        holder.bind(position, type)
+        holder.bind(position, categories[position].category)
     }
 
     fun setCategories(categories: List<CategoryEntity>) {
@@ -35,7 +34,7 @@ class CategoryTypeAdapter(private val type: String) :
         fun bind(position: Int, type: String) {
             composeView.setContent {
                 val color = if ((position % 2) == 0) Color.Blue else Color.Green
-                CategoryItem(color = color, category = "$type $position")
+                CategoryItem(color = color, category = type)
             }
         }
     }
