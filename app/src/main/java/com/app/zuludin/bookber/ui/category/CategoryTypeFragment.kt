@@ -40,12 +40,19 @@ class CategoryTypeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        categoryAdapter = CategoryTypeAdapter(categoryType!!)
+        setupView()
         setupRecyclerView()
+        setupViewModel()
+    }
+
+    private fun setupView() {
+        categoryAdapter = CategoryTypeAdapter(categoryType!!)
+        val errorMessage = if (categoryType == "Quote") "Quote is Empty" else "Book is Empty"
+        binding.emptyMessage.text = errorMessage
     }
 
     private fun setupViewModel() {
-        val type = if (categoryType == "quote") 1 else 2
+        val type = if (categoryType == "Quote") 1 else 2
         viewModel.getCategories(type).observe(viewLifecycleOwner) { result ->
             if (result != null) {
                 when (result) {
@@ -54,6 +61,7 @@ class CategoryTypeFragment : Fragment() {
                     is Result.Success -> {
                         if (result.data.isNotEmpty()) {
                             binding.emptyMessage.visibility = View.GONE
+                            categoryAdapter.setCategories(result.data)
                         } else {
                             binding.emptyMessage.visibility = View.VISIBLE
                         }
