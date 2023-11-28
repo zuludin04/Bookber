@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/app_bar"
-        layout="@layout/app_bar_main" />
+        layout="@layout/dashboard_main_content" />
 
     <LinearLayout
         android:id="@+id/navigation_layout"
