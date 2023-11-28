@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentQuoteBinding
+import com.app.zuludin.bookber.ui.dashboard.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.ViewModelFactory
 
 class QuoteFragment : Fragment() {
@@ -32,9 +33,16 @@ class QuoteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        quoteAdapter = QuoteAdapter()
+        setupView()
         setupViewModel()
         setupRecyclerView()
+    }
+
+    private fun setupView() {
+        quoteAdapter = QuoteAdapter()
+        binding.composeFilter.setContent {
+            CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
+        }
     }
 
     private fun setupViewModel() {

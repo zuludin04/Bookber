@@ -7,10 +7,12 @@ import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 import com.app.zuludin.bookber.ui.dashboard.DashboardViewModel
 import com.app.zuludin.bookber.ui.detail.BookDetailViewModel
+import com.app.zuludin.bookber.ui.quote.QuoteViewModel
 
 class ViewModelFactory constructor(
     private val bookberRepository: BookberRepository,
 ) : ViewModelProvider.NewInstanceFactory() {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             return DashboardViewModel(bookberRepository) as T
@@ -18,6 +20,8 @@ class ViewModelFactory constructor(
             return BookCreateViewModel(bookberRepository) as T
         } else if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
             return BookDetailViewModel(bookberRepository) as T
+        } else if (modelClass.isAssignableFrom(QuoteViewModel::class.java)) {
+            return QuoteViewModel(bookberRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
