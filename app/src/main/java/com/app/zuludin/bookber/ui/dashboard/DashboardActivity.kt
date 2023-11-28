@@ -47,7 +47,7 @@ class DashboardActivity : AppCompatActivity() {
                 object : ClickListener {
                     override fun onClick(view: View, position: Int) {
                         when (position) {
-                            0 -> changeSelectedFragment(QuoteFragment())
+                            0 -> changeSelectedFragment(QuoteFragment.newInstance())
                             1 -> changeSelectedFragment(BookFragment())
                             2 -> changeSelectedFragment(CaregoryFragment())
                         }
@@ -64,7 +64,7 @@ class DashboardActivity : AppCompatActivity() {
 
         updateDrawerAdapter(0)
 
-        changeSelectedFragment(QuoteFragment())
+        changeSelectedFragment(QuoteFragment.newInstance())
 
         setupDrawer()
     }
