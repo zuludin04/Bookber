@@ -16,7 +16,7 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <ImageView
@@ -40,16 +40,6 @@
             android:layout_weight="1"
             android:scrollbarThumbHorizontal="@null"
             android:scrollbarThumbVertical="@null" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="12sp"
-            android:text="Developed by Zulfikar Mauludin"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
 
     </LinearLayout>
 

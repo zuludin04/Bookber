@@ -27,13 +27,10 @@ class DrawerNavigationAdapter(
         val context = holder.itemView.context
 
         if (position == currentPos) {
-            holder.itemView.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.colorPrimaryDark
-                )
-            )
+            holder.itemView.setBackgroundResource(R.drawable.drawer_menu_bg)
+            holder.binding.navigationIcon.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP)
         } else {
+            holder.binding.navigationIcon.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP)
             holder.itemView.setBackgroundColor(
                 ContextCompat.getColor(
                     context,
@@ -41,8 +38,7 @@ class DrawerNavigationAdapter(
                 )
             )
         }
-        holder.binding.navigationIcon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP)
-        holder.binding.navigationTitle.setTextColor(Color.WHITE)
+        holder.binding.navigationTitle.setTextColor(Color.BLACK)
 
         holder.binding.navigationTitle.text = items[position].title
         holder.binding.navigationIcon.setImageResource(items[position].icon)
