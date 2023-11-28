@@ -5,14 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentCategoryTypeBinding
+import com.app.zuludin.bookber.util.ViewModelFactory
 
 private const val CATEGORY_TYPE = "categoryType"
 
 class CategoryTypeFragment : Fragment() {
 
     private lateinit var binding: FragmentCategoryTypeBinding
+    private lateinit var categoryAdapter: CategoryTypeAdapter
     private var categoryType: String? = null
+
+    private val viewModel by viewModels<CategoryTypeViewModel> {
+        ViewModelFactory.getInstance(requireContext())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +40,35 @@ class CategoryTypeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.categoryType.text = categoryType
+        categoryAdapter = CategoryTypeAdapter(categoryType!!)
+        setupRecyclerView()
+    }
+
+    private fun setupViewModel() {
+        val type = if (categoryType == "quote") 1 else 2
+        viewModel.getCategories(type).observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {}
+                    is Result.Error -> {}
+                    is Result.Success -> {
+                        if (result.data.isNotEmpty()) {
+                            binding.emptyMessage.visibility = View.GONE
+                        } else {
+                            binding.emptyMessage.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvCategoryType.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+            adapter = categoryAdapter
+        }
     }
 
     companion object {
