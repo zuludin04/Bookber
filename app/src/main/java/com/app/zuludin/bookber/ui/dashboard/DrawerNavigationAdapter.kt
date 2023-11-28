@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.databinding.RowNavDrawerBinding
+import com.app.zuludin.bookber.databinding.DrawerNavItemBinding
 import com.app.zuludin.bookber.domain.model.NavigationDrawer
 
 class DrawerNavigationAdapter(
@@ -17,7 +17,7 @@ class DrawerNavigationAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DrawerNavigationViewHolder {
         val binding =
-            RowNavDrawerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            DrawerNavItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DrawerNavigationViewHolder(binding)
     }
 
@@ -44,6 +44,6 @@ class DrawerNavigationAdapter(
         holder.binding.navigationIcon.setImageResource(items[position].icon)
     }
 
-    inner class DrawerNavigationViewHolder(val binding: RowNavDrawerBinding) :
+    inner class DrawerNavigationViewHolder(val binding: DrawerNavItemBinding) :
         RecyclerView.ViewHolder(binding.root)
 }
