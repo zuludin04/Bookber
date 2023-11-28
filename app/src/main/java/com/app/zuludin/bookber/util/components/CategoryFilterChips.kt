@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.dashboard.components
+package com.app.zuludin.bookber.util.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.dashboard
+package com.app.zuludin.bookber.ui.book
 
 import android.content.Intent
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.ui.dashboard.components.BookItem
+import com.app.zuludin.bookber.ui.book.components.BookItem
 import com.app.zuludin.bookber.ui.detail.BookDetailActivity
 
 class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {

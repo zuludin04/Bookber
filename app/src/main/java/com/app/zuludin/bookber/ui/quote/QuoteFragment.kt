@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentQuoteBinding
-import com.app.zuludin.bookber.ui.dashboard.components.CategoryFilterChips
+import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.ViewModelFactory
 
 class QuoteFragment : Fragment() {
