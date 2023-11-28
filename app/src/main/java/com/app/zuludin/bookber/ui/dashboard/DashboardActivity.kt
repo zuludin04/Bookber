@@ -3,8 +3,6 @@ package com.app.zuludin.bookber.ui.dashboard
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -54,9 +52,7 @@ class DashboardActivity : AppCompatActivity() {
                             2 -> changeSelectedFragment(CaregoryFragment())
                         }
                         updateDrawerAdapter(position)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            binding.drawerLayout.closeDrawer(GravityCompat.START)
-                        }, 200)
+                        binding.drawerLayout.closeDrawer(GravityCompat.START)
                     }
                 })
         )
