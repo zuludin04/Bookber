@@ -9,8 +9,8 @@ import kotlinx.coroutines.SupervisorJob
 
 class BookberApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
-    val database by lazy { BookberDatabase.getDatabase(this, applicationScope) }
-    val localSource by lazy {
+    private val database by lazy { BookberDatabase.getDatabase(this, applicationScope) }
+    private val localSource by lazy {
         BookberLocalDataSourceImpl(
             database.bookDao(),
             database.quoteDao(),

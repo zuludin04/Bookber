@@ -8,6 +8,7 @@ import android.util.Base64
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.app.zuludin.bookber.BookberApplication
+import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
@@ -37,7 +38,7 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
         bookId = intent.extras?.getString("BOOK_ID")
 
         if (bookId != null) {
-            binding.btnCreateBook.text = "Update"
+            binding.btnCreateBook.text = getString(R.string.update)
             viewModel.getDetailBook(bookId!!).observe(this) { result ->
                 if (result != null) {
                     when (result) {

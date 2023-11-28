@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.zuludin.bookber.BookberApplication
+import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentQuoteBinding
 import com.app.zuludin.bookber.util.ViewModelFactory
@@ -38,7 +39,7 @@ class QuoteFragment : Fragment() {
     }
 
     private fun setupView() {
-        binding.emptyLayout.emptyMessage.text = "Quote is Empty"
+        binding.emptyLayout.emptyMessage.text = getString(R.string.empty_quote)
         quoteAdapter = QuoteAdapter()
         binding.composeFilter.setContent {
             CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
