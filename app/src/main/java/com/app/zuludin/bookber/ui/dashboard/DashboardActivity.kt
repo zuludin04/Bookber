@@ -51,6 +51,11 @@ class DashboardActivity : AppCompatActivity() {
                             1 -> changeSelectedFragment(BookFragment())
                             2 -> changeSelectedFragment(CaregoryFragment())
                         }
+                        if (position == 3 || position == 4) {
+                            binding.appBar.fabAddItems.hide()
+                        } else {
+                            binding.appBar.fabAddItems.show()
+                        }
                         updateDrawerAdapter(position)
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
                     }
