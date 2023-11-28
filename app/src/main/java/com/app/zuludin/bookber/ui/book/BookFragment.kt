@@ -1,60 +1,77 @@
 package com.app.zuludin.bookber.ui.book
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.app.zuludin.bookber.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import com.app.zuludin.bookber.data.Result
+import com.app.zuludin.bookber.databinding.FragmentBookBinding
+import com.app.zuludin.bookber.util.ViewModelFactory
+import com.app.zuludin.bookber.util.components.CategoryFilterChips
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [BookFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class BookFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var binding: FragmentBookBinding
+    private lateinit var bookAdapter: BookAdapter
+
+    private val viewModel by viewModels<BookViewModel> {
+        ViewModelFactory.getInstance(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book, container, false)
+    ): View {
+        binding = FragmentBookBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupView()
+        setupViewModel()
+        setupRecyclerView()
+    }
+
+    private fun setupView() {
+        bookAdapter = BookAdapter()
+        binding.composeFilter.setContent {
+            CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
+        }
+    }
+
+    private fun setupViewModel() {
+        viewModel.getBooks().observe(viewLifecycleOwner) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Loading -> {}
+                    is Result.Error -> {}
+                    is Result.Success -> {
+                        if (result.data.isNotEmpty()) {
+                            binding.emptyMessage.visibility = View.GONE
+                            bookAdapter.setBookStore(result.data)
+                        } else {
+                            binding.emptyMessage.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerBook.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            setHasFixedSize(true)
+            adapter = bookAdapter
+        }
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment BookFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            BookFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = BookFragment()
     }
 }

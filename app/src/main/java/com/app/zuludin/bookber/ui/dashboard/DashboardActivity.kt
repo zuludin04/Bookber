@@ -48,7 +48,7 @@ class DashboardActivity : AppCompatActivity() {
                     override fun onClick(view: View, position: Int) {
                         when (position) {
                             0 -> changeSelectedFragment(QuoteFragment.newInstance())
-                            1 -> changeSelectedFragment(BookFragment())
+                            1 -> changeSelectedFragment(BookFragment.newInstance())
                             2 -> changeSelectedFragment(CaregoryFragment())
                         }
                         if (position == 3 || position == 4) {
@@ -63,9 +63,7 @@ class DashboardActivity : AppCompatActivity() {
         )
 
         updateDrawerAdapter(0)
-
         changeSelectedFragment(QuoteFragment.newInstance())
-
         setupDrawer()
     }
 
@@ -119,6 +117,5 @@ class DashboardActivity : AppCompatActivity() {
     private fun changeSelectedFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment_container, fragment).commit()
-
     }
 }
