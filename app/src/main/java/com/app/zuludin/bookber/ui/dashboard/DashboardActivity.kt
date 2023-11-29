@@ -2,6 +2,7 @@ package com.app.zuludin.bookber.ui.dashboard
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -16,6 +17,7 @@ import com.app.zuludin.bookber.databinding.ActivityDashboardBinding
 import com.app.zuludin.bookber.domain.model.NavigationDrawer
 import com.app.zuludin.bookber.ui.book.BookFragment
 import com.app.zuludin.bookber.ui.category.CategoryFragment
+import com.app.zuludin.bookber.ui.create.BookCreateActivity
 import com.app.zuludin.bookber.ui.quote.QuoteFragment
 
 class DashboardActivity : AppCompatActivity() {
@@ -38,6 +40,10 @@ class DashboardActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBar.toolbar)
         supportActionBar?.title = ""
+
+        binding.appBar.fabAddItems.setOnClickListener {
+            startActivity(Intent(this, BookCreateActivity::class.java))
+        }
 
         binding.navigationRv.layoutManager = LinearLayoutManager(this)
         binding.navigationRv.setHasFixedSize(true)

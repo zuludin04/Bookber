@@ -13,6 +13,7 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.PickImageSheet
+import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
 import com.app.zuludin.bookber.util.ViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -34,6 +35,10 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "Create"
+
+        binding.quoteInputCompose.setContent {
+            QuoteInputField()
+        }
 
         bookId = intent.extras?.getString("BOOK_ID")
 
