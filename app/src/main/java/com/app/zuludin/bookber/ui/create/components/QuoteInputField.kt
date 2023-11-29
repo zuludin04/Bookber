@@ -1,6 +1,7 @@
 package com.app.zuludin.bookber.ui.create.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -42,7 +43,7 @@ import com.app.zuludin.bookber.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuoteInputField(modifier: Modifier = Modifier) {
+fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: () -> Unit) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
 
     Card(shape = RoundedCornerShape(0.dp), elevation = CardDefaults.cardElevation(4.dp)) {
@@ -62,8 +63,10 @@ fun QuoteInputField(modifier: Modifier = Modifier) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 keyboardActions = KeyboardActions(onDone = {}),
                 shape = RoundedCornerShape(100.dp),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.White,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                 ),
@@ -83,7 +86,8 @@ fun QuoteInputField(modifier: Modifier = Modifier) {
                     .fillMaxHeight()
                     .weight(1f)
                     .clip(CircleShape)
-                    .background(colorResource(id = R.color.colorAccent)),
+                    .background(colorResource(id = R.color.colorAccent))
+                    .clickable { onSaveQuote() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Filled.Send, contentDescription = null)
@@ -95,5 +99,5 @@ fun QuoteInputField(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun QuoteInputFieldPreview() {
-    QuoteInputField()
+    QuoteInputField(onSaveQuote = {})
 }
