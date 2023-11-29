@@ -3,6 +3,7 @@ package com.app.zuludin.bookber.ui.create
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.zuludin.bookber.MainCoroutineRule
 import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -28,6 +29,7 @@ class BookCreateViewModelTest {
 
     private lateinit var viewModel: BookCreateViewModel
     private val bookDummy = BookEntity(title = "Title 1", genre = "Genre 1")
+    private val quoteDummy = QuoteEntity(quotes = "Quote 1", author = "Author 1")
 
     @Before
     fun setup() {
@@ -44,5 +46,11 @@ class BookCreateViewModelTest {
     fun updateBook_SuccessUpdateToDatabase() = runTest {
         viewModel.updateBook(bookDummy)
         Mockito.verify(repository).updateBook(bookDummy)
+    }
+
+    @Test
+    fun saveQuote_SuccessSaveQuoteToDatabase() = runTest {
+        viewModel.saveQuote(quoteDummy)
+        Mockito.verify(repository).saveQuote(quoteDummy)
     }
 }
