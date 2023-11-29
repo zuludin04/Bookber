@@ -2,6 +2,7 @@ package com.app.zuludin.bookber.ui.create
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.app.zuludin.bookber.BookberApplication
+import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
@@ -40,9 +42,22 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                 showCustomDialog = true
             }
             if (showCustomDialog) {
-                SaveQuoteConfirmDialog {
-                    showCustomDialog = !showCustomDialog
-                }
+                SaveQuoteConfirmDialog(
+                    onDismissRequest = {
+                        showCustomDialog = !showCustomDialog
+                    },
+                    onSaveQuote = { text ->
+                        val quote = QuoteEntity(
+                            quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
+                            author = text,
+                            categoryId = "1",
+                            bookId = ""
+                        )
+                        viewModel.saveQuote(quote)
+                        showCustomDialog = !showCustomDialog
+                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
+                    }
+                )
             }
         }
 

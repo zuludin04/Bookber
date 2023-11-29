@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit) {
+fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit, onSaveQuote: (String) -> Unit) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
     val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
 
@@ -89,7 +89,7 @@ fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { onSaveQuote(text.text) }, modifier = Modifier.fillMaxWidth()) {
                 Text(text = "Save")
             }
         }
