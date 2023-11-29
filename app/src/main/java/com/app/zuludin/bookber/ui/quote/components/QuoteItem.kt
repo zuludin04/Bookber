@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,7 +41,6 @@ fun QuoteItem(
             .clickable { onClick(quote) }
             .padding(10.dp)
             .fillMaxWidth()
-            .height(150.dp)
     ) {
         Column(
             modifier = Modifier
@@ -54,12 +54,14 @@ fun QuoteItem(
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.clip(RoundedCornerShape(5.dp))
             )
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = quote.quotes,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 overflow = TextOverflow.Ellipsis,
             )
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "- ${quote.author}",
                 fontSize = 14.sp,
