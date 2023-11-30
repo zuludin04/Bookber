@@ -12,9 +12,11 @@ import androidx.compose.runtime.setValue
 import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
+import com.app.zuludin.bookber.ui.create.components.BookEmptyInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
+import com.app.zuludin.bookber.ui.create.components.ShowBookInformation
 import com.app.zuludin.bookber.util.ViewModelFactory
 
 class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
@@ -34,6 +36,10 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "Create"
+
+        binding.bookQuoteInfoCompose.setContent {
+            ShowBookInformation()
+        }
 
         binding.quoteInputCompose.setContent {
             var showCustomDialog by remember { mutableStateOf(false) }
