@@ -68,7 +68,7 @@ fun BookItem(
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
-                text = book.genre,
+                text = book.author,
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

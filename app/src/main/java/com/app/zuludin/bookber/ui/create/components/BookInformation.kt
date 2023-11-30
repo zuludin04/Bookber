@@ -35,7 +35,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -69,8 +68,9 @@ fun BookEmptyInformation() {
 }
 
 @Composable
-fun ShowBookInformation() {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
+    var titleField by remember { mutableStateOf(TextFieldValue("")) }
+    var authorField by remember { mutableStateOf(TextFieldValue("")) }
     val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
 
     val context = LocalContext.current
@@ -78,12 +78,12 @@ fun ShowBookInformation() {
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
-    val imagePicker = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = { uri ->
-            imageUri = uri
-        }
-    )
+//    val imagePicker = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.PickVisualMedia(),
+//        onResult = { uri ->
+//            imageUri = uri
+//        }
+//    )
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
@@ -145,8 +145,8 @@ fun ShowBookInformation() {
                     Spacer(modifier = Modifier.width(16.dp))
 
                     Column {
-                        TextField(value = text, onValueChange = { text = it })
-                        TextField(value = text, onValueChange = { text = it })
+                        TextField(value = titleField, onValueChange = { titleField = it })
+                        TextField(value = authorField, onValueChange = { authorField = it })
                         SampleSpinner(
                             modifier = Modifier.fillMaxWidth(),
                             list = myData,
@@ -158,16 +158,13 @@ fun ShowBookInformation() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Button(onClick = { }, modifier = Modifier.fillMaxWidth()) {
+                Button(
+                    onClick = { onSaveBook(titleField.text, authorField.text, imageUri) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(text = "Save")
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun BookEmptyInformationPreview() {
-    ShowBookInformation()
 }
