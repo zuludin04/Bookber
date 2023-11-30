@@ -15,12 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 
 @Composable
-fun CategoryFilterChips(categories: List<String>) {
+fun CategoryFilterChips(categories: List<CategoryEntity>) {
     LazyRow {
-        items(items = categories) { title ->
-            CategoryChips(title = title)
+        items(items = categories) { category ->
+            CategoryChips(title = category.category)
         }
     }
 }
@@ -47,6 +48,6 @@ fun CategoryChips(title: String) {
 @Composable
 fun CategoryFilterChipsPreview() {
     MaterialTheme {
-        CategoryFilterChips(arrayListOf("All", "Home", "Mobile"))
+        CategoryFilterChips(arrayListOf(CategoryEntity(category = "All")))
     }
 }

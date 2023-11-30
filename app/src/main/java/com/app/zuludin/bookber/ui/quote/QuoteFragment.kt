@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.databinding.FragmentQuoteBinding
 import com.app.zuludin.bookber.util.ViewModelFactory
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
@@ -41,26 +40,24 @@ class QuoteFragment : Fragment() {
     private fun setupView() {
         binding.emptyLayout.emptyMessage.text = getString(R.string.empty_quote)
         quoteAdapter = QuoteAdapter()
-        binding.composeFilter.setContent {
-            CategoryFilterChips(categories = arrayListOf("All", "Fiction", "Non-Fiction"))
-        }
+
     }
 
     private fun setupViewModel() {
-        viewModel.loadQuotes().observe(viewLifecycleOwner) { result ->
+        viewModel.quotes.observe(viewLifecycleOwner) { result ->
             if (result != null) {
-                when (result) {
-                    is Result.Loading -> {}
-                    is Result.Error -> {}
-                    is Result.Success -> {
-                        if (result.data.isNotEmpty()) {
-                            binding.emptyLayout.emptyMessage.visibility = View.GONE
-                            quoteAdapter.setBookStore(result.data)
-                        } else {
-                            binding.emptyLayout.emptyMessage.visibility = View.VISIBLE
-                        }
-                    }
+                if (result.isNotEmpty()) {
+                    binding.emptyLayout.emptyMessage.visibility = View.GONE
+                    quoteAdapter.setBookStore(result)
+                } else {
+                    binding.emptyLayout.emptyMessage.visibility = View.VISIBLE
                 }
+            }
+        }
+
+        viewModel.categories.observe(viewLifecycleOwner) { result ->
+            binding.composeFilter.setContent {
+                CategoryFilterChips(categories = result)
             }
         }
     }
