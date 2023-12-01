@@ -32,7 +32,6 @@ class BookCreateActivity : AppCompatActivity() {
     }
 
     private var bookId: String? = null
-    private var bookCoverImage = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,19 +47,18 @@ class BookCreateActivity : AppCompatActivity() {
             BookInformation(
                 viewModel = viewModel,
                 isBookAvailable = bookId != null
-            ) { title, author, imageUri ->
+            ) { title, author, categoryId, imageUri ->
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 val bytes = stream.toByteArray()
-                bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+                val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
 
                 val book = BookEntity(
                     title = title,
                     author = author,
-                    genre = "",
                     cover = bookCoverImage,
-                    categoryId = "1"
+                    categoryId = categoryId
                 )
                 viewModel.saveBook(book)
                 Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()

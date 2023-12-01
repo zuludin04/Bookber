@@ -46,7 +46,7 @@ import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 fun BookInformation(
     viewModel: BookCreateViewModel,
     isBookAvailable: Boolean,
-    onSaveBook: (String, String, Uri?) -> Unit
+    onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
     var showBookInfo by remember { mutableStateOf(isBookAvailable) }
 
@@ -87,10 +87,11 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 fun ShowBookInformation(
     viewModel: BookCreateViewModel,
     isBookAvailable: Boolean,
-    onSaveBook: (String, String, Uri?) -> Unit
+    onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
     var titleField by remember { mutableStateOf(TextFieldValue("")) }
     var authorField by remember { mutableStateOf(TextFieldValue("")) }
+    var selectedCategoryId by remember { mutableStateOf("") }
 
     val categories by viewModel.bookCategories.observeAsState(initial = emptyList())
 
@@ -162,7 +163,9 @@ fun ShowBookInformation(
                             modifier = Modifier.fillMaxWidth(),
                             list = categories,
                             preselected = CategoryEntity(category = "Select Category"),
-                            onSelectionChanged = {},
+                            onSelectionChanged = {
+                                selectedCategoryId = it.id
+                            },
                         )
                     }
                 }
@@ -172,7 +175,12 @@ fun ShowBookInformation(
                 if (!bookAvailability) {
                     Button(
                         onClick = {
-                            onSaveBook(titleField.text, authorField.text, imageUri)
+                            onSaveBook(
+                                titleField.text,
+                                authorField.text,
+                                selectedCategoryId,
+                                imageUri
+                            )
                             bookAvailability = !bookAvailability
                         },
                         modifier = Modifier.fillMaxWidth()
