@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.QuoteAdapter
 import com.app.zuludin.bookber.util.ViewModelFactory
+import com.app.zuludin.bookber.util.enums.BookInfoState
 import java.io.ByteArrayOutputStream
 
 class BookCreateActivity : AppCompatActivity() {
@@ -32,7 +34,9 @@ class BookCreateActivity : AppCompatActivity() {
     }
 
     private var bookId: String? = null
+    private var isFromQuote = BookInfoState.ADD_QUOTE
 
+    @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookCreateBinding.inflate(layoutInflater)
@@ -41,12 +45,13 @@ class BookCreateActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "Create"
 
+        isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
         bookId = intent.extras?.getString("BOOK_ID")
 
         binding.bookQuoteInfoCompose.setContent {
             BookInformation(
                 viewModel = viewModel,
-                isBookAvailable = bookId != null
+                bookState = isFromQuote
             ) { title, author, categoryId, imageUri ->
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 val stream = ByteArrayOutputStream()
@@ -61,6 +66,8 @@ class BookCreateActivity : AppCompatActivity() {
                     categoryId = categoryId
                 )
                 viewModel.saveBook(book)
+                isFromQuote = BookInfoState.DETAIL_BOOK
+                binding.bookQuoteInfoCompose.visibility = View.VISIBLE
                 Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
             }
         }

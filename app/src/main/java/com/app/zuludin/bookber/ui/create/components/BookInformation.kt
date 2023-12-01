@@ -41,19 +41,20 @@ import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.create.BookCreateViewModel
+import com.app.zuludin.bookber.util.enums.BookInfoState
 
 @Composable
 fun BookInformation(
     viewModel: BookCreateViewModel,
-    isBookAvailable: Boolean,
+    bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
-    var showBookInfo by remember { mutableStateOf(isBookAvailable) }
+    var showBookInfo by remember { mutableStateOf(bookState) }
 
-    if (showBookInfo) {
-        ShowBookInformation(viewModel, isBookAvailable, onSaveBook)
+    if (showBookInfo == BookInfoState.ADD_QUOTE) {
+        BookEmptyInformation { showBookInfo = BookInfoState.ADD_BOOK }
     } else {
-        BookEmptyInformation { showBookInfo = !showBookInfo }
+        ShowBookInformation(viewModel, showBookInfo, onSaveBook)
     }
 }
 
@@ -86,7 +87,7 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 @Composable
 fun ShowBookInformation(
     viewModel: BookCreateViewModel,
-    isBookAvailable: Boolean,
+    bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
     var titleField by remember { mutableStateOf(TextFieldValue("")) }
@@ -97,7 +98,7 @@ fun ShowBookInformation(
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
-    var bookAvailability by remember { mutableStateOf(isBookAvailable) }
+    var bookAvailability by remember { mutableStateOf(bookState) }
 
     Card(shape = RoundedCornerShape(0.dp), modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.padding(16.dp)) {
@@ -172,7 +173,7 @@ fun ShowBookInformation(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                if (!bookAvailability) {
+                if (bookAvailability == BookInfoState.ADD_BOOK) {
                     Button(
                         onClick = {
                             onSaveBook(
@@ -181,7 +182,7 @@ fun ShowBookInformation(
                                 selectedCategoryId,
                                 imageUri
                             )
-                            bookAvailability = !bookAvailability
+                            bookAvailability = BookInfoState.DETAIL_BOOK
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {

@@ -19,6 +19,7 @@ import com.app.zuludin.bookber.ui.book.BookFragment
 import com.app.zuludin.bookber.ui.category.CategoryFragment
 import com.app.zuludin.bookber.ui.create.BookCreateActivity
 import com.app.zuludin.bookber.ui.quote.QuoteFragment
+import com.app.zuludin.bookber.util.enums.BookInfoState
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -33,6 +34,8 @@ class DashboardActivity : AppCompatActivity() {
         NavigationDrawer(R.drawable.ic_settings, "Settings"),
     )
 
+    private var selectedNavIndex = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
@@ -42,7 +45,9 @@ class DashboardActivity : AppCompatActivity() {
         supportActionBar?.title = ""
 
         binding.appBar.fabAddItems.setOnClickListener {
-            startActivity(Intent(this, BookCreateActivity::class.java))
+            val intent = Intent(this, BookCreateActivity::class.java)
+            intent.putExtra("INPUT_SOURCE", inputSourceInfo())
+            startActivity(intent)
         }
 
         binding.navigationRv.layoutManager = LinearLayoutManager(this)
@@ -62,6 +67,7 @@ class DashboardActivity : AppCompatActivity() {
                         } else {
                             binding.appBar.fabAddItems.show()
                         }
+                        selectedNavIndex = position
                         updateDrawerAdapter(position)
                         binding.drawerLayout.closeDrawer(GravityCompat.START)
                     }
@@ -123,5 +129,13 @@ class DashboardActivity : AppCompatActivity() {
     private fun changeSelectedFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment_container, fragment).commit()
+    }
+
+    private fun inputSourceInfo(): BookInfoState {
+        return when (selectedNavIndex) {
+            0 -> BookInfoState.ADD_QUOTE
+            1 -> BookInfoState.ADD_BOOK
+            else -> BookInfoState.ADD_QUOTE
+        }
     }
 }
