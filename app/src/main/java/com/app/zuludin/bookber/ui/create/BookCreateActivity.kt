@@ -42,7 +42,10 @@ class BookCreateActivity : AppCompatActivity() {
         bookId = intent.extras?.getString("BOOK_ID")
 
         binding.bookQuoteInfoCompose.setContent {
-            BookInformation(isBookAvailable = bookId != null) { title, author, imageUri ->
+            BookInformation(
+                viewModel = viewModel,
+                isBookAvailable = bookId != null
+            ) { title, author, imageUri ->
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -69,6 +72,7 @@ class BookCreateActivity : AppCompatActivity() {
             }
             if (showCustomDialog) {
                 SaveQuoteConfirmDialog(
+                    viewModel = viewModel,
                     onDismissRequest = {
                         showCustomDialog = !showCustomDialog
                     },

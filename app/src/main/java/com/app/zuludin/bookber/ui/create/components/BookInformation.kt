@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,13 +39,19 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 
 @Composable
-fun BookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?) -> Unit) {
+fun BookInformation(
+    viewModel: BookCreateViewModel,
+    isBookAvailable: Boolean,
+    onSaveBook: (String, String, Uri?) -> Unit
+) {
     var showBookInfo by remember { mutableStateOf(isBookAvailable) }
 
     if (showBookInfo) {
-        ShowBookInformation(isBookAvailable, onSaveBook)
+        ShowBookInformation(viewModel, isBookAvailable, onSaveBook)
     } else {
         BookEmptyInformation { showBookInfo = !showBookInfo }
     }
@@ -77,10 +84,15 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 }
 
 @Composable
-fun ShowBookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?) -> Unit) {
+fun ShowBookInformation(
+    viewModel: BookCreateViewModel,
+    isBookAvailable: Boolean,
+    onSaveBook: (String, String, Uri?) -> Unit
+) {
     var titleField by remember { mutableStateOf(TextFieldValue("")) }
     var authorField by remember { mutableStateOf(TextFieldValue("")) }
-    val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
+
+    val categories by viewModel.bookCategories.observeAsState(initial = emptyList())
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
@@ -148,8 +160,8 @@ fun ShowBookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, U
                         TextField(value = authorField, onValueChange = { authorField = it })
                         SampleSpinner(
                             modifier = Modifier.fillMaxWidth(),
-                            list = myData,
-                            preselected = myData.first(),
+                            list = categories,
+                            preselected = CategoryEntity(category = "Select Category"),
                             onSelectionChanged = {},
                         )
                     }

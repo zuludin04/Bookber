@@ -21,13 +21,13 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,15 +36,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit, onSaveQuote: (String) -> Unit) {
+fun SaveQuoteConfirmDialog(
+    viewModel: BookCreateViewModel,
+    onDismissRequest: () -> Unit,
+    onSaveQuote: (String) -> Unit
+) {
     var text by remember { mutableStateOf(TextFieldValue("")) }
-    val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
+    val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -83,8 +88,8 @@ fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit, onSaveQuote: (String) -
 
             SampleSpinner(
                 modifier = Modifier.fillMaxWidth(),
-                list = myData,
-                preselected = myData.first(),
+                list = categories,
+                preselected = CategoryEntity(category = "Select Category"),
                 onSelectionChanged = {},
             )
             Spacer(modifier = Modifier.height(24.dp))
@@ -98,9 +103,9 @@ fun SaveQuoteConfirmDialog(onDismissRequest: () -> Unit, onSaveQuote: (String) -
 
 @Composable
 fun SampleSpinner(
-    list: List<MyData>,
-    preselected: MyData,
-    onSelectionChanged: (myData: MyData) -> Unit,
+    list: List<CategoryEntity>,
+    preselected: CategoryEntity,
+    onSelectionChanged: (myData: CategoryEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -110,7 +115,7 @@ fun SampleSpinner(
     Box(modifier = modifier) {
         Column {
             TextField(
-                value = selected.name,
+                value = selected.category,
                 onValueChange = { },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
@@ -140,7 +145,7 @@ fun SampleSpinner(
                         },
                         text = {
                             Text(
-                                text = entry.name,
+                                text = entry.category,
                                 modifier = Modifier
                                     .wrapContentWidth()
                                     .align(Alignment.Start),
@@ -163,23 +168,3 @@ fun SampleSpinner(
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun SpinnerSample_Preview() {
-    MaterialTheme {
-        val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
-
-        SampleSpinner(
-            myData,
-            preselected = myData[1],
-            onSelectionChanged = { },
-            modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-data class MyData(
-    val id: Int,
-    val name: String
-)

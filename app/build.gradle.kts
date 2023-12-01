@@ -77,6 +77,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.1.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
