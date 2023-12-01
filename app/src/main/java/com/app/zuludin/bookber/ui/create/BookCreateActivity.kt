@@ -16,10 +16,10 @@ import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
+import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
-import com.app.zuludin.bookber.ui.create.components.ShowBookInformation
 import com.app.zuludin.bookber.util.ViewModelFactory
 import java.io.ByteArrayOutputStream
 
@@ -41,8 +41,10 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = "Create"
 
+        bookId = intent.extras?.getString("BOOK_ID")
+
         binding.bookQuoteInfoCompose.setContent {
-            ShowBookInformation { title, author, imageUri ->
+            BookInformation(isBookAvailable = bookId != null) { title, author, imageUri ->
                 val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
                 val stream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
@@ -86,10 +88,6 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                 )
             }
         }
-
-        bookId = intent.extras?.getString("BOOK_ID")
-
-
     }
 
     override fun showImage(uri: Uri?) {

@@ -43,7 +43,18 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.util.getImageUri
 
 @Composable
-fun BookEmptyInformation() {
+fun BookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?) -> Unit) {
+    var showBookInfo by remember { mutableStateOf(isBookAvailable) }
+
+    if (showBookInfo) {
+        ShowBookInformation(onSaveBook)
+    } else {
+        BookEmptyInformation { showBookInfo = !showBookInfo }
+    }
+}
+
+@Composable
+fun BookEmptyInformation(inputBook: () -> Unit) {
     Card(shape = RoundedCornerShape(0.dp)) {
         Box(
             modifier = Modifier
@@ -54,7 +65,8 @@ fun BookEmptyInformation() {
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.clickable { inputBook() },
             ) {
                 Image(
                     modifier = Modifier.size(48.dp),
