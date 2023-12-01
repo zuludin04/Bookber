@@ -21,9 +21,6 @@
             android:name=".ui.create.BookCreateActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.detail.BookDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.dashboard.DashboardActivity"
             android:exported="true">
             <intent-filter>

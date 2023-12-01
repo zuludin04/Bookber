@@ -20,9 +20,6 @@ data class BookEntity(
     @ColumnInfo(name = "author")
     var author: String = "",
 
-    @ColumnInfo(name = "genre")
-    var genre: String = "",
-
     @ColumnInfo(name = "categoryId")
     var categoryId: String = "",
 )
