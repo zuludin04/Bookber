@@ -45,17 +45,19 @@ import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 @Composable
 fun SaveQuoteConfirmDialog(
     viewModel: BookCreateViewModel,
+    quote: String,
     onDismissRequest: () -> Unit,
-    onSaveQuote: (String) -> Unit
+    onSaveQuote: (String, String) -> Unit
 ) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+    var authorField by remember { mutableStateOf(TextFieldValue("")) }
+    var selectedCategoryId by remember { mutableStateOf("") }
     val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -68,13 +70,13 @@ fun SaveQuoteConfirmDialog(
                 }
             }
 
-            Text(text = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.")
+            Text(text = quote)
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = text,
-                onValueChange = { text = it },
+                value = authorField,
+                onValueChange = { authorField = it },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
@@ -90,11 +92,16 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
                 preselected = CategoryEntity(category = "Select Category"),
-                onSelectionChanged = {},
+                onSelectionChanged = {
+                    selectedCategoryId = it.id
+                },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick = { onSaveQuote(text.text) }, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { onSaveQuote(authorField.text, selectedCategoryId) },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = "Save")
             }
         }

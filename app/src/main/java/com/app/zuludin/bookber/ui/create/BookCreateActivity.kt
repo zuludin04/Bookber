@@ -69,24 +69,27 @@ class BookCreateActivity : AppCompatActivity() {
 
         binding.quoteInputCompose.setContent {
             var showCustomDialog by remember { mutableStateOf(false) }
+            var quote by remember { mutableStateOf("") }
 
             QuoteInputField {
+                quote = it
                 showCustomDialog = true
             }
             if (showCustomDialog) {
                 SaveQuoteConfirmDialog(
                     viewModel = viewModel,
+                    quote = quote,
                     onDismissRequest = {
                         showCustomDialog = !showCustomDialog
                     },
-                    onSaveQuote = { text ->
-                        val quote = QuoteEntity(
-                            quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
-                            author = text,
-                            categoryId = "1",
-                            bookId = ""
+                    onSaveQuote = { author, categoryId ->
+                        val q = QuoteEntity(
+                            quotes = quote,
+                            author = author,
+                            categoryId = categoryId,
+                            bookId = bookId ?: ""
                         )
-                        viewModel.saveQuote(quote)
+                        viewModel.saveQuote(q)
                         showCustomDialog = !showCustomDialog
                         Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
                     }

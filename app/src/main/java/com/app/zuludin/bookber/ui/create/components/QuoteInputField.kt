@@ -19,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -41,10 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.zuludin.bookber.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: () -> Unit) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: (String) -> Unit) {
+    var quoteField by remember { mutableStateOf(TextFieldValue("")) }
 
     Card(shape = RoundedCornerShape(0.dp), elevation = CardDefaults.cardElevation(4.dp)) {
         Row(
@@ -55,9 +53,9 @@ fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: () -> Unit) {
         ) {
             TextField(
                 modifier = Modifier.weight(5f),
-                value = text,
+                value = quoteField,
                 onValueChange = {
-                    text = it
+                    quoteField = it
                 },
                 placeholder = { Text(text = "Input Quote") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -87,7 +85,7 @@ fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: () -> Unit) {
                     .weight(1f)
                     .clip(CircleShape)
                     .background(colorResource(id = R.color.colorAccent))
-                    .clickable { onSaveQuote() },
+                    .clickable { onSaveQuote(quoteField.text) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Filled.Send, contentDescription = null)
