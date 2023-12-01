@@ -1,7 +1,6 @@
 package com.app.zuludin.bookber.ui.create
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
@@ -19,11 +18,10 @@ import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
-import com.app.zuludin.bookber.ui.create.components.SelectedImageListener
 import com.app.zuludin.bookber.util.ViewModelFactory
 import java.io.ByteArrayOutputStream
 
-class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
+class BookCreateActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookCreateBinding
     private val viewModel: BookCreateViewModel by viewModels {
@@ -88,9 +86,5 @@ class BookCreateActivity : AppCompatActivity(), SelectedImageListener {
                 )
             }
         }
-    }
-
-    override fun showImage(uri: Uri?) {
-
     }
 }
