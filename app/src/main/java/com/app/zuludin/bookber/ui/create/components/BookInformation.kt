@@ -44,7 +44,7 @@ fun BookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?)
     var showBookInfo by remember { mutableStateOf(isBookAvailable) }
 
     if (showBookInfo) {
-        ShowBookInformation(onSaveBook)
+        ShowBookInformation(isBookAvailable, onSaveBook)
     } else {
         BookEmptyInformation { showBookInfo = !showBookInfo }
     }
@@ -77,13 +77,14 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 }
 
 @Composable
-fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
+fun ShowBookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?) -> Unit) {
     var titleField by remember { mutableStateOf(TextFieldValue("")) }
     var authorField by remember { mutableStateOf(TextFieldValue("")) }
     val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
+    var bookAvailability by remember { mutableStateOf(isBookAvailable) }
 
     Card(shape = RoundedCornerShape(0.dp), modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.padding(16.dp)) {
@@ -156,11 +157,16 @@ fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    onClick = { onSaveBook(titleField.text, authorField.text, imageUri) },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Save")
+                if (!bookAvailability) {
+                    Button(
+                        onClick = {
+                            onSaveBook(titleField.text, authorField.text, imageUri)
+                            bookAvailability = !bookAvailability
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Save")
+                    }
                 }
             }
         }
