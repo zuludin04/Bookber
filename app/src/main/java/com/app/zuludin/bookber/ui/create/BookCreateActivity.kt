@@ -11,13 +11,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.zuludin.bookber.BookberApplication
+import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
+import com.app.zuludin.bookber.ui.quote.QuoteAdapter
 import com.app.zuludin.bookber.util.ViewModelFactory
 import java.io.ByteArrayOutputStream
 
@@ -89,6 +92,26 @@ class BookCreateActivity : AppCompatActivity() {
                     }
                 )
             }
+        }
+
+        val quoteAdapter = QuoteAdapter()
+
+        viewModel.getQuotes().observe(this) { result ->
+            if (result != null) {
+                when (result) {
+                    is Result.Error -> {}
+                    Result.Loading -> {}
+                    is Result.Success -> {
+                        quoteAdapter.setBookStore(result.data)
+                    }
+                }
+            }
+        }
+
+        binding.rvQuoteInput.apply {
+            layoutManager = LinearLayoutManager(this@BookCreateActivity)
+            setHasFixedSize(true)
+            adapter = quoteAdapter
         }
     }
 }

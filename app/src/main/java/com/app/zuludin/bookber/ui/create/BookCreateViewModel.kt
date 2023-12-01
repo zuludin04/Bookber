@@ -57,7 +57,7 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
 
     private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
-    fun getDetailBook(bookId: String) = repository.loadBookDetail(bookId)
+    fun getQuotes() = repository.loadAllQuotes()
 
     fun saveBook(book: BookEntity) {
         viewModelScope.launch {
