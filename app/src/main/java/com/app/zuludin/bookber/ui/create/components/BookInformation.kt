@@ -1,8 +1,6 @@
 package com.app.zuludin.bookber.ui.create.components
 
 import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.util.getImageUri
 
 @Composable
 fun BookInformation(isBookAvailable: Boolean, onSaveBook: (String, String, Uri?) -> Unit) {
@@ -85,24 +82,8 @@ fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
     var authorField by remember { mutableStateOf(TextFieldValue("")) }
     val myData = listOf(MyData(0, "Apples"), MyData(1, "Bananas"), MyData(2, "Kiwis"))
 
-    val context = LocalContext.current
-    var uri = getImageUri(context)
-
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-
-//    val imagePicker = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.PickVisualMedia(),
-//        onResult = { uri ->
-//            imageUri = uri
-//        }
-//    )
-
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
-            if (it) {
-                imageUri = uri
-            }
-        }
+    var showPickImageSheet by remember { mutableStateOf(false) }
 
     Card(shape = RoundedCornerShape(0.dp), modifier = Modifier.fillMaxWidth()) {
         Box(modifier = Modifier.padding(16.dp)) {
@@ -116,13 +97,7 @@ fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
                             .width(100.dp)
                             .height(150.dp)
                             .clickable {
-//                                imagePicker.launch(
-//                                    PickVisualMediaRequest(
-//                                        mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly
-//                                    )
-//                                )
-                                uri = getImageUri(context)
-                                launcher.launch(uri)
+                                showPickImageSheet = true
                             }
                     ) {
                         if (imageUri != null) {
@@ -152,6 +127,17 @@ fun ShowBookInformation(onSaveBook: (String, String, Uri?) -> Unit) {
                                     .height(150.dp)
                             )
                         }
+                    }
+
+                    if (showPickImageSheet) {
+                        PickImageBottomSheet(
+                            onDismiss = {
+                                showPickImageSheet = !showPickImageSheet
+                            },
+                            onSelectImage = { uri ->
+                                imageUri = uri
+                            }
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
