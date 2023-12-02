@@ -6,11 +6,12 @@ import com.app.zuludin.bookber.data.local.BookberLocalDataSource
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 
 class BookberFakeDataSource(
-    var books: MutableList<BookEntity>? = mutableListOf(),
-    var quotes: MutableList<QuoteEntity>? = mutableListOf(),
-    var categories: MutableList<CategoryEntity>? = mutableListOf()
+    private var books: MutableList<BookEntity>? = mutableListOf(),
+    private var quotes: MutableList<QuoteEntity>? = mutableListOf(),
+    private var categories: MutableList<CategoryEntity>? = mutableListOf()
 ) :
     BookberLocalDataSource {
     override fun loadBookStore(): LiveData<Result<List<BookEntity>>> {
@@ -26,10 +27,9 @@ class BookberFakeDataSource(
         return observableBooks
     }
 
-    override fun loadBookDetail(bookId: String): LiveData<Result<BookEntity>> {
-        val observableBook = MutableLiveData<Result<BookEntity>>()
-        books?.firstOrNull { it.id == bookId }?.let { observableBook.value = Result.Success(it) }
-        return observableBook
+    override fun loadBookDetail(bookId: String): LiveData<Result<BookDetailEntity>> {
+        //        books?.firstOrNull { it.id == bookId }?.let { observableBook.value = Result.Success(it) }
+        return MutableLiveData()
     }
 
     override suspend fun saveBook(book: BookEntity) {

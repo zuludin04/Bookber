@@ -16,7 +16,7 @@ class BookDaoTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val sampleBook = BookEntity(title = "Title 1", genre = "Genre 1")
+    private val sampleBook = BookEntity(title = "Title 1", author = "Genre 1")
 
     private lateinit var database: BookberDatabase
     private lateinit var dao: BookDao
