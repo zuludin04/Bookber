@@ -30,12 +30,13 @@ import java.util.UUID
 class BookCreateActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookCreateBinding
+    private var bookEntity: BookEntity? = null
+    private var bookId: String? = null
+    private var isFromQuote = BookInfoState.ADD_QUOTE
+
     private val viewModel: BookCreateViewModel by viewModels {
         ViewModelFactory.getInstance(application as BookberApplication)
     }
-
-    private var bookId: String = ""
-    private var isFromQuote = BookInfoState.ADD_QUOTE
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,36 +48,59 @@ class BookCreateActivity : AppCompatActivity() {
         supportActionBar?.title = "Create"
 
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
-        bookId = intent.extras?.getString("BOOK_ID") ?: UUID.randomUUID().toString()
+        bookId = intent.extras?.getString("BOOK_ID")
+
+        val quoteAdapter = QuoteAdapter()
+
+        if (bookId != null) {
+            viewModel.start(bookId!!)
+            bookId = UUID.randomUUID().toString()
+        } else {
+            binding.bookQuoteInfoCompose.setContent {
+                BookInformation(
+                    viewModel = viewModel,
+                    bookState = isFromQuote
+                ) { title, author, categoryId, imageUri ->
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    val bytes = stream.toByteArray()
+                    val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+                    val book = BookEntity(
+                        id = bookId!!,
+                        title = title,
+                        author = author,
+                        cover = bookCoverImage,
+                        categoryId = categoryId
+                    )
+                    viewModel.saveBook(book)
+                    isFromQuote = BookInfoState.DETAIL_BOOK
+                    binding.bookQuoteInfoCompose.visibility = View.VISIBLE
+                    Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
+                    binding.quoteInputCompose.visibility = View.VISIBLE
+                }
+            }
+            bookId = UUID.randomUUID().toString()
+            viewModel.getCurrentQuotes(bookId!!).observe(this) { result ->
+                if (result != null) {
+                    when (result) {
+                        is Result.Error -> {}
+                        Result.Loading -> {}
+                        is Result.Success -> {
+                            quoteAdapter.setBookStore(result.data)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isFromQuote == BookInfoState.DETAIL_BOOK) {
+            bookEntity = intent.getParcelableExtra("BOOK_ENTITY")
+        }
 
         binding.quoteInputCompose.visibility =
             if (isFromQuote == BookInfoState.ADD_BOOK) View.GONE else View.VISIBLE
-
-        binding.bookQuoteInfoCompose.setContent {
-            BookInformation(
-                viewModel = viewModel,
-                bookState = isFromQuote
-            ) { title, author, categoryId, imageUri ->
-                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-                val stream = ByteArrayOutputStream()
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                val bytes = stream.toByteArray()
-                val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
-
-                val book = BookEntity(
-                    id = bookId,
-                    title = title,
-                    author = author,
-                    cover = bookCoverImage,
-                    categoryId = categoryId
-                )
-                viewModel.saveBook(book)
-                isFromQuote = BookInfoState.DETAIL_BOOK
-                binding.bookQuoteInfoCompose.visibility = View.VISIBLE
-                Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
-                binding.quoteInputCompose.visibility = View.VISIBLE
-            }
-        }
 
         binding.quoteInputCompose.setContent {
             var showCustomDialog by remember { mutableStateOf(false) }
@@ -98,7 +122,7 @@ class BookCreateActivity : AppCompatActivity() {
                             quotes = quote,
                             author = author,
                             categoryId = categoryId,
-                            bookId = bookId
+                            bookId = bookId!!
                         )
                         viewModel.saveQuote(q)
                         showCustomDialog = !showCustomDialog
@@ -108,17 +132,36 @@ class BookCreateActivity : AppCompatActivity() {
             }
         }
 
-        val quoteAdapter = QuoteAdapter()
-
-        viewModel.getQuotes(bookId).observe(this) { result ->
+        viewModel.bookDetail.observe(this) { result ->
             if (result != null) {
-                when (result) {
-                    is Result.Error -> {}
-                    Result.Loading -> {}
-                    is Result.Success -> {
-                        quoteAdapter.setBookStore(result.data)
+                binding.bookQuoteInfoCompose.setContent {
+                    BookInformation(
+                        viewModel = viewModel,
+                        bookState = isFromQuote
+                    ) { title, author, categoryId, imageUri ->
+                        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                        val stream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                        val bytes = stream.toByteArray()
+                        val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+                        val book = BookEntity(
+                            id = bookId!!,
+                            title = title,
+                            author = author,
+                            cover = bookCoverImage,
+                            categoryId = categoryId
+                        )
+                        viewModel.saveBook(book)
+                        isFromQuote = BookInfoState.DETAIL_BOOK
+                        binding.bookQuoteInfoCompose.visibility = View.VISIBLE
+                        Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
+                        binding.quoteInputCompose.visibility = View.VISIBLE
+                        viewModel.start(bookId!!)
                     }
                 }
+
+                quoteAdapter.setBookStore(result.quotes)
             }
         }
 

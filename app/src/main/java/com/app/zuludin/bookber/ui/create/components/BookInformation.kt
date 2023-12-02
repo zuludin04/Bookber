@@ -90,11 +90,20 @@ fun ShowBookInformation(
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
-    var titleField by remember { mutableStateOf(TextFieldValue("")) }
-    var authorField by remember { mutableStateOf(TextFieldValue("")) }
+    val bookDetail by viewModel.bookDetail.observeAsState()
+
+    var titleField by remember {
+        mutableStateOf(TextFieldValue(bookDetail?.bookEntity?.title ?: ""))
+    }
+    var authorField by remember {
+        mutableStateOf(TextFieldValue(bookDetail?.bookEntity?.author ?: ""))
+    }
     var selectedCategoryId by remember { mutableStateOf("") }
 
     val categories by viewModel.bookCategories.observeAsState(initial = emptyList())
+    val preselectCategory = if (bookState == BookInfoState.DETAIL_BOOK) CategoryEntity(
+        category = bookDetail?.category?.category ?: ""
+    ) else CategoryEntity(category = "Select Category")
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
@@ -111,9 +120,10 @@ fun ShowBookInformation(
                         modifier = Modifier
                             .width(100.dp)
                             .height(150.dp)
-                            .clickable {
-                                showPickImageSheet = true
-                            }
+                            .clickable(
+                                enabled = bookAvailability != BookInfoState.DETAIL_BOOK,
+                                onClick = { showPickImageSheet = true }
+                            )
                     ) {
                         if (imageUri != null) {
                             val painter = rememberAsyncImagePainter(
@@ -158,15 +168,24 @@ fun ShowBookInformation(
                     Spacer(modifier = Modifier.width(16.dp))
 
                     Column {
-                        TextField(value = titleField, onValueChange = { titleField = it })
-                        TextField(value = authorField, onValueChange = { authorField = it })
+                        TextField(
+                            value = titleField,
+                            onValueChange = { titleField = it },
+                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                        )
+                        TextField(
+                            value = authorField,
+                            onValueChange = { authorField = it },
+                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                        )
                         SampleSpinner(
                             modifier = Modifier.fillMaxWidth(),
                             list = categories,
-                            preselected = CategoryEntity(category = "Select Category"),
+                            preselected = preselectCategory,
                             onSelectionChanged = {
                                 selectedCategoryId = it.id
                             },
+                            enableSpinner = bookAvailability != BookInfoState.DETAIL_BOOK
                         )
                     }
                 }

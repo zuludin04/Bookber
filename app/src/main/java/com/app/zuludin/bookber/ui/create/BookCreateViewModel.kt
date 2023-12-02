@@ -4,16 +4,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.launch
 
 class BookCreateViewModel(private val repository: BookberRepository) : ViewModel() {
+
+    private val _bookId = MutableLiveData<String>()
+
+    private val _bookDetail = _bookId.switchMap { id ->
+        repository.loadBookDetail(id).map { computeResult(it) }
+    }
+    val bookDetail: LiveData<BookDetailEntity?> = _bookDetail
 
     private val _quoteCategories: LiveData<List<CategoryEntity>> =
         repository.loadCategoriesByType(1).distinctUntilChanged()
@@ -24,6 +33,8 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         repository.loadCategoriesByType(2).distinctUntilChanged()
             .switchMap { observeBookCategory(it) }
     val bookCategories: LiveData<List<CategoryEntity>> = _bookCategories
+
+    fun getCurrentQuotes(bookId: String) = repository.loadQuotesByBook(bookId)
 
     private fun observeQuoteCategories(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {
         val result = MutableLiveData<List<CategoryEntity>>()
@@ -57,7 +68,17 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
 
     private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
-    fun getQuotes(bookId: String) = repository.loadQuotesByBook(bookId)
+    fun start(bookId: String) {
+        _bookId.value = bookId
+    }
+
+    private fun computeResult(bookResult: Result<BookDetailEntity>): BookDetailEntity? {
+        return if (bookResult is Result.Success) {
+            bookResult.data
+        } else {
+            null
+        }
+    }
 
     fun saveBook(book: BookEntity) {
         viewModelScope.launch {

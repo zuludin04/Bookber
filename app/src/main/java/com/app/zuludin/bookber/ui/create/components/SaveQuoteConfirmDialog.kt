@@ -113,7 +113,8 @@ fun SampleSpinner(
     list: List<CategoryEntity>,
     preselected: CategoryEntity,
     onSelectionChanged: (myData: CategoryEntity) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enableSpinner: Boolean = true
 ) {
 
     var selected by remember { mutableStateOf(preselected) }
@@ -170,6 +171,7 @@ fun SampleSpinner(
                 .background(Color.Transparent)
                 .padding(10.dp)
                 .clickable(
+                    enabled = enableSpinner,
                     onClick = { expanded = !expanded }
                 )
         )
