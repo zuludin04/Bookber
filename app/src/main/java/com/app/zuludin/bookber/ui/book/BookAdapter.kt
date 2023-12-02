@@ -1,11 +1,14 @@
 package com.app.zuludin.bookber.ui.book
 
+import android.content.Intent
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.ui.book.components.BookItem
+import com.app.zuludin.bookber.ui.create.BookCreateActivity
+import com.app.zuludin.bookber.util.enums.BookInfoState
 
 class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
     private val books = ArrayList<BookEntity>()
@@ -33,7 +36,10 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
         fun bindView(bookEntity: BookEntity) {
             composeView.setContent {
                 BookItem(book = bookEntity, {
-
+                    val context = composeView.context
+                    val intent = Intent(context, BookCreateActivity::class.java)
+                    intent.putExtra("INPUT_SOURCE", BookInfoState.DETAIL_BOOK)
+                    context.startActivity(intent)
                 })
             }
         }
