@@ -39,6 +39,7 @@ class BookAdapter : RecyclerView.Adapter<BookAdapter.BookViewHolder>() {
                     val context = composeView.context
                     val intent = Intent(context, BookCreateActivity::class.java)
                     intent.putExtra("INPUT_SOURCE", BookInfoState.DETAIL_BOOK)
+                    intent.putExtra("BOOK_ID", it.id)
                     context.startActivity(intent)
                 })
             }

@@ -25,6 +25,7 @@ import com.app.zuludin.bookber.ui.quote.QuoteAdapter
 import com.app.zuludin.bookber.util.ViewModelFactory
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import java.io.ByteArrayOutputStream
+import java.util.UUID
 
 class BookCreateActivity : AppCompatActivity() {
 
@@ -33,7 +34,7 @@ class BookCreateActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(application as BookberApplication)
     }
 
-    private var bookId: String? = null
+    private var bookId: String = ""
     private var isFromQuote = BookInfoState.ADD_QUOTE
 
     @Suppress("DEPRECATION")
@@ -46,7 +47,7 @@ class BookCreateActivity : AppCompatActivity() {
         supportActionBar?.title = "Create"
 
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
-        bookId = intent.extras?.getString("BOOK_ID")
+        bookId = intent.extras?.getString("BOOK_ID") ?: UUID.randomUUID().toString()
 
         binding.quoteInputCompose.visibility =
             if (isFromQuote == BookInfoState.ADD_BOOK) View.GONE else View.VISIBLE
@@ -63,6 +64,7 @@ class BookCreateActivity : AppCompatActivity() {
                 val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
 
                 val book = BookEntity(
+                    id = bookId,
                     title = title,
                     author = author,
                     cover = bookCoverImage,
@@ -96,7 +98,7 @@ class BookCreateActivity : AppCompatActivity() {
                             quotes = quote,
                             author = author,
                             categoryId = categoryId,
-                            bookId = bookId ?: ""
+                            bookId = bookId
                         )
                         viewModel.saveQuote(q)
                         showCustomDialog = !showCustomDialog
@@ -108,7 +110,7 @@ class BookCreateActivity : AppCompatActivity() {
 
         val quoteAdapter = QuoteAdapter()
 
-        viewModel.getQuotes().observe(this) { result ->
+        viewModel.getQuotes(bookId).observe(this) { result ->
             if (result != null) {
                 when (result) {
                     is Result.Error -> {}
