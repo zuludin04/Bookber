@@ -5,13 +5,14 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 
 interface BookberLocalDataSource {
     fun loadBookStore(): LiveData<Result<List<BookEntity>>>
 
     fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>>
 
-    fun loadBookDetail(bookId: String): LiveData<Result<BookEntity>>
+    fun loadBookDetail(bookId: String): LiveData<Result<BookDetailEntity>>
 
     suspend fun saveBook(book: BookEntity)
 

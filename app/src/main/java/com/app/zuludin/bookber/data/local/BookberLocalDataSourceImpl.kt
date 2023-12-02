@@ -7,6 +7,7 @@ import com.app.zuludin.bookber.data.Result.Success
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.room.BookDao
 import com.app.zuludin.bookber.data.local.room.CategoryDao
 import com.app.zuludin.bookber.data.local.room.QuoteDao
@@ -32,7 +33,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override fun loadBookDetail(bookId: String): LiveData<Result<BookEntity>> {
+    override fun loadBookDetail(bookId: String): LiveData<Result<BookDetailEntity>> {
         return bookDao.loadBookDetail(bookId).map {
             Success(it)
         }

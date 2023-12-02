@@ -1,10 +1,13 @@
 package com.app.zuludin.bookber.data.local.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 @Entity
 data class BookEntity(
     @PrimaryKey
@@ -22,4 +25,4 @@ data class BookEntity(
 
     @ColumnInfo(name = "categoryId")
     var categoryId: String = "",
-)
+) : Parcelable
