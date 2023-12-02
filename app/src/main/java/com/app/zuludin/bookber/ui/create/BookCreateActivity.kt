@@ -48,6 +48,9 @@ class BookCreateActivity : AppCompatActivity() {
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
         bookId = intent.extras?.getString("BOOK_ID")
 
+        binding.quoteInputCompose.visibility =
+            if (isFromQuote == BookInfoState.ADD_BOOK) View.GONE else View.VISIBLE
+
         binding.bookQuoteInfoCompose.setContent {
             BookInformation(
                 viewModel = viewModel,
@@ -69,6 +72,7 @@ class BookCreateActivity : AppCompatActivity() {
                 isFromQuote = BookInfoState.DETAIL_BOOK
                 binding.bookQuoteInfoCompose.visibility = View.VISIBLE
                 Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
+                binding.quoteInputCompose.visibility = View.VISIBLE
             }
         }
 
