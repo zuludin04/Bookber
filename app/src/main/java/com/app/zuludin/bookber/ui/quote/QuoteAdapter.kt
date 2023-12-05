@@ -7,7 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
 
-class QuoteAdapter(private val onDeleteQuote: (String) -> Unit) :
+class QuoteAdapter(
+    private val onDeleteQuote: (String) -> Unit,
+    private val onRemoveFromBook: (QuoteEntity) -> Unit
+) :
     RecyclerView.Adapter<QuoteAdapter.QuoteViewHolder>() {
     private val quotes = ArrayList<QuoteEntity>()
 
@@ -18,7 +21,11 @@ class QuoteAdapter(private val onDeleteQuote: (String) -> Unit) :
     override fun getItemCount(): Int = quotes.size
 
     override fun onBindViewHolder(holder: QuoteViewHolder, position: Int) {
-        holder.bindView(quotes[position]) { onDeleteQuote(it) }
+        holder.bindView(
+            quotes[position],
+            onDeleteQuote = { onDeleteQuote(it) },
+            onRemoveFromBook = { onRemoveFromBook(it) }
+        )
     }
 
     fun setBookStore(books: List<QuoteEntity>) {
@@ -31,9 +38,17 @@ class QuoteAdapter(private val onDeleteQuote: (String) -> Unit) :
 
     inner class QuoteViewHolder(private val composeView: ComposeView) :
         RecyclerView.ViewHolder(composeView) {
-        fun bindView(quote: QuoteEntity, onDeleteQuote: (String) -> Unit) {
+        fun bindView(
+            quote: QuoteEntity,
+            onDeleteQuote: (String) -> Unit,
+            onRemoveFromBook: (QuoteEntity) -> Unit
+        ) {
             composeView.setContent {
-                QuoteItem(quote = quote, onDeleteQuote = { onDeleteQuote(it) })
+                QuoteItem(
+                    quote = quote,
+                    onDeleteQuote = { onDeleteQuote(it) },
+                    onRemoveFromBook = { onRemoveFromBook(it) }
+                )
             }
         }
     }

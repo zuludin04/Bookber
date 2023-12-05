@@ -28,7 +28,8 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 fun QuoteManagementSheet(
     quote: QuoteEntity,
     onDismissRequest: () -> Unit,
-    onDeleteQuote: (quoteId: String) -> Unit
+    onDeleteQuote: (quoteId: String) -> Unit,
+    onRemoveFromBook: (quote: QuoteEntity) -> Unit,
 ) {
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -52,12 +53,22 @@ fun QuoteManagementSheet(
             Divider(modifier = Modifier.padding(vertical = 16.dp))
             QuoteManagementMenu(iconId = R.drawable.ic_edit, title = "Edit", onClickMenu = {})
             QuoteManagementMenu(iconId = R.drawable.ic_share, title = "Share", onClickMenu = {})
-            QuoteManagementMenu(iconId = R.drawable.ic_add, title = "Add to Book", onClickMenu = {})
-            QuoteManagementMenu(
-                iconId = R.drawable.ic_remove,
-                title = "Remove from Book",
-                onClickMenu = {}
-            )
+            if (quote.bookId != "") {
+                QuoteManagementMenu(
+                    iconId = R.drawable.ic_remove,
+                    title = "Remove from Book",
+                    onClickMenu = {
+                        onDismissRequest()
+                        onRemoveFromBook(quote)
+                    }
+                )
+            } else {
+                QuoteManagementMenu(
+                    iconId = R.drawable.ic_add,
+                    title = "Add to Book",
+                    onClickMenu = {}
+                )
+            }
             QuoteManagementMenu(
                 iconId = R.drawable.ic_delete,
                 title = "Delete",

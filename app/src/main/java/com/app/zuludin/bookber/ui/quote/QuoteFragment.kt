@@ -39,9 +39,14 @@ class QuoteFragment : Fragment() {
 
     private fun setupView() {
         binding.emptyLayout.emptyMessage.text = getString(R.string.empty_quote)
-        quoteAdapter = QuoteAdapter(onDeleteQuote = {
-            viewModel.deleteQuote(it)
-        })
+        quoteAdapter = QuoteAdapter(
+            onDeleteQuote = {
+                viewModel.deleteQuote(it)
+            },
+            onRemoveFromBook = {
+                viewModel.removeFromBook(it)
+            }
+        )
     }
 
     private fun setupViewModel() {

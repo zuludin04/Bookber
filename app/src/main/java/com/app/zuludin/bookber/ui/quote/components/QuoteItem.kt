@@ -35,6 +35,7 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 fun QuoteItem(
     quote: QuoteEntity,
     onDeleteQuote: (String) -> Unit,
+    onRemoveFromBook: (QuoteEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showQuoteManagement by remember { mutableStateOf(false) }
@@ -81,7 +82,8 @@ fun QuoteItem(
         QuoteManagementSheet(
             quote = quote,
             onDismissRequest = { showQuoteManagement = !showQuoteManagement },
-            onDeleteQuote = { onDeleteQuote(it) }
+            onDeleteQuote = { onDeleteQuote(it) },
+            onRemoveFromBook = { onRemoveFromBook(it) }
         )
     }
 }
@@ -94,6 +96,7 @@ fun QuoteItemPreview() {
             quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
             author = "Jurgen Klopp"
         ),
-        onDeleteQuote = {}
+        onDeleteQuote = {},
+        onRemoveFromBook = {}
     )
 }

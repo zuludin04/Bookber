@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,7 +51,11 @@ class BookCreateActivity : AppCompatActivity() {
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
         bookId = intent.extras?.getString("BOOK_ID")
 
-        val quoteAdapter = QuoteAdapter(onDeleteQuote = { viewModel.deleteQuote(it) })
+        val quoteAdapter =
+            QuoteAdapter(
+                onDeleteQuote = { viewModel.deleteQuote(it) },
+                onRemoveFromBook = { viewModel.removeFromBook(it) }
+            )
 
         if (bookId != null) {
             viewModel.start(bookId!!)
@@ -105,6 +110,7 @@ class BookCreateActivity : AppCompatActivity() {
         binding.quoteInputCompose.setContent {
             var showCustomDialog by remember { mutableStateOf(false) }
             var quote by remember { mutableStateOf("") }
+            val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
 
             QuoteInputField {
                 quote = it
@@ -112,7 +118,7 @@ class BookCreateActivity : AppCompatActivity() {
             }
             if (showCustomDialog) {
                 SaveQuoteConfirmDialog(
-                    viewModel = viewModel,
+                    categories = categories,
                     quote = quote,
                     onDismissRequest = {
                         showCustomDialog = !showCustomDialog
