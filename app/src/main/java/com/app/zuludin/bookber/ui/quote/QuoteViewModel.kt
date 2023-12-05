@@ -65,4 +65,10 @@ class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
     }
 
     fun loadQuotes() = repository.loadAllQuotes()
+
+    fun deleteQuote(quoteId: String) {
+        viewModelScope.launch {
+            repository.deleteQuoteById(quoteId)
+        }
+    }
 }

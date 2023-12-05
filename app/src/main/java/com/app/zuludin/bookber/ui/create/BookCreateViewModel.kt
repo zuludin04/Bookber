@@ -97,4 +97,10 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
             repository.saveQuote(quote)
         }
     }
+
+    fun deleteQuote(quoteId: String) {
+        viewModelScope.launch {
+            repository.deleteQuoteById(quoteId)
+        }
+    }
 }

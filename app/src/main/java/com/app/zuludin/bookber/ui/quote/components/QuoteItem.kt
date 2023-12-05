@@ -34,6 +34,7 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 @Composable
 fun QuoteItem(
     quote: QuoteEntity,
+    onDeleteQuote: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showQuoteManagement by remember { mutableStateOf(false) }
@@ -79,7 +80,8 @@ fun QuoteItem(
     if (showQuoteManagement) {
         QuoteManagementSheet(
             quote = quote,
-            onDismissRequest = { showQuoteManagement = !showQuoteManagement }
+            onDismissRequest = { showQuoteManagement = !showQuoteManagement },
+            onDeleteQuote = { onDeleteQuote(it) }
         )
     }
 }
@@ -91,6 +93,7 @@ fun QuoteItemPreview() {
         quote = QuoteEntity(
             quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
             author = "Jurgen Klopp"
-        )
+        ),
+        onDeleteQuote = {}
     )
 }
