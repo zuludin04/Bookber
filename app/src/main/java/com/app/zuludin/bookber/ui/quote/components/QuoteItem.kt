@@ -19,6 +19,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,15 +42,16 @@ import de.charlex.compose.RevealSwipe
 @Composable
 fun QuoteItem(
     quote: QuoteEntity,
-    onClick: (QuoteEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showQuoteManagement by remember { mutableStateOf(false) }
+
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = modifier
-            .clickable { onClick(quote) }
+            .clickable { showQuoteManagement = true }
             .padding(10.dp)
             .fillMaxWidth()
     ) {
@@ -79,13 +84,18 @@ fun QuoteItem(
             )
         }
     }
+    if (showQuoteManagement) {
+        QuoteManagementSheet(
+            quote = quote,
+            onDismissRequest = { showQuoteManagement = !showQuoteManagement }
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeableQuoteItem(
     quote: QuoteEntity,
-    onClick: (QuoteEntity) -> Unit,
     onRemoveFromBook: () -> Unit,
     onDeleteQuote: () -> Unit
 ) {
@@ -121,7 +131,7 @@ fun SwipeableQuoteItem(
         backgroundCardEndColor = colorResource(id = R.color.colorAccent),
         backgroundCardModifier = Modifier.padding(10.dp)
     ) {
-        QuoteItem(quote = quote, onClick = onClick)
+        QuoteItem(quote = quote)
     }
 }
 
@@ -132,5 +142,5 @@ fun QuoteItemPreview() {
         quote = QuoteEntity(
             quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
             author = "Jurgen Klopp"
-        ), onClick = {})
+        ))
 }
