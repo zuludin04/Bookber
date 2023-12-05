@@ -39,7 +39,7 @@ class QuoteFragment : Fragment() {
 
     private fun setupView() {
         binding.emptyLayout.emptyMessage.text = getString(R.string.empty_quote)
-        quoteAdapter = QuoteAdapter(false)
+        quoteAdapter = QuoteAdapter()
 
     }
 

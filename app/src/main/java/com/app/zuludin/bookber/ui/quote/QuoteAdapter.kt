@@ -6,10 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
-import com.app.zuludin.bookber.ui.quote.components.SwipeableQuoteItem
 
-class QuoteAdapter(private val isSwipeable: Boolean) :
-    RecyclerView.Adapter<QuoteAdapter.QuoteViewHolder>() {
+class QuoteAdapter : RecyclerView.Adapter<QuoteAdapter.QuoteViewHolder>() {
     private val quotes = ArrayList<QuoteEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuoteViewHolder {
@@ -19,7 +17,7 @@ class QuoteAdapter(private val isSwipeable: Boolean) :
     override fun getItemCount(): Int = quotes.size
 
     override fun onBindViewHolder(holder: QuoteViewHolder, position: Int) {
-        holder.bindView(quotes[position], isSwipeable)
+        holder.bindView(quotes[position])
     }
 
     fun setBookStore(books: List<QuoteEntity>) {
@@ -32,18 +30,9 @@ class QuoteAdapter(private val isSwipeable: Boolean) :
 
     inner class QuoteViewHolder(private val composeView: ComposeView) :
         RecyclerView.ViewHolder(composeView) {
-        fun bindView(quote: QuoteEntity, isSwipeable: Boolean) {
+        fun bindView(quote: QuoteEntity) {
             composeView.setContent {
-                if (isSwipeable) {
-                    SwipeableQuoteItem(
-                        quote = quote,
-                        onClick = {},
-                        onRemoveFromBook = { },
-                        onDeleteQuote = {}
-                    )
-                } else {
-                    QuoteItem(quote = quote, onClick = {})
-                }
+                QuoteItem(quote = quote)
             }
         }
     }

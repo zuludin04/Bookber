@@ -50,7 +50,7 @@ class BookCreateActivity : AppCompatActivity() {
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
         bookId = intent.extras?.getString("BOOK_ID")
 
-        val quoteAdapter = QuoteAdapter(true)
+        val quoteAdapter = QuoteAdapter()
 
         if (bookId != null) {
             viewModel.start(bookId!!)
