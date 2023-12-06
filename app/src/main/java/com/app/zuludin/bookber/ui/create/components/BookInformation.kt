@@ -42,12 +42,14 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 import com.app.zuludin.bookber.util.enums.BookInfoState
 
 @Composable
 fun BookInformation(
     viewModel: BookCreateViewModel,
+    bookDetail: BookDetailEntity?,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
@@ -56,7 +58,7 @@ fun BookInformation(
     if (showBookInfo == BookInfoState.ADD_QUOTE) {
         BookEmptyInformation { showBookInfo = BookInfoState.ADD_BOOK }
     } else {
-        ShowBookInformation(viewModel, showBookInfo, onSaveBook)
+        ShowBookInformation(viewModel, bookDetail, showBookInfo, onSaveBook)
     }
 }
 
@@ -89,6 +91,7 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 @Composable
 fun ShowBookInformation(
     viewModel: BookCreateViewModel,
+    bookDetail: BookDetailEntity?,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
@@ -137,8 +140,7 @@ fun ShowBookInformation(
                         } else {
                             if (imageField != "") {
                                 val byteArray = Base64.decode(imageField, Base64.DEFAULT)
-                                val bitmap =
-                                    BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 
                                 Image(
                                     bitmap = bitmap.asImageBitmap(),

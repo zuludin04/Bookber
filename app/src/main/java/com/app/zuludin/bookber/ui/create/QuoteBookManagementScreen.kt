@@ -11,6 +11,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,6 +28,8 @@ fun QuoteBookManagementScreen(
     viewModel: BookCreateViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
+    val bookDetail by viewModel.bookDetail.observeAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -43,6 +47,7 @@ fun QuoteBookManagementScreen(
         Column(modifier = Modifier.padding(it)) {
             BookInformation(
                 viewModel = viewModel,
+                bookDetail = bookDetail,
                 bookState = convertStringToBookState(bookState),
                 onSaveBook = { title, author, categoryId, imageUri ->
 
