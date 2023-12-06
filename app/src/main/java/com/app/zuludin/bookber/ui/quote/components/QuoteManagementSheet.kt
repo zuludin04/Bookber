@@ -32,6 +32,7 @@ fun QuoteManagementSheet(
     onDismissRequest: () -> Unit,
     onDeleteQuote: (quoteId: String) -> Unit,
     onRemoveFromBook: (quote: QuoteEntity) -> Unit,
+    onEditQuote: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -55,7 +56,13 @@ fun QuoteManagementSheet(
                 }
             }
             Divider(modifier = Modifier.padding(vertical = 16.dp))
-//            QuoteManagementMenu(iconId = R.drawable.ic_edit, title = "Edit", onClickMenu = {})
+            QuoteManagementMenu(
+                iconId = R.drawable.ic_edit,
+                title = "Edit",
+                onClickMenu = {
+                    onEditQuote()
+                    onDismissRequest()
+                })
             QuoteManagementMenu(
                 iconId = R.drawable.ic_share,
                 title = "Share",
@@ -83,13 +90,13 @@ fun QuoteManagementSheet(
                         onRemoveFromBook(quote)
                     }
                 )
-            } /*else {
+            } else {
                 QuoteManagementMenu(
                     iconId = R.drawable.ic_add,
                     title = "Add to Book",
                     onClickMenu = {}
                 )
-            }*/
+            }
             QuoteManagementMenu(
                 iconId = R.drawable.ic_delete,
                 title = "Delete",

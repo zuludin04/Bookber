@@ -17,11 +17,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
+import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -57,6 +62,8 @@ fun QuoteScreen(
     ) {
         val categories by viewModel.categories.observeAsState(initial = emptyList())
         val quotes by viewModel.quotes.observeAsState(initial = emptyList())
+        var showEditDialog by remember { mutableStateOf(false) }
+        var editQuote by remember { mutableStateOf(QuoteEntity()) }
 
         Column(
             modifier = Modifier
@@ -67,8 +74,25 @@ fun QuoteScreen(
 
             LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                 items(quotes) { quote ->
-                    QuoteItem(quote = quote, onDeleteQuote = {}, onRemoveFromBook = {})
+                    QuoteItem(
+                        quote = quote,
+                        onDeleteQuote = {},
+                        onRemoveFromBook = {},
+                        onEditQuote = {
+                            editQuote = quote
+                            showEditDialog = true
+                        }
+                    )
                 }
+            }
+
+            if (showEditDialog) {
+                SaveQuoteConfirmDialog(
+                    categories = categories,
+                    quote = editQuote.quotes,
+                    onDismissRequest = { showEditDialog = !showEditDialog },
+                    onSaveQuote = { title, author -> }
+                )
             }
         }
     }

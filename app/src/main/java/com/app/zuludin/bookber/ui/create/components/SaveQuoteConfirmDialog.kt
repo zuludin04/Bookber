@@ -89,9 +89,7 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
                 preselected = CategoryEntity(category = "Select Category"),
-                onSelectionChanged = {
-                    selectedCategoryId = it.id
-                },
+                onSelectionChanged = { selectedCategoryId = it.id },
             )
             Spacer(modifier = Modifier.height(24.dp))
 

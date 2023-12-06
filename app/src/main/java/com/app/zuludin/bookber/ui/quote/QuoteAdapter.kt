@@ -47,7 +47,8 @@ class QuoteAdapter(
                 QuoteItem(
                     quote = quote,
                     onDeleteQuote = { onDeleteQuote(it) },
-                    onRemoveFromBook = { onRemoveFromBook(it) }
+                    onRemoveFromBook = { onRemoveFromBook(it) },
+                    onEditQuote = {}
                 )
             }
         }

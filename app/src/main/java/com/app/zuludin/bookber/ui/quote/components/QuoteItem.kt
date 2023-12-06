@@ -36,6 +36,7 @@ fun QuoteItem(
     quote: QuoteEntity,
     onDeleteQuote: (String) -> Unit,
     onRemoveFromBook: (QuoteEntity) -> Unit,
+    onEditQuote: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showQuoteManagement by remember { mutableStateOf(false) }
@@ -83,7 +84,8 @@ fun QuoteItem(
             quote = quote,
             onDismissRequest = { showQuoteManagement = !showQuoteManagement },
             onDeleteQuote = { onDeleteQuote(it) },
-            onRemoveFromBook = { onRemoveFromBook(it) }
+            onRemoveFromBook = { onRemoveFromBook(it) },
+            onEditQuote = { onEditQuote() }
         )
     }
 }
@@ -97,6 +99,7 @@ fun QuoteItemPreview() {
             author = "Jurgen Klopp"
         ),
         onDeleteQuote = {},
-        onRemoveFromBook = {}
+        onRemoveFromBook = {},
+        onEditQuote = {}
     )
 }
