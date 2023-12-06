@@ -13,8 +13,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.app.zuludin.bookber.ui.quote.QuoteScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun BookberNavGraph(
@@ -41,7 +43,7 @@ fun BookberNavGraph(
                 currentRoute = currentRoute,
                 navigationActions = navActions
             ) {
-
+                QuoteScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
             }
         }
     }

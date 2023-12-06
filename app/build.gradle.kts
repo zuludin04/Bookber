@@ -67,7 +67,7 @@ dependencies {
     val androidXTestExtKotlinRunnerVersion = "1.1.4-alpha04"
     val androidXTestRulesVersion = "1.4.1-alpha04"
     val accompanistVersion = "0.23.0"
-    val navigationVersion = "2.7.5"
+    val navigationVersion = "2.5.0"
 
     val composeBom = platform("androidx.compose:compose-bom:2022.10.00")
     implementation(composeBom)
