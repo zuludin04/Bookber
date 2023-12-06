@@ -64,6 +64,7 @@ class BookCreateActivity : AppCompatActivity() {
             binding.bookQuoteInfoCompose.setContent {
                 BookInformation(
                     viewModel = viewModel,
+                    bookDetail = null,
                     bookState = isFromQuote
                 ) { title, author, categoryId, imageUri ->
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
@@ -143,6 +144,7 @@ class BookCreateActivity : AppCompatActivity() {
                 binding.bookQuoteInfoCompose.setContent {
                     BookInformation(
                         viewModel = viewModel,
+                        bookDetail = null,
                         bookState = isFromQuote
                     ) { title, author, categoryId, imageUri ->
                         val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)

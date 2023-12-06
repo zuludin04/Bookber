@@ -9,14 +9,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_ID_ARG
+import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_STATE_ARG
 import com.app.zuludin.bookber.ui.book.BookScreen
 import com.app.zuludin.bookber.ui.category.CategoryScreen
+import com.app.zuludin.bookber.ui.create.QuoteBookManagementScreen
 import com.app.zuludin.bookber.ui.quote.QuoteScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
+import com.app.zuludin.bookber.util.enums.BookInfoState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -45,13 +51,35 @@ fun BookberNavGraph(
                 currentRoute = currentRoute,
                 navigationActions = navActions
             ) {
-                QuoteScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
+                QuoteScreen(
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onAddQuote = {
+                        navActions.navigateToBookQuoteManagement(
+                            BookInfoState.ADD_QUOTE.name,
+                            null
+                        )
+                    }
+                )
             }
         }
 
         composable(BookberDestination.BOOKS_ROUTE) {
             BookberModalDrawer(drawerState, currentRoute, navActions) {
-                BookScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
+                BookScreen(
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onAddBook = {
+                        navActions.navigateToBookQuoteManagement(
+                            BookInfoState.ADD_BOOK.name,
+                            null
+                        )
+                    },
+                    onDetailBook = {
+                        navActions.navigateToBookQuoteManagement(
+                            BookInfoState.DETAIL_BOOK.name,
+                            it.id
+                        )
+                    }
+                )
             }
         }
 
@@ -59,6 +87,22 @@ fun BookberNavGraph(
             BookberModalDrawer(drawerState, currentRoute, navActions) {
                 CategoryScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
             }
+        }
+
+        composable(
+            BookberDestination.BOOK_QUOTE_MANAGEMENT_ROUTE,
+            arguments = listOf(
+                navArgument(BOOK_STATE_ARG) { type = NavType.StringType },
+                navArgument(BOOK_ID_ARG) { type = NavType.StringType; nullable = true }
+            )
+        ) { entry ->
+            val state = entry.arguments?.getString(BOOK_STATE_ARG)
+            val bookId = entry.arguments?.getString(BOOK_ID_ARG)
+            QuoteBookManagementScreen(
+                onBack = { navController.popBackStack() },
+                bookId = bookId,
+                bookState = state!!
+            )
         }
     }
 }

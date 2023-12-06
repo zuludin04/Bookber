@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
+import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.ui.book.components.BookItem
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -28,6 +29,8 @@ import com.app.zuludin.bookber.util.getViewModelFactory
 @Composable
 fun BookScreen(
     openDrawer: () -> Unit,
+    onAddBook: () -> Unit,
+    onDetailBook: (BookEntity) -> Unit,
     viewModel: BookViewModel = viewModel(factory = getViewModelFactory())
 ) {
     Scaffold(
@@ -43,7 +46,7 @@ fun BookScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = onAddBook) {
                 Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
             }
         }
@@ -59,8 +62,8 @@ fun BookScreen(
             CategoryFilterChips(categories = categories)
 
             LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(books) { quote ->
-                    BookItem(book = quote, onClick = {})
+                items(books) { book ->
+                    BookItem(book = book, onClick = { onDetailBook(book) })
                 }
             }
         }

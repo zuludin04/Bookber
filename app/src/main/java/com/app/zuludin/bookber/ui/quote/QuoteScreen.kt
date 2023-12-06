@@ -29,6 +29,7 @@ import com.app.zuludin.bookber.util.getViewModelFactory
 @Composable
 fun QuoteScreen(
     openDrawer: () -> Unit,
+    onAddQuote: () -> Unit,
     viewModel: QuoteViewModel = viewModel(factory = getViewModelFactory())
 ) {
     Scaffold(
@@ -49,7 +50,7 @@ fun QuoteScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = onAddQuote) {
                 Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
             }
         }
