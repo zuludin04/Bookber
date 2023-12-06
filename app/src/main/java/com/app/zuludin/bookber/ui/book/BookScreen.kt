@@ -10,7 +10,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -39,11 +38,6 @@ fun BookScreen(
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
-                    }
-                },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(Icons.Filled.Search, contentDescription = null)
                     }
                 }
             )
