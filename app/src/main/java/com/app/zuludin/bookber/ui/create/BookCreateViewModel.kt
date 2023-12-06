@@ -1,6 +1,5 @@
 package com.app.zuludin.bookber.ui.create
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -34,6 +33,11 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         repository.loadCategoriesByType(2).distinctUntilChanged()
             .switchMap { observeBookCategory(it) }
     val bookCategories: LiveData<List<CategoryEntity>> = _bookCategories
+
+    val bookTitle = MutableLiveData<String>()
+    val bookAuthor = MutableLiveData<String>()
+    val bookCategory = MutableLiveData<CategoryEntity>()
+    val bookImage = MutableLiveData<String>()
 
     fun getCurrentQuotes(bookId: String) = repository.loadQuotesByBook(bookId)
 
@@ -75,6 +79,10 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
 
     private fun computeResult(bookResult: Result<BookDetailEntity>): BookDetailEntity? {
         return if (bookResult is Result.Success) {
+            bookTitle.value = bookResult.data.bookEntity.title
+            bookAuthor.value = bookResult.data.bookEntity.author
+            bookCategory.value = bookResult.data.category
+            bookImage.value = bookResult.data.bookEntity.cover
             bookResult.data
         } else {
             null

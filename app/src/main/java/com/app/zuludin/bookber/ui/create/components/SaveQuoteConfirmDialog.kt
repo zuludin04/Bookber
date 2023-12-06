@@ -120,7 +120,7 @@ fun SampleSpinner(
     Box(modifier = modifier) {
         Column {
             TextField(
-                value = selected.category,
+                value = preselected.category,
                 onValueChange = { },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },

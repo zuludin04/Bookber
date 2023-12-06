@@ -10,16 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.util.enums.BookInfoState
@@ -33,12 +26,6 @@ fun QuoteBookManagementScreen(
     viewModel: BookCreateViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
-    val bookDetail by viewModel.bookDetail.observeAsState()
-
-    var titleField by remember {
-        mutableStateOf(bookDetail?.bookEntity?.title ?: "")
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,15 +43,10 @@ fun QuoteBookManagementScreen(
         Column(modifier = Modifier.padding(it)) {
             BookInformation(
                 viewModel = viewModel,
-                bookDetail = bookDetail,
                 bookState = convertStringToBookState(bookState),
-                onSaveBook = { title, author, categoryId, imageUri -> }
-            )
-            Text(text = bookDetail?.bookEntity?.title ?: "null")
-            TextField(
-                value = bookDetail?.bookEntity?.title ?: "",
-                onValueChange = { text -> titleField = text },
-                enabled = false
+                onSaveBook = { title, author, categoryId, imageUri ->
+
+                }
             )
         }
     }
