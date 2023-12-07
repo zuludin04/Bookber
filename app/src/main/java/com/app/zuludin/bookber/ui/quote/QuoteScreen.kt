@@ -77,8 +77,8 @@ fun QuoteScreen(
                 items(quotes) { quote ->
                     QuoteItem(
                         quote = quote,
-                        onDeleteQuote = {},
-                        onRemoveFromBook = {},
+                        onDeleteQuote = { quoteId -> viewModel.deleteQuote(quoteId) },
+                        onRemoveFromBook = { q -> viewModel.removeFromBook(q) },
                         onEditQuote = {
                             editQuote = quote
                             showEditDialog = true
