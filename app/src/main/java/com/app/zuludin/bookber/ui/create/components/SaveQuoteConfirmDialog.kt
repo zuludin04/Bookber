@@ -38,17 +38,21 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SaveQuoteConfirmDialog(
+    isUpdate: Boolean,
+    quote: QuoteEntity?,
+    category: CategoryEntity? = null,
     categories: List<CategoryEntity>,
-    quote: String,
-    onDismissRequest: () -> Unit,
-    onSaveQuote: (String, String) -> Unit
+    onSaveQuote: (quote: String, author: String, categoryId: String) -> Unit,
+    onDismissRequest: () -> Unit
 ) {
-    var authorField by remember { mutableStateOf(TextFieldValue("")) }
-    var selectedCategoryId by remember { mutableStateOf("") }
+    var authorField by remember { mutableStateOf(TextFieldValue(quote?.author ?: "")) }
+    var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quotes ?: "")) }
+    var selectedCategoryId by remember { mutableStateOf(quote?.categoryId ?: "") }
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -61,13 +65,33 @@ fun SaveQuoteConfirmDialog(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Save Quote", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                Text(
+                    text = if (isUpdate) "Update Quote" else "Save Quote",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
                 IconButton(onClick = { onDismissRequest() }) {
                     Icon(Icons.Filled.Close, contentDescription = null)
                 }
             }
 
-            Text(text = quote)
+            if (isUpdate) {
+                TextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    value = quoteField,
+                    onValueChange = { quoteField = it },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
+                        disabledContainerColor = Color.White,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                    ),
+                    shape = RoundedCornerShape(10.dp)
+                )
+            } else {
+                Text(text = quote?.quotes ?: "")
+            }
             Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
@@ -88,13 +112,15 @@ fun SaveQuoteConfirmDialog(
             SampleSpinner(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
-                preselected = CategoryEntity(category = "Select Category"),
+                preselected = category ?: CategoryEntity(category = "Select Category"),
                 onSelectionChanged = { selectedCategoryId = it.id },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { onSaveQuote(authorField.text, selectedCategoryId) },
+                onClick = {
+                    onSaveQuote(quoteField.text, authorField.text, selectedCategoryId)
+                },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Save")
@@ -118,7 +144,7 @@ fun SampleSpinner(
     Box(modifier = modifier) {
         Column {
             TextField(
-                value = preselected.category,
+                value = selected.category,
                 onValueChange = { },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },

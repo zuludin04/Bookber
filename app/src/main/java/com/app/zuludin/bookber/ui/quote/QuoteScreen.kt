@@ -62,6 +62,7 @@ fun QuoteScreen(
     ) {
         val categories by viewModel.categories.observeAsState(initial = emptyList())
         val quotes by viewModel.quotes.observeAsState(initial = emptyList())
+
         var showEditDialog by remember { mutableStateOf(false) }
         var editQuote by remember { mutableStateOf(QuoteEntity()) }
 
@@ -88,10 +89,18 @@ fun QuoteScreen(
 
             if (showEditDialog) {
                 SaveQuoteConfirmDialog(
+                    isUpdate = true,
+                    quote = editQuote,
+//                    category = CategoryEntity(category = "Horror"),
                     categories = categories,
-                    quote = editQuote.quotes,
+                    onSaveQuote = { quote, author, categoryId ->
+                        editQuote.quotes = quote
+                        editQuote.author = author
+                        editQuote.categoryId = categoryId
+                        viewModel.updateQuote(editQuote)
+                        showEditDialog = false
+                    },
                     onDismissRequest = { showEditDialog = !showEditDialog },
-                    onSaveQuote = { title, author -> }
                 )
             }
         }

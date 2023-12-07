@@ -118,24 +118,24 @@ class BookCreateActivity : AppCompatActivity() {
                 showCustomDialog = true
             }
             if (showCustomDialog) {
-                SaveQuoteConfirmDialog(
-                    categories = categories,
-                    quote = quote,
-                    onDismissRequest = {
-                        showCustomDialog = !showCustomDialog
-                    },
-                    onSaveQuote = { author, categoryId ->
-                        val q = QuoteEntity(
-                            quotes = quote,
-                            author = author,
-                            categoryId = categoryId,
-                            bookId = bookId!!
-                        )
-                        viewModel.saveQuote(q)
-                        showCustomDialog = !showCustomDialog
-                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
-                    }
-                )
+//                SaveQuoteConfirmDialog(
+//                    categories = categories,
+//                    quote = quote,
+//                    onDismissRequest = {
+//                        showCustomDialog = !showCustomDialog
+//                    },
+//                    onSaveQuote = { author, categoryId ->
+//                        val q = QuoteEntity(
+//                            quotes = quote,
+//                            author = author,
+//                            categoryId = categoryId,
+//                            bookId = bookId!!
+//                        )
+//                        viewModel.saveQuote(q)
+//                        showCustomDialog = !showCustomDialog
+//                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
+//                    }
+//                )
             }
         }
 

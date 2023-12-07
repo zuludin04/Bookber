@@ -78,4 +78,10 @@ class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
             repository.updateQuote(quote)
         }
     }
+
+    fun updateQuote(quote: QuoteEntity) {
+        viewModelScope.launch {
+            repository.updateQuote(quote)
+        }
+    }
 }
