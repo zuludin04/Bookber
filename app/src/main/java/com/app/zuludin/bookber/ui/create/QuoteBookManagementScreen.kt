@@ -46,11 +46,12 @@ fun QuoteBookManagementScreen(
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
     val context = LocalContext.current
-
     val bookInfoState = convertStringToBookState(bookState)
+
     var showSaveQuoteDialog by remember { mutableStateOf(false) }
     var showQuoteInput by remember { mutableStateOf(bookInfoState != BookInfoState.ADD_BOOK) }
     var quoteInput by remember { mutableStateOf("") }
+    var currentBookId by remember { mutableStateOf(bookId ?: "") }
 
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
     val quotes by viewModel.bookQuotes.observeAsState(initial = emptyList())
@@ -96,13 +97,15 @@ fun QuoteBookManagementScreen(
                         cover = bookCoverImage,
                         categoryId = categoryId
                     )
+
+                    currentBookId = book.id
                     viewModel.saveBook(book)
                     showQuoteInput = true
                 }
             )
 
             LazyColumn {
-                items(mutableQuotes) { quote ->
+                items(quotes) { quote ->
                     QuoteItem(
                         quote = quote,
                         onDeleteQuote = {},
@@ -122,11 +125,11 @@ fun QuoteBookManagementScreen(
                             quotes = quote,
                             author = author,
                             categoryId = categoryId,
-                            bookId = ""
+                            bookId = currentBookId
                         )
 
                         viewModel.saveQuote(newQuote)
-                        mutableQuotes.add(newQuote)
+                        viewModel.bookQuotes.value?.add(newQuote)
                         showSaveQuoteDialog = false
                     },
                     onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },
