@@ -1,5 +1,8 @@
 package com.app.zuludin.bookber.ui.create
 
+import android.graphics.Bitmap
+import android.provider.MediaStore
+import android.util.Base64
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,7 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
@@ -29,7 +34,9 @@ import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
+import java.io.ByteArrayOutputStream
 
+@Suppress("DEPRECATION")
 @Composable
 fun QuoteBookManagementScreen(
     onBack: () -> Unit,
@@ -38,7 +45,11 @@ fun QuoteBookManagementScreen(
     viewModel: BookCreateViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
-    var showQuoteField by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val bookInfoState = convertStringToBookState(bookState)
+    var showSaveQuoteDialog by remember { mutableStateOf(false) }
+    var showQuoteInput by remember { mutableStateOf(bookInfoState != BookInfoState.ADD_BOOK) }
     var quoteInput by remember { mutableStateOf("") }
 
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
@@ -59,36 +70,34 @@ fun QuoteBookManagementScreen(
             )
         },
         bottomBar = {
-            QuoteInputField(onSaveQuote = {
-                quoteInput = it
-                showQuoteField = true
-//                SaveQuoteConfirmDialog(
-//                    categories = categories,
-//                    quote = quote,
-//                    onDismissRequest = {
-//                        showCustomDialog = !showCustomDialog
-//                    },
-//                    onSaveQuote = { author, categoryId ->
-//                        val q = QuoteEntity(
-//                            quotes = quote,
-//                            author = author,
-//                            categoryId = categoryId,
-//                            bookId = bookId!!
-//                        )
-//                        viewModel.saveQuote(q)
-//                        showCustomDialog = !showCustomDialog
-//                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
-//                    }
-//                )
-            })
+            if (showQuoteInput) {
+                QuoteInputField(onSaveQuote = {
+                    quoteInput = it
+                    showSaveQuoteDialog = true
+                })
+            }
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
             BookInformation(
                 viewModel = viewModel,
-                bookState = convertStringToBookState(bookState),
+                bookState = bookInfoState,
                 onSaveBook = { title, author, categoryId, imageUri ->
+                    val bitmap =
+                        MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+                    val stream = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    val bytes = stream.toByteArray()
+                    val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
 
+                    val book = BookEntity(
+                        title = title,
+                        author = author,
+                        cover = bookCoverImage,
+                        categoryId = categoryId
+                    )
+                    viewModel.saveBook(book)
+                    showQuoteInput = true
                 }
             )
 
@@ -98,12 +107,12 @@ fun QuoteBookManagementScreen(
                         quote = quote,
                         onDeleteQuote = {},
                         onRemoveFromBook = {},
-                        onEditQuote = { }
+                        onEditQuote = {}
                     )
                 }
             }
 
-            if (showQuoteField) {
+            if (showSaveQuoteDialog) {
                 SaveQuoteConfirmDialog(
                     isUpdate = false,
                     quote = QuoteEntity(quotes = quoteInput),
@@ -118,9 +127,9 @@ fun QuoteBookManagementScreen(
 
                         viewModel.saveQuote(newQuote)
                         mutableQuotes.add(newQuote)
-                        showQuoteField = false
+                        showSaveQuoteDialog = false
                     },
-                    onDismissRequest = { showQuoteField = !showQuoteField },
+                    onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },
                 )
             }
         }
