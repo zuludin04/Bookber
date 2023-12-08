@@ -4,25 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.launch
 
 class BookCreateViewModel(private val repository: BookberRepository) : ViewModel() {
 
     private val _bookId = MutableLiveData<String>()
-
-    private val _bookDetail = _bookId.switchMap { id ->
-        repository.loadBookDetail(id).map { computeResult(it) }
-    }
-    val bookDetail: LiveData<BookDetailEntity?> = _bookDetail
 
     private val _quoteCategories: LiveData<List<CategoryEntity>> =
         repository.loadCategoriesByType(1).distinctUntilChanged()
@@ -33,6 +26,8 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         repository.loadCategoriesByType(2).distinctUntilChanged()
             .switchMap { observeBookCategory(it) }
     val bookCategories: LiveData<List<CategoryEntity>> = _bookCategories
+
+    val bookQuotes = MutableLiveData<MutableList<QuoteEntity>>()
 
     val bookTitle = MutableLiveData<String>()
     val bookAuthor = MutableLiveData<String>()
@@ -75,17 +70,17 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
 
     fun start(bookId: String) {
         _bookId.value = bookId
-    }
 
-    private fun computeResult(bookResult: Result<BookDetailEntity>): BookDetailEntity? {
-        return if (bookResult is Result.Success) {
-            bookTitle.value = bookResult.data.bookEntity.title
-            bookAuthor.value = bookResult.data.bookEntity.author
-            bookCategory.value = bookResult.data.category
-            bookImage.value = bookResult.data.bookEntity.cover
-            bookResult.data
-        } else {
-            null
+        viewModelScope.launch {
+            repository.loadBookDetail(bookId).let { result ->
+                if (result is Result.Success) {
+                    bookTitle.value = result.data.bookEntity.title
+                    bookAuthor.value = result.data.bookEntity.author
+                    bookCategory.value = result.data.category
+                    bookImage.value = result.data.bookEntity.cover
+                    bookQuotes.value = result.data.quotes.toMutableList()
+                }
+            }
         }
     }
 

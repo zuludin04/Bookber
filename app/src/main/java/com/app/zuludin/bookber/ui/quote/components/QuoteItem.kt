@@ -71,7 +71,7 @@ fun QuoteItem(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "- ${quote.author} --- ${quote.categoryId}",
+                text = "- ${quote.author}",
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

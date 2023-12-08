@@ -42,14 +42,12 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 import com.app.zuludin.bookber.util.enums.BookInfoState
 
 @Composable
 fun BookInformation(
     viewModel: BookCreateViewModel,
-    bookDetail: BookDetailEntity?,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
@@ -58,7 +56,7 @@ fun BookInformation(
     if (showBookInfo == BookInfoState.ADD_QUOTE) {
         BookEmptyInformation { showBookInfo = BookInfoState.ADD_BOOK }
     } else {
-        ShowBookInformation(viewModel, bookDetail, showBookInfo, onSaveBook)
+        ShowBookInformation(viewModel, showBookInfo, onSaveBook)
     }
 }
 
@@ -91,7 +89,6 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 @Composable
 fun ShowBookInformation(
     viewModel: BookCreateViewModel,
-    bookDetail: BookDetailEntity?,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
@@ -106,30 +103,44 @@ fun ShowBookInformation(
     var bookAvailability by remember { mutableStateOf(bookState) }
 
     Card(shape = RoundedCornerShape(0.dp), modifier = Modifier.fillMaxWidth()) {
-        Box(modifier = Modifier.padding(16.dp)) {
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Card(
-                        shape = RoundedCornerShape(5.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
-                        modifier = Modifier
-                            .width(100.dp)
-                            .height(150.dp)
-                            .clickable(
-                                enabled = bookAvailability != BookInfoState.DETAIL_BOOK,
-                                onClick = { showPickImageSheet = true }
-                            )
-                    ) {
-                        if (imageUri != null) {
-                            val painter = rememberAsyncImagePainter(
-                                ImageRequest
-                                    .Builder(LocalContext.current)
-                                    .data(data = imageUri)
-                                    .build()
-                            )
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Card(
+                    shape = RoundedCornerShape(5.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(150.dp)
+                        .clickable(
+                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK,
+                            onClick = { showPickImageSheet = true }
+                        )
+                ) {
+                    if (imageUri != null) {
+                        val painter = rememberAsyncImagePainter(
+                            ImageRequest
+                                .Builder(LocalContext.current)
+                                .data(data = imageUri)
+                                .build()
+                        )
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(5.dp))
+                                .width(100.dp)
+                                .height(150.dp)
+                        )
+                    } else {
+                        if (imageField != "") {
+                            val byteArray = Base64.decode(imageField, Base64.DEFAULT)
+                            val bitmap =
+                                BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+
                             Image(
-                                painter = painter,
+                                bitmap = bitmap.asImageBitmap(),
                                 contentDescription = null,
                                 contentScale = ContentScale.FillBounds,
                                 modifier = Modifier
@@ -138,84 +149,69 @@ fun ShowBookInformation(
                                     .height(150.dp)
                             )
                         } else {
-                            if (imageField != "") {
-                                val byteArray = Base64.decode(imageField, Base64.DEFAULT)
-                                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-
-                                Image(
-                                    bitmap = bitmap.asImageBitmap(),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.FillBounds,
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(5.dp))
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                )
-                            } else {
-                                Image(
-                                    painter = painterResource(id = R.drawable.book_example),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.FillBounds,
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(5.dp))
-                                        .width(100.dp)
-                                        .height(150.dp)
-                                )
-                            }
+                            Image(
+                                painter = painterResource(id = R.drawable.book_example),
+                                contentDescription = null,
+                                contentScale = ContentScale.FillBounds,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .width(100.dp)
+                                    .height(150.dp)
+                            )
                         }
-                    }
-
-                    if (showPickImageSheet) {
-                        PickImageBottomSheet(
-                            onDismiss = {
-                                showPickImageSheet = !showPickImageSheet
-                            },
-                            onSelectImage = { uri ->
-                                imageUri = uri
-                            }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Column {
-                        TextField(
-                            value = titleField,
-                            onValueChange = { viewModel.bookTitle.value = it },
-                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK
-                        )
-                        TextField(
-                            value = authorField,
-                            onValueChange = { viewModel.bookAuthor.value = it },
-                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK
-                        )
-                        SampleSpinner(
-                            modifier = Modifier.fillMaxWidth(),
-                            list = categories,
-                            preselected = categoryField,
-                            onSelectionChanged = { viewModel.bookCategory.value = it },
-                            enableSpinner = bookAvailability != BookInfoState.DETAIL_BOOK
-                        )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (bookAvailability == BookInfoState.ADD_BOOK) {
-                    Button(
-                        onClick = {
-                            onSaveBook(
-                                titleField,
-                                authorField,
-                                categoryField.id,
-                                imageUri
-                            )
-                            bookAvailability = BookInfoState.DETAIL_BOOK
+                if (showPickImageSheet) {
+                    PickImageBottomSheet(
+                        onDismiss = {
+                            showPickImageSheet = !showPickImageSheet
                         },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Save")
-                    }
+                        onSelectImage = { uri ->
+                            imageUri = uri
+                        }
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    TextField(
+                        value = titleField,
+                        onValueChange = { viewModel.bookTitle.value = it },
+                        enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                    )
+                    TextField(
+                        value = authorField,
+                        onValueChange = { viewModel.bookAuthor.value = it },
+                        enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                    )
+                    SampleSpinner(
+                        modifier = Modifier.fillMaxWidth(),
+                        list = categories,
+                        preselected = categoryField,
+                        onSelectionChanged = { viewModel.bookCategory.value = it },
+                        enableSpinner = bookAvailability != BookInfoState.DETAIL_BOOK
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (bookAvailability == BookInfoState.ADD_BOOK) {
+                Button(
+                    onClick = {
+                        onSaveBook(
+                            titleField,
+                            authorField,
+                            categoryField.id,
+                            imageUri
+                        )
+                        bookAvailability = BookInfoState.DETAIL_BOOK
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Save")
                 }
             }
         }

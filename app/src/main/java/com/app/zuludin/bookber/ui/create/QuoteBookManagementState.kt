@@ -20,5 +20,7 @@ class QuoteBookManagementState(bookId: String?, viewModel: BookCreateViewModel) 
         if (bookId != null) {
             viewModel.start(bookId)
         }
+
+
     }
 }

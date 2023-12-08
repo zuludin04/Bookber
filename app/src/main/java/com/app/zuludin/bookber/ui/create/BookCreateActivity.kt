@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -17,11 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
-import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.QuoteAdapter
 import com.app.zuludin.bookber.util.ViewModelFactory
 import com.app.zuludin.bookber.util.enums.BookInfoState
@@ -64,7 +61,6 @@ class BookCreateActivity : AppCompatActivity() {
             binding.bookQuoteInfoCompose.setContent {
                 BookInformation(
                     viewModel = viewModel,
-                    bookDetail = null,
                     bookState = isFromQuote
                 ) { title, author, categoryId, imageUri ->
                     val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
@@ -111,13 +107,13 @@ class BookCreateActivity : AppCompatActivity() {
         binding.quoteInputCompose.setContent {
             var showCustomDialog by remember { mutableStateOf(false) }
             var quote by remember { mutableStateOf("") }
-            val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
+//            val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
 
             QuoteInputField {
                 quote = it
                 showCustomDialog = true
             }
-            if (showCustomDialog) {
+//            if (showCustomDialog) {
 //                SaveQuoteConfirmDialog(
 //                    categories = categories,
 //                    quote = quote,
@@ -136,42 +132,41 @@ class BookCreateActivity : AppCompatActivity() {
 //                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
 //                    }
 //                )
-            }
+//            }
         }
 
-        viewModel.bookDetail.observe(this) { result ->
-            if (result != null) {
-                binding.bookQuoteInfoCompose.setContent {
-                    BookInformation(
-                        viewModel = viewModel,
-                        bookDetail = null,
-                        bookState = isFromQuote
-                    ) { title, author, categoryId, imageUri ->
-                        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-                        val stream = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                        val bytes = stream.toByteArray()
-                        val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
-
-                        val book = BookEntity(
-                            id = bookId!!,
-                            title = title,
-                            author = author,
-                            cover = bookCoverImage,
-                            categoryId = categoryId
-                        )
-                        viewModel.saveBook(book)
-                        isFromQuote = BookInfoState.DETAIL_BOOK
-                        binding.bookQuoteInfoCompose.visibility = View.VISIBLE
-                        Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
-                        binding.quoteInputCompose.visibility = View.VISIBLE
-                        viewModel.start(bookId!!)
-                    }
-                }
-
-                quoteAdapter.setBookStore(result.quotes)
-            }
-        }
+//        viewModel.bookDetail.observe(this) { result ->
+//            if (result != null) {
+//                binding.bookQuoteInfoCompose.setContent {
+//                    BookInformation(
+//                        viewModel = viewModel,
+//                        bookState = isFromQuote
+//                    ) { title, author, categoryId, imageUri ->
+//                        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+//                        val stream = ByteArrayOutputStream()
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+//                        val bytes = stream.toByteArray()
+//                        val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+//
+//                        val book = BookEntity(
+//                            id = bookId!!,
+//                            title = title,
+//                            author = author,
+//                            cover = bookCoverImage,
+//                            categoryId = categoryId
+//                        )
+//                        viewModel.saveBook(book)
+//                        isFromQuote = BookInfoState.DETAIL_BOOK
+//                        binding.bookQuoteInfoCompose.visibility = View.VISIBLE
+//                        Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
+//                        binding.quoteInputCompose.visibility = View.VISIBLE
+//                        viewModel.start(bookId!!)
+//                    }
+//                }
+//
+//                quoteAdapter.setBookStore(result.quotes)
+//            }
+//        }
 
         binding.rvQuoteInput.apply {
             layoutManager = LinearLayoutManager(this@BookCreateActivity)
