@@ -54,9 +54,7 @@ fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: (String) -> Unit
             TextField(
                 modifier = Modifier.weight(5f),
                 value = quoteField,
-                onValueChange = {
-                    quoteField = it
-                },
+                onValueChange = { quoteField = it },
                 placeholder = { Text(text = "Input Quote") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 keyboardActions = KeyboardActions(onDone = {}),
@@ -85,7 +83,10 @@ fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: (String) -> Unit
                     .weight(1f)
                     .clip(CircleShape)
                     .background(colorResource(id = R.color.colorAccent))
-                    .clickable { onSaveQuote(quoteField.text) },
+                    .clickable {
+                        onSaveQuote(quoteField.text)
+                        quoteField = TextFieldValue("")
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(Icons.Filled.Send, contentDescription = null)
