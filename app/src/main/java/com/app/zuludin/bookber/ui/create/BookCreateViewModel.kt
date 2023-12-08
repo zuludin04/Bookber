@@ -27,6 +27,7 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
             .switchMap { observeBookCategory(it) }
     val bookCategories: LiveData<List<CategoryEntity>> = _bookCategories
 
+    private val cacheBookQuotes = ArrayList<QuoteEntity>()
     val bookQuotes = MutableLiveData<MutableList<QuoteEntity>>()
 
     val bookTitle = MutableLiveData<String>()
@@ -79,6 +80,7 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
                     bookCategory.value = result.data.category
                     bookImage.value = result.data.bookEntity.cover
                     bookQuotes.value = result.data.quotes.toMutableList()
+                    cacheBookQuotes.addAll(result.data.quotes)
                 }
             }
         }
@@ -97,6 +99,7 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
     }
 
     fun saveQuote(quote: QuoteEntity) {
+        updateBookQuotes(quote)
         viewModelScope.launch {
             repository.saveQuote(quote)
         }
@@ -113,5 +116,10 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         viewModelScope.launch {
             repository.updateQuote(quote)
         }
+    }
+
+    private fun updateBookQuotes(quote: QuoteEntity) {
+        cacheBookQuotes.add(quote.copy())
+        bookQuotes.value = cacheBookQuotes
     }
 }
