@@ -21,7 +21,7 @@ class BookberRepositoryImpl(
         return localSource.loadBooksByCategory(categoryId)
     }
 
-    override fun loadBookDetail(bookId: String): LiveData<Result<BookDetailEntity>> {
+    override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
         return localSource.loadBookDetail(bookId)
     }
 
