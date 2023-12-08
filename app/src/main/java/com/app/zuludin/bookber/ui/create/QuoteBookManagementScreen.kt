@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
+import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -36,9 +38,12 @@ fun QuoteBookManagementScreen(
     viewModel: BookCreateViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
-    val showQuoteField = remember { mutableStateOf(true) }
+    var showQuoteField by remember { mutableStateOf(false) }
+    var quoteInput by remember { mutableStateOf("") }
+
+    val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
     val quotes by viewModel.bookQuotes.observeAsState(initial = emptyList())
-    val q = remember { quotes.toMutableStateList() }
+    val mutableQuotes = remember { quotes.toMutableStateList() }
 
     Scaffold(
         topBar = {
@@ -55,7 +60,26 @@ fun QuoteBookManagementScreen(
         },
         bottomBar = {
             QuoteInputField(onSaveQuote = {
-
+                quoteInput = it
+                showQuoteField = true
+//                SaveQuoteConfirmDialog(
+//                    categories = categories,
+//                    quote = quote,
+//                    onDismissRequest = {
+//                        showCustomDialog = !showCustomDialog
+//                    },
+//                    onSaveQuote = { author, categoryId ->
+//                        val q = QuoteEntity(
+//                            quotes = quote,
+//                            author = author,
+//                            categoryId = categoryId,
+//                            bookId = bookId!!
+//                        )
+//                        viewModel.saveQuote(q)
+//                        showCustomDialog = !showCustomDialog
+//                        Toast.makeText(this, "Success Save Quote", Toast.LENGTH_SHORT).show()
+//                    }
+//                )
             })
         }
     ) {
@@ -69,7 +93,7 @@ fun QuoteBookManagementScreen(
             )
 
             LazyColumn {
-                items(q) { quote ->
+                items(mutableQuotes) { quote ->
                     QuoteItem(
                         quote = quote,
                         onDeleteQuote = {},
@@ -77,6 +101,27 @@ fun QuoteBookManagementScreen(
                         onEditQuote = { }
                     )
                 }
+            }
+
+            if (showQuoteField) {
+                SaveQuoteConfirmDialog(
+                    isUpdate = false,
+                    quote = QuoteEntity(quotes = quoteInput),
+                    categories = quoteCategories,
+                    onSaveQuote = { quote, author, categoryId ->
+                        val newQuote = QuoteEntity(
+                            quotes = quote,
+                            author = author,
+                            categoryId = categoryId,
+                            bookId = ""
+                        )
+
+                        viewModel.saveQuote(newQuote)
+                        mutableQuotes.add(newQuote)
+                        showQuoteField = false
+                    },
+                    onDismissRequest = { showQuoteField = !showQuoteField },
+                )
             }
         }
     }
