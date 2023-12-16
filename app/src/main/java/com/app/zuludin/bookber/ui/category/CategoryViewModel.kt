@@ -11,7 +11,7 @@ import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.launch
 
-class CategoryTypeViewModel(private val repository: BookberRepository) : ViewModel() {
+class CategoryViewModel(private val repository: BookberRepository) : ViewModel() {
 
     private val _quoteCategories: LiveData<List<CategoryEntity>> =
         repository.loadCategoriesByType(1).distinctUntilChanged()

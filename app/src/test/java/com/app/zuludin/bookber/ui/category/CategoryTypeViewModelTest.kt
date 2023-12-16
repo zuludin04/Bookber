@@ -23,7 +23,7 @@ class CategoryTypeViewModelTest {
     @Mock
     private lateinit var repository: BookberRepository
 
-    private lateinit var viewModel: CategoryTypeViewModel
+    private lateinit var viewModel: CategoryViewModel
 
     private val quoteCategory1 = CategoryEntity(id = "1", category = "Quote Category 1", type = 1)
     private val quoteCategory2 = CategoryEntity(id = "2", category = "Quote Category 2", type = 1)
@@ -35,7 +35,7 @@ class CategoryTypeViewModelTest {
 
     @Before
     fun setup() {
-        viewModel = CategoryTypeViewModel(repository)
+        viewModel = CategoryViewModel(repository)
     }
 
     @Test

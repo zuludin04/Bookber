@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
@@ -42,7 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CategoryScreen(
     openDrawer: () -> Unit,
-    viewModel: CategoryTypeViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: CategoryViewModel = viewModel(factory = getViewModelFactory())
 ) {
     var tabIndex by remember { mutableIntStateOf(0) }
     val tabs = listOf("Quote", "Book")
@@ -62,7 +63,8 @@ fun CategoryScreen(
                     IconButton(onClick = openDrawer) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
                     }
-                }
+                },
+                elevation = 0.dp,
             )
         },
         floatingActionButton = {
@@ -76,12 +78,16 @@ fun CategoryScreen(
                 .padding(it)
                 .fillMaxWidth()
         ) {
-            TabRow(selectedTabIndex = tabIndex) {
+            TabRow(selectedTabIndex = tabIndex, containerColor = Color.White) {
                 tabs.fastForEachIndexed { index, title ->
-                    Tab(selected = tabIndex == index, onClick = {
-                        tabIndex = index
-                        coroutineScope.launch { pagerState.animateScrollToPage(tabIndex) }
-                    }) {
+                    Tab(
+                        selected = tabIndex == index,
+                        onClick = {
+                            tabIndex = index
+                            coroutineScope.launch { pagerState.animateScrollToPage(tabIndex) }
+                        },
+                        modifier = Modifier.padding(12.dp),
+                    ) {
                         Text(text = title)
                     }
                 }

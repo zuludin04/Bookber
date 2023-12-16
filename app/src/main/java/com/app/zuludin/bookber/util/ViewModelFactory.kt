@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.ui.book.BookViewModel
-import com.app.zuludin.bookber.ui.category.CategoryTypeViewModel
+import com.app.zuludin.bookber.ui.category.CategoryViewModel
 import com.app.zuludin.bookber.ui.create.BookCreateViewModel
 import com.app.zuludin.bookber.ui.dashboard.DashboardViewModel
 import com.app.zuludin.bookber.ui.quote.QuoteViewModel
@@ -23,8 +23,8 @@ class ViewModelFactory constructor(
             return QuoteViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(BookViewModel::class.java)) {
             return BookViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(CategoryTypeViewModel::class.java)) {
-            return CategoryTypeViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
+            return CategoryViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
