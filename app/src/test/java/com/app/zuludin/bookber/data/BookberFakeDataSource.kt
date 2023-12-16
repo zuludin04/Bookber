@@ -27,9 +27,9 @@ class BookberFakeDataSource(
         return observableBooks
     }
 
-    override fun loadBookDetail(bookId: String): LiveData<Result<BookDetailEntity>> {
+    override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
         //        books?.firstOrNull { it.id == bookId }?.let { observableBook.value = Result.Success(it) }
-        return MutableLiveData()
+        return Result.Success(BookDetailEntity(BookEntity(), emptyList(), CategoryEntity()))
     }
 
     override suspend fun saveBook(book: BookEntity) {
@@ -48,6 +48,10 @@ class BookberFakeDataSource(
         val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
         quotes?.let { observableQuotes.value = Result.Success(it) }
         return observableQuotes
+    }
+
+    override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
+
     }
 
     override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
