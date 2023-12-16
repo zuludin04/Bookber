@@ -6,7 +6,7 @@ import com.app.zuludin.bookber.BookberApplication
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.ui.book.BookViewModel
 import com.app.zuludin.bookber.ui.category.CategoryViewModel
-import com.app.zuludin.bookber.ui.create.BookCreateViewModel
+import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
 import com.app.zuludin.bookber.ui.dashboard.DashboardViewModel
 import com.app.zuludin.bookber.ui.quote.QuoteViewModel
 
@@ -17,8 +17,8 @@ class ViewModelFactory constructor(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
             return DashboardViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(BookCreateViewModel::class.java)) {
-            return BookCreateViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(QuoteBookManagementViewModel::class.java)) {
+            return QuoteBookManagementViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(QuoteViewModel::class.java)) {
             return QuoteViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(BookViewModel::class.java)) {

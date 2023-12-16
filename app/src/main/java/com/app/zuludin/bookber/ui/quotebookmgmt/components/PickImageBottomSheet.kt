@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create.components
+package com.app.zuludin.bookber.ui.quotebookmgmt.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

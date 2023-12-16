@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create
+package com.app.zuludin.bookber.ui.quotebookmgmt
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.launch
 
-class BookCreateViewModel(private val repository: BookberRepository) : ViewModel() {
+class QuoteBookManagementViewModel(private val repository: BookberRepository) : ViewModel() {
 
     private val _bookId = MutableLiveData<String>()
 
@@ -34,8 +34,6 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
     val bookAuthor = MutableLiveData<String>()
     val bookCategory = MutableLiveData<CategoryEntity>()
     val bookImage = MutableLiveData<String>()
-
-    fun getCurrentQuotes(bookId: String) = repository.loadQuotesByBook(bookId)
 
     private fun observeQuoteCategories(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {
         val result = MutableLiveData<List<CategoryEntity>>()
@@ -127,7 +125,7 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         }
     }
 
-    fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
+    private fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
         val result = ArrayList<QuoteEntity>()
         result.addAll(quotes)
 

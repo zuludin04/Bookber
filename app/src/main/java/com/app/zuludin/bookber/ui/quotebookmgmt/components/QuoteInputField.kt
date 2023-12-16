@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create.components
+package com.app.zuludin.bookber.ui.quotebookmgmt.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

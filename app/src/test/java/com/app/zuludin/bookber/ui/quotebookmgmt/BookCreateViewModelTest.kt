@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create
+package com.app.zuludin.bookber.ui.quotebookmgmt
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.zuludin.bookber.MainCoroutineRule
@@ -27,18 +27,18 @@ class BookCreateViewModelTest {
     @Mock
     private lateinit var repository: BookberRepository
 
-    private lateinit var viewModel: BookCreateViewModel
-    private val bookDummy = BookEntity(title = "Title 1", genre = "Genre 1")
+    private lateinit var viewModel: QuoteBookManagementViewModel
+    private val bookDummy = BookEntity(title = "Title 1", author = "Genre 1")
     private val quoteDummy = QuoteEntity(quotes = "Quote 1", author = "Author 1")
 
     @Before
     fun setup() {
-        viewModel = BookCreateViewModel(repository)
+        viewModel = QuoteBookManagementViewModel(repository)
     }
 
     @Test
     fun saveBook_SuccessSaveToDatabase() = runTest {
-        viewModel.saveBook(bookDummy)
+        viewModel.saveBook(bookDummy, emptyList(), "1")
         Mockito.verify(repository).saveBook(bookDummy)
     }
 

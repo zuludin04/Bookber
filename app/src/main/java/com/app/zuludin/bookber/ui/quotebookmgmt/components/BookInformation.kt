@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create.components
+package com.app.zuludin.bookber.ui.quotebookmgmt.components
 
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -42,12 +42,12 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.ui.create.BookCreateViewModel
+import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
 import com.app.zuludin.bookber.util.enums.BookInfoState
 
 @Composable
 fun BookInformation(
-    viewModel: BookCreateViewModel,
+    viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {
@@ -88,7 +88,7 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 
 @Composable
 fun ShowBookInformation(
-    viewModel: BookCreateViewModel,
+    viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
 ) {

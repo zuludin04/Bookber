@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.create
+package com.app.zuludin.bookber.ui.quotebookmgmt
 
 import android.graphics.Bitmap
 import android.provider.MediaStore
@@ -28,10 +28,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.ui.create.components.BookInformation
-import com.app.zuludin.bookber.ui.create.components.QuoteInputField
-import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
+import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
+import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
+import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -42,7 +42,7 @@ fun QuoteBookManagementScreen(
     onBack: () -> Unit,
     bookId: String?,
     bookState: String,
-    viewModel: BookCreateViewModel = viewModel(factory = getViewModelFactory()),
+    viewModel: QuoteBookManagementViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
 ) {
     val context = LocalContext.current
@@ -111,8 +111,12 @@ fun QuoteBookManagementScreen(
                     key = { q -> q.id }) { quote ->
                     QuoteItem(
                         quote = quote,
-                        onDeleteQuote = {},
-                        onRemoveFromBook = {},
+                        onDeleteQuote = { id ->
+                            viewModel.deleteQuote(id)
+                        },
+                        onRemoveFromBook = { q ->
+                            viewModel.removeFromBook(q)
+                        },
                         onEditQuote = {}
                     )
                 }

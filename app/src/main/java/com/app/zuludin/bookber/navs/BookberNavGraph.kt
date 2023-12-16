@@ -19,7 +19,7 @@ import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_ID_ARG
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_STATE_ARG
 import com.app.zuludin.bookber.ui.book.BookScreen
 import com.app.zuludin.bookber.ui.category.CategoryScreen
-import com.app.zuludin.bookber.ui.create.QuoteBookManagementScreen
+import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementScreen
 import com.app.zuludin.bookber.ui.quote.QuoteScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
 import com.app.zuludin.bookber.util.enums.BookInfoState
