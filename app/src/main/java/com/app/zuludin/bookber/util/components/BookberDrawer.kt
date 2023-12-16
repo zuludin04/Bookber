@@ -1,13 +1,17 @@
 package com.app.zuludin.bookber.util.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerState
 import androidx.compose.material.Icon
 import androidx.compose.material.ModalDrawer
@@ -18,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.app.zuludin.bookber.R
@@ -66,6 +71,14 @@ private fun BookberDrawer(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_quotes),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .height(100.dp)
+        )
         DrawerMenu(
             iconId = R.drawable.ic_quote,
             title = "Quotes",
@@ -131,29 +144,36 @@ private fun DrawerMenu(
     action: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val selectedColor = if (isSelected) {
-        MaterialTheme.colorScheme.secondary
+    val selectedText = if (isSelected) {
+        Color.Black
     } else {
-        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        Color.Black.copy(alpha = 0.4f)
+    }
+
+    val selectedBg = if (isSelected) {
+        Color(0xffFEDBD0)
+    } else {
+        Color.White
     }
 
     TextButton(
-        onClick = action, modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+        onClick = action, modifier = modifier.fillMaxWidth()
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(selectedBg, RoundedCornerShape(100.dp))
+                .padding(12.dp)
         ) {
             Icon(
                 painter = painterResource(id = iconId),
                 contentDescription = null,
-                tint = selectedColor
+                tint = Color.Black
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Text(text = title, style = MaterialTheme.typography.bodyMedium, color = selectedColor)
+            Text(text = title, style = MaterialTheme.typography.bodyMedium, color = selectedText)
         }
     }
 }
