@@ -1,7 +1,9 @@
 package com.app.zuludin.bookber.ui.book
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -19,11 +21,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.ui.book.components.BookItem
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
+import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
@@ -42,7 +46,8 @@ fun BookScreen(
                     IconButton(onClick = openDrawer) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
                     }
-                }
+                },
+                elevation = 0.dp
             )
         },
         floatingActionButton = {
@@ -61,9 +66,15 @@ fun BookScreen(
         ) {
             CategoryFilterChips(categories = categories)
 
-            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(books) { book ->
-                    BookItem(book = book, onClick = { onDetailBook(book) })
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (books.isEmpty()) {
+                EmptyContentLayout(message = "Book is Empty")
+            } else {
+                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                    items(books) { book ->
+                        BookItem(book = book, onClick = { onDetailBook(book) })
+                    }
                 }
             }
         }
