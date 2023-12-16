@@ -22,6 +22,8 @@ interface BookberLocalDataSource {
 
     fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>>
 
+    suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
+
     fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>>
 
     fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>>

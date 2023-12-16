@@ -66,6 +66,11 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
+    override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) =
+        withContext(ioDispatcher) {
+            quoteDao.batchUpdate(quotes)
+        }
+
     override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
         return quoteDao.loadQuotesByBook(bookId).map {
             Success(it)

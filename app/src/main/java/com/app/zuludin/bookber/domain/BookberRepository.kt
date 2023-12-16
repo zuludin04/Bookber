@@ -26,6 +26,8 @@ interface BookberRepository {
 
     fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>>
 
+    suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
+
     suspend fun saveQuote(quote: QuoteEntity)
 
     suspend fun updateQuote(quote: QuoteEntity)

@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 
@@ -27,4 +28,11 @@ interface QuoteDao {
 
     @Query("delete from quoteentity where quoteId = :quoteId")
     suspend fun deleteQuoteById(quoteId: String): Int
+
+    @Transaction
+    suspend fun batchUpdate(quotes: List<QuoteEntity>) {
+        quotes.forEach {
+            updateQuote(it)
+        }
+    }
 }

@@ -55,6 +55,12 @@ class BookberRepositoryImpl(
         return localSource.loadQuotesByCategory(categoryId)
     }
 
+    override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
+        coroutineScope {
+            launch { localSource.insertQuotesIntoBooks(quotes) }
+        }
+    }
+
     override suspend fun saveQuote(quote: QuoteEntity) {
         coroutineScope {
             launch { localSource.saveQuote(quote) }
