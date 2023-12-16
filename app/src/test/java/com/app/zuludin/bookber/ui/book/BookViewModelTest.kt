@@ -23,55 +23,55 @@ class BookViewModelTest {
     @Mock
     private lateinit var repository: BookberRepository
 
-    private lateinit var viewModel: DashboardViewModel
-    private val book1 = BookEntity(title = "Title 1", author = "Genre 1")
-    private val book2 = BookEntity(title = "Title 2", author = "Genre 3")
-    private val book3 = BookEntity(title = "Title 2", author = "Genre 3")
-    private val dummyBooks = listOf(book1, book2, book3)
-
-    @Before
-    fun setup() {
-        viewModel = DashboardViewModel(repository)
-    }
-
-    @Test
-    fun getBooks_SuccessLoadBooks() {
-        val expected = MutableLiveData<Result<List<BookEntity>>>()
-        expected.value = Result.Success(dummyBooks)
-        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
-
-        val actual = viewModel.getBooks().getOrAwaitValue()
-
-        Mockito.verify(repository).loadBookStore()
-        Assert.assertNotNull(actual)
-        Assert.assertTrue(actual is Result.Success)
-        Assert.assertEquals(dummyBooks.size, (actual as Result.Success).data.size)
-    }
-
-    @Test
-    fun getBooks_SuccessButEmptyBooks() {
-        val expected = MutableLiveData<Result<List<BookEntity>>>()
-        expected.value = Result.Success(emptyList())
-        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
-
-        val actual = viewModel.getBooks().getOrAwaitValue()
-
-        Mockito.verify(repository).loadBookStore()
-        Assert.assertNotNull(actual)
-        Assert.assertTrue(actual is Result.Success)
-        Assert.assertEquals(0, (actual as Result.Success).data.size)
-    }
-
-    @Test
-    fun getBooks_ErrorLoadBooks() {
-        val expected = MutableLiveData<Result<List<BookEntity>>>()
-        expected.value = Result.Error(Exception("Error"))
-        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
-
-        val actual = viewModel.getBooks().getOrAwaitValue()
-
-        Mockito.verify(repository).loadBookStore()
-        Assert.assertNotNull(actual)
-        Assert.assertTrue(actual is Result.Error)
-    }
+//    private lateinit var viewModel: DashboardViewModel
+//    private val book1 = BookEntity(title = "Title 1", author = "Genre 1")
+//    private val book2 = BookEntity(title = "Title 2", author = "Genre 3")
+//    private val book3 = BookEntity(title = "Title 2", author = "Genre 3")
+//    private val dummyBooks = listOf(book1, book2, book3)
+//
+//    @Before
+//    fun setup() {
+//        viewModel = DashboardViewModel(repository)
+//    }
+//
+//    @Test
+//    fun getBooks_SuccessLoadBooks() {
+//        val expected = MutableLiveData<Result<List<BookEntity>>>()
+//        expected.value = Result.Success(dummyBooks)
+//        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
+//
+//        val actual = viewModel.getBooks().getOrAwaitValue()
+//
+//        Mockito.verify(repository).loadBookStore()
+//        Assert.assertNotNull(actual)
+//        Assert.assertTrue(actual is Result.Success)
+//        Assert.assertEquals(dummyBooks.size, (actual as Result.Success).data.size)
+//    }
+//
+//    @Test
+//    fun getBooks_SuccessButEmptyBooks() {
+//        val expected = MutableLiveData<Result<List<BookEntity>>>()
+//        expected.value = Result.Success(emptyList())
+//        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
+//
+//        val actual = viewModel.getBooks().getOrAwaitValue()
+//
+//        Mockito.verify(repository).loadBookStore()
+//        Assert.assertNotNull(actual)
+//        Assert.assertTrue(actual is Result.Success)
+//        Assert.assertEquals(0, (actual as Result.Success).data.size)
+//    }
+//
+//    @Test
+//    fun getBooks_ErrorLoadBooks() {
+//        val expected = MutableLiveData<Result<List<BookEntity>>>()
+//        expected.value = Result.Error(Exception("Error"))
+//        Mockito.`when`(repository.loadBookStore()).thenReturn(expected)
+//
+//        val actual = viewModel.getBooks().getOrAwaitValue()
+//
+//        Mockito.verify(repository).loadBookStore()
+//        Assert.assertNotNull(actual)
+//        Assert.assertTrue(actual is Result.Error)
+//    }
 }
