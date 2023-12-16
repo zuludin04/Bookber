@@ -19,7 +19,6 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.databinding.ActivityBookCreateBinding
 import com.app.zuludin.bookber.ui.create.components.BookInformation
 import com.app.zuludin.bookber.ui.create.components.QuoteInputField
-import com.app.zuludin.bookber.ui.quote.QuoteAdapter
 import com.app.zuludin.bookber.util.ViewModelFactory
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import java.io.ByteArrayOutputStream
@@ -48,71 +47,71 @@ class BookCreateActivity : AppCompatActivity() {
         isFromQuote = intent.getSerializableExtra("INPUT_SOURCE") as BookInfoState
         bookId = intent.extras?.getString("BOOK_ID")
 
-        val quoteAdapter =
-            QuoteAdapter(
-                onDeleteQuote = { viewModel.deleteQuote(it) },
-                onRemoveFromBook = { viewModel.removeFromBook(it) }
-            )
-
-        if (bookId != null) {
-            viewModel.start(bookId!!)
-            bookId = UUID.randomUUID().toString()
-        } else {
-            binding.bookQuoteInfoCompose.setContent {
-                BookInformation(
-                    viewModel = viewModel,
-                    bookState = isFromQuote
-                ) { title, author, categoryId, imageUri ->
-                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
-                    val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                    val bytes = stream.toByteArray()
-                    val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
-
-                    val book = BookEntity(
-                        id = bookId!!,
-                        title = title,
-                        author = author,
-                        cover = bookCoverImage,
-                        categoryId = categoryId
-                    )
-                    viewModel.saveBook(book, emptyList(), book.id)
-                    isFromQuote = BookInfoState.DETAIL_BOOK
-                    binding.bookQuoteInfoCompose.visibility = View.VISIBLE
-                    Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
-                    binding.quoteInputCompose.visibility = View.VISIBLE
-                }
-            }
-            bookId = UUID.randomUUID().toString()
-            viewModel.getCurrentQuotes(bookId!!).observe(this) { result ->
-                if (result != null) {
-                    when (result) {
-                        is Result.Error -> {}
-                        Result.Loading -> {}
-                        is Result.Success -> {
-                            quoteAdapter.setBookStore(result.data)
-                        }
-                    }
-                }
-            }
-        }
-
-        if (isFromQuote == BookInfoState.DETAIL_BOOK) {
-            bookEntity = intent.getParcelableExtra("BOOK_ENTITY")
-        }
-
-        binding.quoteInputCompose.visibility =
-            if (isFromQuote == BookInfoState.ADD_BOOK) View.GONE else View.VISIBLE
-
-        binding.quoteInputCompose.setContent {
-            var showCustomDialog by remember { mutableStateOf(false) }
-            var quote by remember { mutableStateOf("") }
-//            val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
-
-            QuoteInputField {
-                quote = it
-                showCustomDialog = true
-            }
+//        val quoteAdapter =
+//            QuoteAdapter(
+//                onDeleteQuote = { viewModel.deleteQuote(it) },
+//                onRemoveFromBook = { viewModel.removeFromBook(it) }
+//            )
+//
+//        if (bookId != null) {
+//            viewModel.start(bookId!!)
+//            bookId = UUID.randomUUID().toString()
+//        } else {
+//            binding.bookQuoteInfoCompose.setContent {
+//                BookInformation(
+//                    viewModel = viewModel,
+//                    bookState = isFromQuote
+//                ) { title, author, categoryId, imageUri ->
+//                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+//                    val stream = ByteArrayOutputStream()
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+//                    val bytes = stream.toByteArray()
+//                    val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+//
+//                    val book = BookEntity(
+//                        id = bookId!!,
+//                        title = title,
+//                        author = author,
+//                        cover = bookCoverImage,
+//                        categoryId = categoryId
+//                    )
+//                    viewModel.saveBook(book, emptyList(), book.id)
+//                    isFromQuote = BookInfoState.DETAIL_BOOK
+//                    binding.bookQuoteInfoCompose.visibility = View.VISIBLE
+//                    Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()
+//                    binding.quoteInputCompose.visibility = View.VISIBLE
+//                }
+//            }
+//            bookId = UUID.randomUUID().toString()
+//            viewModel.getCurrentQuotes(bookId!!).observe(this) { result ->
+//                if (result != null) {
+//                    when (result) {
+//                        is Result.Error -> {}
+//                        Result.Loading -> {}
+//                        is Result.Success -> {
+//                            quoteAdapter.setBookStore(result.data)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (isFromQuote == BookInfoState.DETAIL_BOOK) {
+//            bookEntity = intent.getParcelableExtra("BOOK_ENTITY")
+//        }
+//
+//        binding.quoteInputCompose.visibility =
+//            if (isFromQuote == BookInfoState.ADD_BOOK) View.GONE else View.VISIBLE
+//
+//        binding.quoteInputCompose.setContent {
+//            var showCustomDialog by remember { mutableStateOf(false) }
+//            var quote by remember { mutableStateOf("") }
+////            val categories by viewModel.quoteCategories.observeAsState(initial = emptyList())
+//
+//            QuoteInputField {
+//                quote = it
+//                showCustomDialog = true
+//            }
 //            if (showCustomDialog) {
 //                SaveQuoteConfirmDialog(
 //                    categories = categories,
@@ -168,10 +167,10 @@ class BookCreateActivity : AppCompatActivity() {
 //            }
 //        }
 
-        binding.rvQuoteInput.apply {
-            layoutManager = LinearLayoutManager(this@BookCreateActivity)
-            setHasFixedSize(true)
-            adapter = quoteAdapter
-        }
-    }
+//        binding.rvQuoteInput.apply {
+//            layoutManager = LinearLayoutManager(this@BookCreateActivity)
+//            setHasFixedSize(true)
+//            adapter = quoteAdapter
+//        }
+//    }
 }

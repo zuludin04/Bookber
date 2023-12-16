@@ -1,7 +1,9 @@
 package com.app.zuludin.bookber.ui.quote
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -23,12 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.create.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
+import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
@@ -51,7 +55,8 @@ fun QuoteScreen(
                     IconButton(onClick = {}) {
                         Icon(Icons.Filled.Search, contentDescription = null)
                     }
-                }
+                },
+                elevation = 0.dp,
             )
         },
         floatingActionButton = {
@@ -73,17 +78,23 @@ fun QuoteScreen(
         ) {
             CategoryFilterChips(categories = categories)
 
-            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(quotes) { quote ->
-                    QuoteItem(
-                        quote = quote,
-                        onDeleteQuote = { quoteId -> viewModel.deleteQuote(quoteId) },
-                        onRemoveFromBook = { q -> viewModel.removeFromBook(q) },
-                        onEditQuote = {
-                            editQuote = quote
-                            showEditDialog = true
-                        }
-                    )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (quotes.isEmpty()) {
+                EmptyContentLayout(message = "Quote is Empty")
+            } else {
+                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                    items(quotes) { quote ->
+                        QuoteItem(
+                            quote = quote,
+                            onDeleteQuote = { quoteId -> viewModel.deleteQuote(quoteId) },
+                            onRemoveFromBook = { q -> viewModel.removeFromBook(q) },
+                            onEditQuote = {
+                                editQuote = quote
+                                showEditDialog = true
+                            }
+                        )
+                    }
                 }
             }
 
@@ -91,7 +102,6 @@ fun QuoteScreen(
                 SaveQuoteConfirmDialog(
                     isUpdate = true,
                     quote = editQuote,
-//                    category = CategoryEntity(category = "Horror"),
                     categories = categories,
                     onSaveQuote = { quote, author, categoryId ->
                         editQuote.quotes = quote
