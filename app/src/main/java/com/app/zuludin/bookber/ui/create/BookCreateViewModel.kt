@@ -86,7 +86,9 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         }
     }
 
-    fun saveBook(book: BookEntity) {
+    fun saveBook(book: BookEntity, quotes: List<QuoteEntity>, bookId: String) {
+        updateQuotesBookId(quotes, bookId)
+
         viewModelScope.launch {
             repository.saveBook(book)
         }
@@ -122,6 +124,19 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         quote.bookId = ""
         viewModelScope.launch {
             repository.updateQuote(quote)
+        }
+    }
+
+    fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
+        val result = ArrayList<QuoteEntity>()
+        result.addAll(quotes)
+
+        result.forEach {
+            it.bookId = bookId
+        }
+
+        viewModelScope.launch {
+            repository.insertQuotesIntoBooks(result)
         }
     }
 }

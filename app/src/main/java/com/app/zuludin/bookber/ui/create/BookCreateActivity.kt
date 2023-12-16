@@ -76,7 +76,7 @@ class BookCreateActivity : AppCompatActivity() {
                         cover = bookCoverImage,
                         categoryId = categoryId
                     )
-                    viewModel.saveBook(book)
+                    viewModel.saveBook(book, emptyList(), book.id)
                     isFromQuote = BookInfoState.DETAIL_BOOK
                     binding.bookQuoteInfoCompose.visibility = View.VISIBLE
                     Toast.makeText(this, "Success Save Book", Toast.LENGTH_SHORT).show()

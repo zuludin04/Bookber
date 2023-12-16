@@ -99,15 +99,15 @@ fun QuoteBookManagementScreen(
                     )
 
                     currentBookId = book.id
-                    viewModel.saveBook(book)
-                    viewModel.setBookId(book.id)
+                    viewModel.saveBook(book, quotesWithoutBook.toList(), book.id)
+                    if (bookInfoState != BookInfoState.ADD_QUOTE) viewModel.setBookId(book.id)
                     showQuoteInput = true
                 }
             )
 
             LazyColumn {
                 items(
-                    if (currentBookId == "") quotesWithoutBook else quotesWithBook,
+                    if (bookInfoState == BookInfoState.ADD_QUOTE) quotesWithoutBook else quotesWithBook,
                     key = { q -> q.id }) { quote ->
                     QuoteItem(
                         quote = quote,
@@ -132,7 +132,7 @@ fun QuoteBookManagementScreen(
                         )
 
                         viewModel.saveQuote(newQuote)
-                        if (currentBookId == "") quotesWithoutBook.add(newQuote)
+                        if (bookInfoState == BookInfoState.ADD_QUOTE) quotesWithoutBook.add(newQuote)
                         showSaveQuoteDialog = false
                     },
                     onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },
