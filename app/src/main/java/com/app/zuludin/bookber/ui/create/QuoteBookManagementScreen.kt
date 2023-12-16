@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -53,7 +54,8 @@ fun QuoteBookManagementScreen(
     var currentBookId by remember { mutableStateOf(bookId ?: "") }
 
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
-    val quotes by viewModel.bookQuotes.observeAsState(initial = mutableListOf())
+    val quotesWithBook by viewModel.bookQuotes.observeAsState(initial = mutableListOf())
+    val quotesWithoutBook = remember { mutableStateListOf<QuoteEntity>() }
 
     Scaffold(
         topBar = {
@@ -98,12 +100,15 @@ fun QuoteBookManagementScreen(
 
                     currentBookId = book.id
                     viewModel.saveBook(book)
+                    viewModel.setBookId(book.id)
                     showQuoteInput = true
                 }
             )
 
             LazyColumn {
-                items(quotes, key = { q -> q.id }) { quote ->
+                items(
+                    if (currentBookId == "") quotesWithoutBook else quotesWithBook,
+                    key = { q -> q.id }) { quote ->
                     QuoteItem(
                         quote = quote,
                         onDeleteQuote = {},
@@ -127,6 +132,7 @@ fun QuoteBookManagementScreen(
                         )
 
                         viewModel.saveQuote(newQuote)
+                        if (currentBookId == "") quotesWithoutBook.add(newQuote)
                         showSaveQuoteDialog = false
                     },
                     onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },

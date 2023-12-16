@@ -99,10 +99,17 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
     }
 
     fun saveQuote(quote: QuoteEntity) {
-        updateBookQuotes(quote)
+//        updateBookQuotes(quote)
         viewModelScope.launch {
             repository.saveQuote(quote)
+            if (_bookId.value != null) {
+                start(_bookId.value!!)
+            }
         }
+    }
+
+    fun setBookId(bookId: String) {
+        _bookId.value = bookId
     }
 
     fun deleteQuote(quoteId: String) {
@@ -116,10 +123,5 @@ class BookCreateViewModel(private val repository: BookberRepository) : ViewModel
         viewModelScope.launch {
             repository.updateQuote(quote)
         }
-    }
-
-    private fun updateBookQuotes(quote: QuoteEntity) {
-        cacheBookQuotes.add(quote.copy())
-        bookQuotes.value = cacheBookQuotes
     }
 }
