@@ -37,6 +37,7 @@ fun QuoteItem(
     onDeleteQuote: (String) -> Unit,
     onRemoveFromBook: (QuoteEntity) -> Unit,
     onEditQuote: () -> Unit,
+    onDetailQuote: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showQuoteManagement by remember { mutableStateOf(false) }
@@ -46,7 +47,7 @@ fun QuoteItem(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = modifier
-            .clickable { showQuoteManagement = true }
+            .clickable { onDetailQuote(quote.id) }
             .padding(10.dp)
             .fillMaxWidth()
     ) {
@@ -100,6 +101,7 @@ fun QuoteItemPreview() {
         ),
         onDeleteQuote = {},
         onRemoveFromBook = {},
-        onEditQuote = {}
+        onEditQuote = {},
+        onDetailQuote = {}
     )
 }

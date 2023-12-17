@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream
 @Composable
 fun QuoteBookManagementScreen(
     onBack: () -> Unit,
+    onOpenDetailQuote: (String) -> Unit,
     bookId: String?,
     bookState: String,
     viewModel: QuoteBookManagementViewModel = viewModel(factory = getViewModelFactory()),
@@ -117,7 +118,8 @@ fun QuoteBookManagementScreen(
                         onRemoveFromBook = { q ->
                             viewModel.removeFromBook(q)
                         },
-                        onEditQuote = {}
+                        onEditQuote = {},
+                        onDetailQuote = onOpenDetailQuote,
                     )
                 }
             }

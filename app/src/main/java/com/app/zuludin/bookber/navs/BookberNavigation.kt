@@ -4,9 +4,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_ID_ARG
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_STATE_ARG
+import com.app.zuludin.bookber.navs.BookberDestinationArgs.QUOTE_ID_ARG
 
 private object BookberScreens {
     const val QUOTES_SCREEN = "quotes"
+    const val QUOTE_DETAIL_SCREEN = "quote_detail"
     const val BOOKS_SCREEN = "books"
     const val BOOK_QUOTE_MANAGEMENT = "bookQuoteManagement"
     const val CATEGORY_SCREEN = "category"
@@ -16,6 +18,7 @@ private object BookberScreens {
 object BookberDestinationArgs {
     const val BOOK_STATE_ARG = "bookStateArg"
     const val BOOK_ID_ARG = "bookIdArg"
+    const val QUOTE_ID_ARG = "quoteIdArg"
 }
 
 object BookberDestination {
@@ -25,6 +28,7 @@ object BookberDestination {
         "${BookberScreens.BOOK_QUOTE_MANAGEMENT}/{${BOOK_STATE_ARG}}?$BOOK_ID_ARG={$BOOK_ID_ARG}"
     const val CATEGORY_ROUTE = BookberScreens.CATEGORY_SCREEN
     const val FAVORITE_ROUTE = BookberScreens.FAVORITE_SCREEN
+    const val QUOTE_DETAIL_ROUTE = "${BookberScreens.QUOTE_DETAIL_SCREEN}/{${QUOTE_ID_ARG}}"
 }
 
 class BookberNavigationActions(private val navController: NavHostController) {
@@ -68,5 +72,9 @@ class BookberNavigationActions(private val navController: NavHostController) {
             }
             launchSingleTop = true
         }
+    }
+
+    fun navigateToQuoteDetail(quoteId: String) {
+        navController.navigate("${BookberScreens.QUOTE_DETAIL_SCREEN}/$quoteId")
     }
 }

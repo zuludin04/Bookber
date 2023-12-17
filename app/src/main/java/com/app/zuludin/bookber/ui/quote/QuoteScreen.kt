@@ -39,6 +39,7 @@ import com.app.zuludin.bookber.util.getViewModelFactory
 fun QuoteScreen(
     openDrawer: () -> Unit,
     onAddQuote: () -> Unit,
+    onOpenDetailQuote: (String) -> Unit,
     viewModel: QuoteViewModel = viewModel(factory = getViewModelFactory())
 ) {
     Scaffold(
@@ -92,7 +93,8 @@ fun QuoteScreen(
                             onEditQuote = {
                                 editQuote = quote
                                 showEditDialog = true
-                            }
+                            },
+                            onDetailQuote = onOpenDetailQuote,
                         )
                     }
                 }

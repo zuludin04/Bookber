@@ -17,11 +17,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_ID_ARG
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_STATE_ARG
+import com.app.zuludin.bookber.navs.BookberDestinationArgs.QUOTE_ID_ARG
 import com.app.zuludin.bookber.ui.book.BookScreen
 import com.app.zuludin.bookber.ui.category.CategoryScreen
 import com.app.zuludin.bookber.ui.favorite.FavoriteScreen
-import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementScreen
 import com.app.zuludin.bookber.ui.quote.QuoteScreen
+import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementScreen
+import com.app.zuludin.bookber.ui.quotedetail.QuoteDetailScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import kotlinx.coroutines.CoroutineScope
@@ -59,6 +61,9 @@ fun BookberNavGraph(
                             BookInfoState.ADD_QUOTE.name,
                             null
                         )
+                    },
+                    onOpenDetailQuote = {
+                        navActions.navigateToQuoteDetail(it)
                     }
                 )
             }
@@ -102,7 +107,10 @@ fun BookberNavGraph(
             QuoteBookManagementScreen(
                 onBack = { navController.popBackStack() },
                 bookId = bookId,
-                bookState = state!!
+                bookState = state!!,
+                onOpenDetailQuote = {
+                    navActions.navigateToQuoteDetail(it)
+                }
             )
         }
 
@@ -110,6 +118,13 @@ fun BookberNavGraph(
             BookberModalDrawer(drawerState, currentRoute, navActions) {
                 FavoriteScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
             }
+        }
+
+        composable(BookberDestination.QUOTE_DETAIL_ROUTE) { entry ->
+            QuoteDetailScreen(
+                quoteId = entry.arguments?.getString(QUOTE_ID_ARG)!!,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }
