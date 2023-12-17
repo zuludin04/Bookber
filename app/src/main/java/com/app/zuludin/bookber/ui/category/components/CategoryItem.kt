@@ -21,9 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.zuludin.bookber.R
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 
 @Composable
-fun CategoryItem(color: Color, category: String, modifier: Modifier = Modifier) {
+fun CategoryItem(
+    color: Color,
+    category: CategoryEntity,
+    onDeleteCategory: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
@@ -42,7 +48,7 @@ fun CategoryItem(color: Color, category: String, modifier: Modifier = Modifier) 
             .clip(CircleShape)
             .background(color))
 
-        Text(text = category,
+        Text(text = category.category,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.constrainAs(title) {
@@ -60,12 +66,15 @@ fun CategoryItem(color: Color, category: String, modifier: Modifier = Modifier) 
                     bottom.linkTo(parent.bottom)
                 }
                 .padding(horizontal = 8.dp)
-                .clickable { })
+                .clickable { onDeleteCategory(category.id) })
     }
 }
 
 @Preview
 @Composable
 fun CategoryItemPreview() {
-    CategoryItem(color = Color.Yellow, category = "Fiction")
+    CategoryItem(
+        color = Color.Yellow,
+        category = CategoryEntity(category = "Fiction"),
+        onDeleteCategory = {})
 }

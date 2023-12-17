@@ -98,8 +98,16 @@ fun CategoryScreen(
 
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
                 when (index) {
-                    0 -> CategoryContents(categories = quoteCategories)
-                    1 -> CategoryContents(categories = bookCategories)
+                    0 -> CategoryContents(
+                        categories = quoteCategories,
+                        onDeleteCategory = { id ->
+                            viewModel.deleteSelectedCategory(id)
+                        })
+
+                    1 -> CategoryContents(categories = bookCategories,
+                        onDeleteCategory = { id ->
+                            viewModel.deleteSelectedCategory(id)
+                        })
                 }
             }
         }
@@ -124,13 +132,13 @@ fun CategoryScreen(
 }
 
 @Composable
-private fun CategoryContents(categories: List<CategoryEntity>) {
+private fun CategoryContents(categories: List<CategoryEntity>, onDeleteCategory: (String) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(categories) { cat ->
             val index = categories.indexOf(cat)
             val color = if ((index % 2) == 0) Color.Blue else Color.Green
 
-            CategoryItem(color = color, category = cat.category)
+            CategoryItem(color = color, category = cat, onDeleteCategory = onDeleteCategory)
         }
     }
 }

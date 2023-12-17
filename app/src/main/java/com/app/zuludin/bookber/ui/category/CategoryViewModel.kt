@@ -62,4 +62,10 @@ class CategoryViewModel(private val repository: BookberRepository) : ViewModel()
             repository.saveCategory(category)
         }
     }
+
+    fun deleteSelectedCategory(categoryId: String) {
+        viewModelScope.launch {
+            repository.deleteCategoryById(categoryId)
+        }
+    }
 }
