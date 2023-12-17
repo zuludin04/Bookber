@@ -56,4 +56,10 @@ class CategoryViewModel(private val repository: BookberRepository) : ViewModel()
     private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
     fun getCategories(type: Int) = repository.loadCategoriesByType(type)
+
+    fun saveNewCategory(category: CategoryEntity) {
+        viewModelScope.launch {
+            repository.saveCategory(category)
+        }
+    }
 }

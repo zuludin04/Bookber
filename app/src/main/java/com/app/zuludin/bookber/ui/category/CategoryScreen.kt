@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.category.components.CategoryItem
+import com.app.zuludin.bookber.ui.category.components.CategoryManagementSheet
 import com.app.zuludin.bookber.util.getViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -51,6 +53,7 @@ fun CategoryScreen(
 
     val bookCategories by viewModel.bookCategories.observeAsState(initial = emptyList())
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
+    var showCategorySheet by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -68,7 +71,7 @@ fun CategoryScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = { showCategorySheet = true }) {
                 Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
             }
         }
@@ -105,6 +108,17 @@ fun CategoryScreen(
             if (!pagerState.isScrollInProgress) {
                 tabIndex = pagerState.currentPage
             }
+        }
+
+        if (showCategorySheet) {
+            CategoryManagementSheet(
+                type = if (tabIndex == 0) "Quote" else "Book",
+                onSaveCategory = { cat ->
+                    viewModel.saveNewCategory(cat)
+                    showCategorySheet = false
+                },
+                onDismissRequest = { showCategorySheet = !showCategorySheet }
+            )
         }
     }
 }
