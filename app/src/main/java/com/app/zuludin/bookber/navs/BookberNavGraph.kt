@@ -19,6 +19,7 @@ import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_ID_ARG
 import com.app.zuludin.bookber.navs.BookberDestinationArgs.BOOK_STATE_ARG
 import com.app.zuludin.bookber.ui.book.BookScreen
 import com.app.zuludin.bookber.ui.category.CategoryScreen
+import com.app.zuludin.bookber.ui.favorite.FavoriteScreen
 import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementScreen
 import com.app.zuludin.bookber.ui.quote.QuoteScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
@@ -103,6 +104,12 @@ fun BookberNavGraph(
                 bookId = bookId,
                 bookState = state!!
             )
+        }
+
+        composable(BookberDestination.FAVORITE_ROUTE) {
+            BookberModalDrawer(drawerState, currentRoute, navActions) {
+                FavoriteScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
+            }
         }
     }
 }
