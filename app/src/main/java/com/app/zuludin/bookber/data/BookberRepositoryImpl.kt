@@ -89,12 +89,6 @@ class BookberRepositoryImpl(
         }
     }
 
-    override suspend fun updateCategory(category: CategoryEntity) {
-        coroutineScope {
-            launch { localSource.updateCategory(category) }
-        }
-    }
-
     override suspend fun deleteCategoryById(categoryId: String) {
         coroutineScope {
             launch { localSource.deleteCategoryById(categoryId) }

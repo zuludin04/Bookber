@@ -38,7 +38,5 @@ interface BookberRepository {
 
     suspend fun saveCategory(category: CategoryEntity)
 
-    suspend fun updateCategory(category: CategoryEntity)
-
     suspend fun deleteCategoryById(categoryId: String)
 }

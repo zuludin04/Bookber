@@ -90,10 +90,6 @@ class BookberFakeDataSource(
         categories?.add(category)
     }
 
-    override suspend fun updateCategory(category: CategoryEntity) {
-        categories?.firstOrNull { it.id == category.id }?.let { it.category = category.category }
-    }
-
     override suspend fun deleteCategoryById(categoryId: String) {
         categories?.removeIf { it.id == categoryId }
     }

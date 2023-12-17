@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 
 @Dao
@@ -15,9 +14,6 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCategory(category: CategoryEntity)
-
-    @Update
-    suspend fun updateCategory(category: CategoryEntity): Int
 
     @Query("delete from categoryentity where categoryId = :categoryId")
     suspend fun deleteCategoryById(categoryId: String): Int

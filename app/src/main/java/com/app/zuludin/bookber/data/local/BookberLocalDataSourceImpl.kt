@@ -105,11 +105,6 @@ class BookberLocalDataSourceImpl internal constructor(
         categoryDao.saveCategory(category)
     }
 
-    override suspend fun updateCategory(category: CategoryEntity) =
-        withContext<Unit>(ioDispatcher) {
-            categoryDao.updateCategory(category)
-        }
-
     override suspend fun deleteCategoryById(categoryId: String) = withContext<Unit>(ioDispatcher) {
         categoryDao.deleteCategoryById(categoryId)
     }

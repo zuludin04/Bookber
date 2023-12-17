@@ -92,7 +92,7 @@ class BookberRepositoryImplTest {
 
     @Test
     fun getBookDetail_successLoadFromDatabase() = runTest {
-        val actual = bookberRepository.loadBookDetail(localBooks[0].id)
+//        val actual = bookberRepository.loadBookDetail(localBooks[0].id)
 //        actual.observeForTesting {
 //            Assert.assertNotNull(actual)
 ////            Assert.assertEquals(localBooks[0], (actual.value as Result.Success).data)
@@ -228,17 +228,6 @@ class BookberRepositoryImplTest {
         localDataSource.saveCategory(newCategory)
         val actual = bookberRepository.loadCategoriesByType(1).getOrAwaitValue()
         Assert.assertTrue((actual as Result.Success).data.contains(newCategory))
-    }
-
-    @Test
-    fun updateCategory_updateSelectedCategory() = runTest {
-        localCategories[0].category = newCategory.category
-
-        localDataSource.updateCategory(localCategories[0])
-
-        val actual = bookberRepository.loadCategoriesByType(1).getOrAwaitValue()
-        val actualData = (actual as Result.Success).data[0]
-        Assert.assertEquals(newCategory.category, actualData.category)
     }
 
     @Test

@@ -79,7 +79,7 @@ fun CategoryManagementSheet(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = if (category == "") "Save" else "Update")
+                Text(text = "Save")
             }
         }
     }
