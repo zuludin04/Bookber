@@ -1,5 +1,7 @@
 package com.app.zuludin.bookber.ui.quotedetail
 
+import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +32,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +58,7 @@ fun QuoteDetailScreen(
     val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
     val category by viewModel.quoteCategory.observeAsState(initial = "")
     val bookInfo by viewModel.quoteBookInfo.observeAsState(initial = BookEntity())
+    val bookImage by viewModel.bookImage.observeAsState(initial = "")
 
     Scaffold(
         topBar = {
@@ -80,7 +84,11 @@ fun QuoteDetailScreen(
     ) {
         Column(modifier = Modifier.padding(it)) {
             QuoteBanner(quote, category)
-            QuoteBookInfo(bookInfo)
+            if (bookInfo != null) {
+                QuoteBookInfo(bookInfo, bookImage)
+            } else {
+                EmptyBookInfo()
+            }
             Spacer(modifier = Modifier.height(48.dp))
             Button(
                 onClick = { },
@@ -114,9 +122,10 @@ private fun QuoteBanner(quote: QuoteEntity, category: String) {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        ConstraintLayout(modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
+        ConstraintLayout(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
         ) {
             val (q, a, c) = createRefs()
 
@@ -161,7 +170,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: String) {
 }
 
 @Composable
-private fun QuoteBookInfo(book: BookEntity?) {
+private fun QuoteBookInfo(book: BookEntity?, bookImage: String) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -176,11 +185,13 @@ private fun QuoteBookInfo(book: BookEntity?) {
                 .fillMaxWidth()
         ) {
             val (image, infoContainer, removeBook) = createRefs()
-            val bookAvailable = book != null
 
-            if (bookAvailable) {
+            if (bookImage != "") {
+                val byteArray = Base64.decode(bookImage, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+
                 Image(
-                    painter = painterResource(id = R.drawable.book_example),
+                    bitmap = bitmap.asImageBitmap(),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -202,14 +213,14 @@ private fun QuoteBookInfo(book: BookEntity?) {
                     .padding(start = 12.dp)
             ) {
                 Text(
-                    text = if (bookAvailable) book?.title ?: "" else "No Book Info",
+                    text = book?.title ?: "",
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (bookAvailable) book?.author ?: "" else "Please Input Book Info",
+                    text = book?.author ?: "",
                     color = Color.Gray
                 )
             }
@@ -219,9 +230,62 @@ private fun QuoteBookInfo(book: BookEntity?) {
                 bottom.linkTo(image.bottom)
             }) {
                 Icon(
-                    painter = painterResource(id = if (bookAvailable) R.drawable.ic_remove else R.drawable.ic_add),
+                    painter = painterResource(id = R.drawable.ic_remove ),
                     contentDescription = null,
-                    tint = if (bookAvailable) Color.Red else Color.Black
+                    tint = Color.Red
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EmptyBookInfo() {
+    Card(
+        shape = RoundedCornerShape(5.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                .fillMaxWidth()
+        ) {
+            val (image, infoContainer, removeBook) = createRefs()
+
+            Column(
+                modifier = Modifier
+                    .constrainAs(infoContainer) {
+                        start.linkTo(image.end)
+                        top.linkTo(image.top)
+                        bottom.linkTo(image.bottom)
+                    }
+                    .padding(start = 12.dp)
+            ) {
+                Text(
+                    text = "No Book Info",
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Please Input Book Info",
+                    color = Color.Gray
+                )
+            }
+            IconButton(onClick = { }, modifier = Modifier.constrainAs(removeBook) {
+                end.linkTo(parent.end)
+                top.linkTo(image.top)
+                bottom.linkTo(image.bottom)
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = null,
+                    tint = Color.Black
                 )
             }
         }
@@ -242,5 +306,5 @@ fun QuoteBannerPreview() {
 @Preview
 @Composable
 fun QuoteBookInfoPreview() {
-    QuoteBookInfo(BookEntity())
+    QuoteBookInfo(BookEntity(), "")
 }

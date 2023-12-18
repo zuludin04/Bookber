@@ -15,6 +15,7 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
     val quoteDetail = MutableLiveData<QuoteEntity>()
     val quoteCategory = MutableLiveData<String>()
     val quoteBookInfo = MutableLiveData<BookEntity?>()
+    val bookImage = MutableLiveData<String>()
 
     fun start(quoteId: String) {
         _quoteId.value = quoteId
@@ -25,6 +26,7 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
                     quoteDetail.value = result.data.quoteEntity
                     quoteCategory.value = result.data.categoryEntity.category
                     quoteBookInfo.value = result.data.bookEntity
+                    bookImage.value = result.data.bookEntity?.cover
                 }
             }
         }
