@@ -31,4 +31,10 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
             }
         }
     }
+
+    suspend fun deleteQuote() {
+        _quoteId.value?.let {
+            repository.deleteQuoteById(it)
+        }
+    }
 }

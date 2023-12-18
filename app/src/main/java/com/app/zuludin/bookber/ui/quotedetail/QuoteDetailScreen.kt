@@ -53,8 +53,9 @@ import com.app.zuludin.bookber.util.getViewModelFactory
 fun QuoteDetailScreen(
     quoteId: String,
     onBack: () -> Unit,
+    onDeleteQuote: () -> Unit,
     viewModel: QuoteDetailViewModel = viewModel(factory = getViewModelFactory()),
-    state: QuoteDetailState = rememberQuoteDetailState(quoteId, viewModel)
+    state: QuoteDetailState = rememberQuoteDetailState(quoteId, onDeleteQuote, viewModel)
 ) {
     val context = LocalContext.current
 
@@ -106,7 +107,7 @@ fun QuoteDetailScreen(
             }
             Spacer(modifier = Modifier.height(48.dp))
             Button(
-                onClick = { },
+                onClick = state::onDelete,
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier

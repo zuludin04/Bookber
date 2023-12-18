@@ -123,7 +123,8 @@ fun BookberNavGraph(
         composable(BookberDestination.QUOTE_DETAIL_ROUTE) { entry ->
             QuoteDetailScreen(
                 quoteId = entry.arguments?.getString(QUOTE_ID_ARG)!!,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onDeleteQuote = { navController.popBackStack() }
             )
         }
     }
