@@ -9,6 +9,7 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
+import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.data.local.room.BookDao
 import com.app.zuludin.bookber.data.local.room.CategoryDao
 import com.app.zuludin.bookber.data.local.room.QuoteDao
@@ -82,6 +83,20 @@ class BookberLocalDataSourceImpl internal constructor(
             Success(it)
         }
     }
+
+    override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> =
+        withContext(ioDispatcher) {
+            try {
+                val book = quoteDao.loadQuoteDetail(quoteId)
+                if (book != null) {
+                    return@withContext Success(book)
+                } else {
+                    return@withContext Error(Exception(""))
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
+            }
+        }
 
     override suspend fun saveQuote(quote: QuoteEntity) = withContext(ioDispatcher) {
         quoteDao.saveQuote(quote)

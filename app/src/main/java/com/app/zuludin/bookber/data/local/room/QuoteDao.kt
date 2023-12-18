@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 
 @Dao
 interface QuoteDao {
@@ -19,6 +20,10 @@ interface QuoteDao {
 
     @Query("select * from quoteentity where categoryId = :categoryId")
     fun loadQuotesByCategory(categoryId: String): LiveData<List<QuoteEntity>>
+
+    @Transaction
+    @Query("select * from quoteentity where quoteId = :quoteId")
+    suspend fun loadQuoteDetail(quoteId: String): QuoteDetailEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveQuote(quote: QuoteEntity)

@@ -6,6 +6,7 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
+import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 
 interface BookberRepository {
     fun loadBookStore(): LiveData<Result<List<BookEntity>>>
@@ -25,6 +26,8 @@ interface BookberRepository {
     fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>>
 
     fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>>
+
+    suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity>
 
     suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
 
