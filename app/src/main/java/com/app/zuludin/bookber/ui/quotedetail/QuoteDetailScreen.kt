@@ -1,5 +1,6 @@
 package com.app.zuludin.bookber.ui.quotedetail
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.compose.foundation.BorderStroke
@@ -34,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,6 +56,7 @@ fun QuoteDetailScreen(
     viewModel: QuoteDetailViewModel = viewModel(factory = getViewModelFactory()),
     state: QuoteDetailState = rememberQuoteDetailState(quoteId, viewModel)
 ) {
+    val context = LocalContext.current
 
     val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
     val category by viewModel.quoteCategory.observeAsState(initial = "")
@@ -71,7 +74,19 @@ fun QuoteDetailScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        val intent = Intent(Intent.ACTION_SEND)
+                        intent.type = "text/plain"
+                        val quoteFormat = """
+                        ${quote.quotes}
+                        
+                        - ${quote.author}
+                    """.trimIndent()
+                        intent.putExtra(Intent.EXTRA_TEXT, quoteFormat)
+                        context.startActivity(
+                            Intent.createChooser(intent, "Share Quote from ${quote.author}")
+                        )
+                    }) {
                         Icon(Icons.Filled.Share, null)
                     }
 
@@ -230,7 +245,7 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String) {
                 bottom.linkTo(image.bottom)
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_remove ),
+                    painter = painterResource(id = R.drawable.ic_remove),
                     contentDescription = null,
                     tint = Color.Red
                 )
