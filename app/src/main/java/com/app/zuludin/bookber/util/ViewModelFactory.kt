@@ -8,6 +8,7 @@ import com.app.zuludin.bookber.ui.book.BookViewModel
 import com.app.zuludin.bookber.ui.category.CategoryViewModel
 import com.app.zuludin.bookber.ui.quote.QuoteViewModel
 import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
+import com.app.zuludin.bookber.ui.quotedetail.QuoteDetailViewModel
 
 class ViewModelFactory constructor(
     private val repository: BookberRepository,
@@ -22,6 +23,8 @@ class ViewModelFactory constructor(
             return BookViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(CategoryViewModel::class.java)) {
             return CategoryViewModel(repository) as T
+        } else if (modelClass.isAssignableFrom(QuoteDetailViewModel::class.java)) {
+            return QuoteDetailViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

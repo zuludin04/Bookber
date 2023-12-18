@@ -25,6 +25,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,11 +38,24 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
+import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
-fun QuoteDetailScreen(quoteId: String, onBack: () -> Unit) {
+fun QuoteDetailScreen(
+    quoteId: String,
+    onBack: () -> Unit,
+    viewModel: QuoteDetailViewModel = viewModel(factory = getViewModelFactory()),
+    state: QuoteDetailState = rememberQuoteDetailState(quoteId, viewModel)
+) {
+
+    val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
+    val category by viewModel.quoteCategory.observeAsState(initial = "")
+    val bookInfo by viewModel.quoteBookInfo.observeAsState(initial = BookEntity())
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,13 +79,8 @@ fun QuoteDetailScreen(quoteId: String, onBack: () -> Unit) {
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-            QuoteBanner(
-                quote = QuoteEntity(
-                    quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
-                    author = "Jurgen Klopp"
-                )
-            )
-            QuoteBookInfo()
+            QuoteBanner(quote, category)
+            QuoteBookInfo(bookInfo)
             Spacer(modifier = Modifier.height(48.dp))
             Button(
                 onClick = { },
@@ -95,7 +105,7 @@ fun QuoteDetailScreen(quoteId: String, onBack: () -> Unit) {
 }
 
 @Composable
-private fun QuoteBanner(quote: QuoteEntity) {
+private fun QuoteBanner(quote: QuoteEntity, category: String) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -104,11 +114,14 @@ private fun QuoteBanner(quote: QuoteEntity) {
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        ConstraintLayout(modifier = Modifier.padding(16.dp)) {
+        ConstraintLayout(modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+        ) {
             val (q, a, c) = createRefs()
 
             Text(
-                text = "Motivation",
+                text = category,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .constrainAs(c) {
@@ -148,7 +161,7 @@ private fun QuoteBanner(quote: QuoteEntity) {
 }
 
 @Composable
-private fun QuoteBookInfo() {
+private fun QuoteBookInfo(book: BookEntity?) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -163,19 +176,22 @@ private fun QuoteBookInfo() {
                 .fillMaxWidth()
         ) {
             val (image, infoContainer, removeBook) = createRefs()
+            val bookAvailable = book != null
 
-            Image(
-                painter = painterResource(id = R.drawable.book_example),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds,
-                modifier = Modifier
-                    .constrainAs(image) {
-                        start.linkTo(parent.start)
-                        top.linkTo(parent.top)
-                    }
-                    .height(80.dp)
-                    .width(80.dp)
-            )
+            if (bookAvailable) {
+                Image(
+                    painter = painterResource(id = R.drawable.book_example),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .constrainAs(image) {
+                            start.linkTo(parent.start)
+                            top.linkTo(parent.top)
+                        }
+                        .height(80.dp)
+                        .width(80.dp)
+                )
+            }
             Column(
                 modifier = Modifier
                     .constrainAs(infoContainer) {
@@ -186,13 +202,16 @@ private fun QuoteBookInfo() {
                     .padding(start = 12.dp)
             ) {
                 Text(
-                    text = "Angsa & Kelelawar",
+                    text = if (bookAvailable) book?.title ?: "" else "No Book Info",
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Keigo Higashino", color = Color.Gray)
+                Text(
+                    text = if (bookAvailable) book?.author ?: "" else "Please Input Book Info",
+                    color = Color.Gray
+                )
             }
             IconButton(onClick = { }, modifier = Modifier.constrainAs(removeBook) {
                 end.linkTo(parent.end)
@@ -200,9 +219,9 @@ private fun QuoteBookInfo() {
                 bottom.linkTo(image.bottom)
             }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_remove),
+                    painter = painterResource(id = if (bookAvailable) R.drawable.ic_remove else R.drawable.ic_add),
                     contentDescription = null,
-                    tint = Color.Red
+                    tint = if (bookAvailable) Color.Red else Color.Black
                 )
             }
         }
@@ -216,12 +235,12 @@ fun QuoteBannerPreview() {
         quote = QuoteEntity(
             quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
             author = "Jurgen Klopp"
-        )
+        ), category = ""
     )
 }
 
 @Preview
 @Composable
 fun QuoteBookInfoPreview() {
-    QuoteBookInfo()
+    QuoteBookInfo(BookEntity())
 }
