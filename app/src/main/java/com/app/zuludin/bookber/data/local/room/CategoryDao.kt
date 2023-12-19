@@ -12,6 +12,9 @@ interface CategoryDao {
     @Query("select * from categoryentity where type = :type")
     fun loadAllCategories(type: Int): LiveData<List<CategoryEntity>>
 
+    @Query("select * from categoryentity where type = :type")
+    suspend fun loadCategories(type: Int): List<CategoryEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveCategory(category: CategoryEntity)
 

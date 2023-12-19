@@ -84,6 +84,20 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
+    override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> =
+        withContext(ioDispatcher) {
+            try {
+                val categories = categoryDao.loadCategories(type)
+                if (categories.isNotEmpty()) {
+                    return@withContext Success(categories)
+                } else {
+                    return@withContext Success(emptyList())
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
+            }
+        }
+
     override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> =
         withContext(ioDispatcher) {
             try {

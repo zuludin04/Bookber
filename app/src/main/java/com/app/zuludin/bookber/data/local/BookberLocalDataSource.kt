@@ -29,6 +29,8 @@ interface BookberLocalDataSource {
 
     fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>>
 
+    suspend fun loadCategories(type: Int): Result<List<CategoryEntity>>
+
     suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity>
 
     suspend fun saveQuote(quote: QuoteEntity)

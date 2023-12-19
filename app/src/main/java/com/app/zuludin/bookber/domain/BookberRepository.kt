@@ -39,6 +39,8 @@ interface BookberRepository {
 
     fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>>
 
+    suspend fun loadCategories(type: Int): Result<List<CategoryEntity>>
+
     suspend fun saveCategory(category: CategoryEntity)
 
     suspend fun deleteCategoryById(categoryId: String)

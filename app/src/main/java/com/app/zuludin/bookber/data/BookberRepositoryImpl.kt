@@ -88,6 +88,10 @@ class BookberRepositoryImpl(
         return localSource.loadCategoriesByType(type)
     }
 
+    override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> {
+        return localSource.loadCategories(type)
+    }
+
     override suspend fun saveCategory(category: CategoryEntity) {
         coroutineScope {
             launch { localSource.saveCategory(category) }
