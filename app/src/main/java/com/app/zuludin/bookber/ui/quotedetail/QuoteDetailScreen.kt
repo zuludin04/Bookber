@@ -73,6 +73,8 @@ fun QuoteDetailScreen(
     val bookInfo by viewModel.quoteBookInfo.observeAsState(initial = BookEntity())
     val bookImage by viewModel.bookImage.observeAsState(initial = "")
 
+    val categories by viewModel.categories.observeAsState(initial = emptyList())
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -142,9 +144,9 @@ fun QuoteDetailScreen(
                 isUpdate = true,
                 quote = quote,
                 category = category,
-                categories = listOf(CategoryEntity(category = "Hallo")),
+                categories = categories,
                 onSaveQuote = { quote, author, categoryId ->
-                    viewModel.updateQuote(quote, author)
+                    viewModel.updateQuote(quote, author, categoryId)
                     showEditQuoteDialog = false
                 },
                 onDismissRequest = { showEditQuoteDialog = false }
