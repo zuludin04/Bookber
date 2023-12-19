@@ -1,6 +1,8 @@
 package com.app.zuludin.bookber.ui.quotedetail.components
 
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
@@ -9,15 +11,16 @@ import com.app.zuludin.bookber.ui.book.components.BookItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectBookSheet(onDismissRequest: () -> Unit, onSelectBook: (BookEntity) -> Unit) {
+fun SelectBookSheet(
+    books: List<BookEntity>,
+    onDismissRequest: () -> Unit,
+    onSelectBook: (BookEntity) -> Unit
+) {
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
-        LazyColumn {
-            items(10) {
+        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+            items(books) { books ->
                 BookItem(
-                    book = BookEntity(
-                        title = "Hall",
-                        cover = "iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg=="
-                    ),
+                    book = books,
                     onClick = {
                         onSelectBook(it)
                     }

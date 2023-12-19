@@ -74,6 +74,7 @@ fun QuoteDetailScreen(
     val bookImage by viewModel.bookImage.observeAsState(initial = "")
 
     val categories by viewModel.categories.observeAsState(initial = emptyList())
+    val books by viewModel.books.observeAsState(initial = emptyList())
 
     Scaffold(
         topBar = {
@@ -155,6 +156,7 @@ fun QuoteDetailScreen(
 
         if (showBookSelectDialog) {
             SelectBookSheet(
+                books = books,
                 onDismissRequest = { showBookSelectDialog = false },
                 onSelectBook = { book ->
                     viewModel.addBookInfo(book)

@@ -19,6 +19,7 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
     val bookImage = MutableLiveData<String>()
 
     val categories = MutableLiveData<List<CategoryEntity>>()
+    val books = MutableLiveData<List<BookEntity>>()
 
     fun start(quoteId: String) {
         _quoteId.value = quoteId
@@ -41,12 +42,26 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
                 }
             }
         }
+
+        viewModelScope.launch {
+            repository.loadBooks().let { result ->
+                if (result is Result.Success) {
+                    books.value = loadedBooks(result.data)
+                }
+            }
+        }
     }
 
     private fun loadedCategories(input: List<CategoryEntity>): List<CategoryEntity> {
         val cats = ArrayList<CategoryEntity>()
         cats.addAll(input)
         return cats
+    }
+
+    private fun loadedBooks(input: List<BookEntity>): List<BookEntity> {
+        val books = ArrayList<BookEntity>()
+        books.addAll(input)
+        return books
     }
 
     suspend fun deleteQuote() {
@@ -70,10 +85,22 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
     fun addBookInfo(book: BookEntity) {
         quoteBookInfo.value = book
         bookImage.value = book.cover
+
+        viewModelScope.launch {
+            val old = quoteDetail.value!!
+            old.bookId = book.id
+            repository.updateQuote(old)
+        }
     }
 
     fun removeBookInfo() {
         quoteBookInfo.value = null
         bookImage.value = ""
+
+        viewModelScope.launch {
+            val old = quoteDetail.value!!
+            old.bookId = ""
+            repository.updateQuote(old)
+        }
     }
 }
