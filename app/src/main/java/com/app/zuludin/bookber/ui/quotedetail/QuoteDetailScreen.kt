@@ -30,6 +30,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +49,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
@@ -59,8 +64,10 @@ fun QuoteDetailScreen(
 ) {
     val context = LocalContext.current
 
+    var showEditQuoteDialog by remember { mutableStateOf(false) }
+
     val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
-    val category by viewModel.quoteCategory.observeAsState(initial = "")
+    val category by viewModel.quoteCategory.observeAsState(initial = CategoryEntity())
     val bookInfo by viewModel.quoteBookInfo.observeAsState(initial = BookEntity())
     val bookImage by viewModel.bookImage.observeAsState(initial = "")
 
@@ -91,7 +98,9 @@ fun QuoteDetailScreen(
                         Icon(Icons.Filled.Share, null)
                     }
 
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        showEditQuoteDialog = true
+                    }) {
                         Icon(Icons.Filled.Edit, null)
                     }
                 }
@@ -125,11 +134,25 @@ fun QuoteDetailScreen(
                 }
             }
         }
+
+        if (showEditQuoteDialog) {
+            SaveQuoteConfirmDialog(
+                isUpdate = true,
+                quote = quote,
+                category = category,
+                categories = listOf(CategoryEntity(category = "Hallo")),
+                onSaveQuote = { quote, author, categoryId ->
+                    viewModel.updateQuote(quote, author)
+                    showEditQuoteDialog = false
+                },
+                onDismissRequest = { showEditQuoteDialog = false }
+            )
+        }
     }
 }
 
 @Composable
-private fun QuoteBanner(quote: QuoteEntity, category: String) {
+private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -146,7 +169,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: String) {
             val (q, a, c) = createRefs()
 
             Text(
-                text = category,
+                text = category.category,
                 fontSize = 12.sp,
                 modifier = Modifier
                     .constrainAs(c) {
@@ -315,7 +338,7 @@ fun QuoteBannerPreview() {
         quote = QuoteEntity(
             quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
             author = "Jurgen Klopp"
-        ), category = ""
+        ), category = CategoryEntity()
     )
 }
 
