@@ -52,6 +52,7 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
+import com.app.zuludin.bookber.ui.quotedetail.components.SelectBookSheet
 import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
@@ -65,6 +66,7 @@ fun QuoteDetailScreen(
     val context = LocalContext.current
 
     var showEditQuoteDialog by remember { mutableStateOf(false) }
+    var showBookSelectDialog by remember { mutableStateOf(false) }
 
     val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
     val category by viewModel.quoteCategory.observeAsState(initial = CategoryEntity())
@@ -110,9 +112,9 @@ fun QuoteDetailScreen(
         Column(modifier = Modifier.padding(it)) {
             QuoteBanner(quote, category)
             if (bookInfo != null) {
-                QuoteBookInfo(bookInfo, bookImage)
+                QuoteBookInfo(bookInfo, bookImage) { viewModel.removeBookInfo() }
             } else {
-                EmptyBookInfo()
+                EmptyBookInfo { showBookSelectDialog = true }
             }
             Spacer(modifier = Modifier.height(48.dp))
             Button(
@@ -146,6 +148,16 @@ fun QuoteDetailScreen(
                     showEditQuoteDialog = false
                 },
                 onDismissRequest = { showEditQuoteDialog = false }
+            )
+        }
+
+        if (showBookSelectDialog) {
+            SelectBookSheet(
+                onDismissRequest = { showBookSelectDialog = false },
+                onSelectBook = { book ->
+                    viewModel.addBookInfo(book)
+                    showBookSelectDialog = false
+                }
             )
         }
     }
@@ -209,7 +221,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity) {
 }
 
 @Composable
-private fun QuoteBookInfo(book: BookEntity?, bookImage: String) {
+private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -263,7 +275,7 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String) {
                     color = Color.Gray
                 )
             }
-            IconButton(onClick = { }, modifier = Modifier.constrainAs(removeBook) {
+            IconButton(onClick = { onRemoveBook() }, modifier = Modifier.constrainAs(removeBook) {
                 end.linkTo(parent.end)
                 top.linkTo(image.top)
                 bottom.linkTo(image.bottom)
@@ -279,7 +291,7 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String) {
 }
 
 @Composable
-private fun EmptyBookInfo() {
+private fun EmptyBookInfo(onInputBook: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -316,7 +328,7 @@ private fun EmptyBookInfo() {
                     color = Color.Gray
                 )
             }
-            IconButton(onClick = { }, modifier = Modifier.constrainAs(removeBook) {
+            IconButton(onClick = { onInputBook() }, modifier = Modifier.constrainAs(removeBook) {
                 end.linkTo(parent.end)
                 top.linkTo(image.top)
                 bottom.linkTo(image.bottom)
@@ -345,5 +357,5 @@ fun QuoteBannerPreview() {
 @Preview
 @Composable
 fun QuoteBookInfoPreview() {
-    QuoteBookInfo(BookEntity(), "")
+    QuoteBookInfo(BookEntity(), "") {}
 }

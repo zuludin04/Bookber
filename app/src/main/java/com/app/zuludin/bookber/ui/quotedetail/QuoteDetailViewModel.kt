@@ -45,4 +45,14 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
         old.author = author
         quoteDetail.value = old
     }
+
+    fun addBookInfo(book: BookEntity) {
+        quoteBookInfo.value = book
+        bookImage.value = book.cover
+    }
+
+    fun removeBookInfo() {
+        quoteBookInfo.value = null
+        bookImage.value = ""
+    }
 }
