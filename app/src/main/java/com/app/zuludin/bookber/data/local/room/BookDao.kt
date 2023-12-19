@@ -15,6 +15,9 @@ interface BookDao {
     @Query("select * from bookentity")
     fun loadBookStore(): LiveData<List<BookEntity>>
 
+    @Query("select * from bookentity")
+    suspend fun loadBooks(): List<BookEntity>
+
     @Transaction
     @Query("select * from bookentity where bookId = :bookId")
     suspend fun loadBookDetail(bookId: String): BookDetailEntity?

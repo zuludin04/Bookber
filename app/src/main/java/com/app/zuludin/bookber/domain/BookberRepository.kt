@@ -11,6 +11,8 @@ import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 interface BookberRepository {
     fun loadBookStore(): LiveData<Result<List<BookEntity>>>
 
+    suspend fun loadBooks(): Result<List<BookEntity>>
+
     fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>>
 
     suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>

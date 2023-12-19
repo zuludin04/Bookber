@@ -29,6 +29,19 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
+    override suspend fun loadBooks(): Result<List<BookEntity>> = withContext(ioDispatcher) {
+        try {
+            val books = bookDao.loadBooks()
+            if (books.isNotEmpty()) {
+                return@withContext Success(books)
+            } else {
+                return@withContext Success(emptyList())
+            }
+        } catch (e: Exception) {
+            return@withContext Error(e)
+        }
+    }
+
     override fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>> {
         return bookDao.loadBooksByCategory(categoryId).map {
             Success(it)
