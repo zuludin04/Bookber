@@ -53,15 +53,15 @@ fun BookInformation(
 ) {
     var showBookInfo by remember { mutableStateOf(bookState) }
 
-    if (showBookInfo == BookInfoState.ADD_QUOTE) {
+    if (bookState == BookInfoState.ADD_QUOTE) {
         BookEmptyInformation { showBookInfo = BookInfoState.ADD_BOOK }
     } else {
-        ShowBookInformation(viewModel, showBookInfo, onSaveBook)
+        ShowBookInformation(viewModel, bookState, onSaveBook)
     }
 }
 
 @Composable
-fun BookEmptyInformation(inputBook: () -> Unit) {
+private fun BookEmptyInformation(inputBook: () -> Unit) {
     Card(shape = RoundedCornerShape(0.dp)) {
         Box(
             modifier = Modifier
@@ -87,7 +87,7 @@ fun BookEmptyInformation(inputBook: () -> Unit) {
 }
 
 @Composable
-fun ShowBookInformation(
+private fun ShowBookInformation(
     viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
     onSaveBook: (String, String, String, Uri?) -> Unit
@@ -100,7 +100,6 @@ fun ShowBookInformation(
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
-    var bookAvailability by remember { mutableStateOf(bookState) }
 
     Card(shape = RoundedCornerShape(0.dp), modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -113,7 +112,7 @@ fun ShowBookInformation(
                         .width(100.dp)
                         .height(150.dp)
                         .clickable(
-                            enabled = bookAvailability != BookInfoState.DETAIL_BOOK,
+                            enabled = bookState != BookInfoState.DETAIL_BOOK,
                             onClick = { showPickImageSheet = true }
                         )
                 ) {
@@ -179,26 +178,26 @@ fun ShowBookInformation(
                     TextField(
                         value = titleField,
                         onValueChange = { viewModel.bookTitle.value = it },
-                        enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                        enabled = bookState != BookInfoState.DETAIL_BOOK
                     )
                     TextField(
                         value = authorField,
                         onValueChange = { viewModel.bookAuthor.value = it },
-                        enabled = bookAvailability != BookInfoState.DETAIL_BOOK
+                        enabled = bookState != BookInfoState.DETAIL_BOOK
                     )
                     SampleSpinner(
                         modifier = Modifier.fillMaxWidth(),
                         list = categories,
                         preselected = categoryField,
                         onSelectionChanged = { viewModel.bookCategory.value = it },
-                        enableSpinner = bookAvailability != BookInfoState.DETAIL_BOOK
+                        enableSpinner = bookState != BookInfoState.DETAIL_BOOK
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (bookAvailability == BookInfoState.ADD_BOOK) {
+            if (bookState == BookInfoState.ADD_BOOK) {
                 Button(
                     onClick = {
                         onSaveBook(
@@ -207,7 +206,6 @@ fun ShowBookInformation(
                             categoryField.id,
                             imageUri
                         )
-                        bookAvailability = BookInfoState.DETAIL_BOOK
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {

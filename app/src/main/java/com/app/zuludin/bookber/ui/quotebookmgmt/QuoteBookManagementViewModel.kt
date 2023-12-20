@@ -99,7 +99,6 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
     }
 
     fun saveQuote(quote: QuoteEntity) {
-//        updateBookQuotes(quote)
         viewModelScope.launch {
             repository.saveQuote(quote)
             if (_bookId.value != null) {

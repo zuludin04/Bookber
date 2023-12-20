@@ -13,6 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +50,7 @@ fun QuoteBookManagementScreen(
     val context = LocalContext.current
     val bookInfoState = convertStringToBookState(bookState)
 
+    var managementState by remember { mutableStateOf(bookInfoState) }
     var showSaveQuoteDialog by remember { mutableStateOf(false) }
     var showQuoteInput by remember { mutableStateOf(bookInfoState != BookInfoState.ADD_BOOK) }
     var quoteInput by remember { mutableStateOf("") }
@@ -68,6 +70,13 @@ fun QuoteBookManagementScreen(
                         Icon(Icons.Filled.ArrowBack, null)
                     }
                 },
+                actions = {
+                    IconButton(onClick = {
+                        managementState = BookInfoState.ADD_BOOK
+                    }) {
+                        Icon(Icons.Filled.Edit, null)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         },
@@ -83,7 +92,7 @@ fun QuoteBookManagementScreen(
         Column(modifier = Modifier.padding(it)) {
             BookInformation(
                 viewModel = viewModel,
-                bookState = bookInfoState,
+                bookState = managementState,
                 onSaveBook = { title, author, categoryId, imageUri ->
                     val bitmap =
                         MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
@@ -100,9 +109,15 @@ fun QuoteBookManagementScreen(
                     )
 
                     currentBookId = book.id
-                    viewModel.saveBook(book, quotesWithoutBook.toList(), book.id)
+                    if (bookId != null) {
+                        book.id = bookId
+                        viewModel.updateBook(book)
+                    } else {
+                        viewModel.saveBook(book, quotesWithoutBook.toList(), book.id)
+                    }
                     if (bookInfoState != BookInfoState.ADD_QUOTE) viewModel.setBookId(book.id)
                     showQuoteInput = true
+                    managementState = BookInfoState.DETAIL_BOOK
                 }
             )
 
