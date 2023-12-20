@@ -13,6 +13,7 @@ private object BookberScreens {
     const val BOOK_QUOTE_MANAGEMENT = "bookQuoteManagement"
     const val CATEGORY_SCREEN = "category"
     const val FAVORITE_SCREEN = "favorite"
+    const val SETTING_SCREEN = "setting"
 }
 
 object BookberDestinationArgs {
@@ -29,6 +30,7 @@ object BookberDestination {
     const val CATEGORY_ROUTE = BookberScreens.CATEGORY_SCREEN
     const val FAVORITE_ROUTE = BookberScreens.FAVORITE_SCREEN
     const val QUOTE_DETAIL_ROUTE = "${BookberScreens.QUOTE_DETAIL_SCREEN}/{${QUOTE_ID_ARG}}"
+    const val SETTING_ROUTE = BookberScreens.SETTING_SCREEN
 }
 
 class BookberNavigationActions(private val navController: NavHostController) {
@@ -67,6 +69,15 @@ class BookberNavigationActions(private val navController: NavHostController) {
 
     fun navigateToFavorite() {
         navController.navigate(BookberDestination.FAVORITE_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+        }
+    }
+
+    fun navigateToSetting() {
+        navController.navigate(BookberDestination.SETTING_ROUTE) {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }

@@ -24,6 +24,7 @@ import com.app.zuludin.bookber.ui.favorite.FavoriteScreen
 import com.app.zuludin.bookber.ui.quote.QuoteScreen
 import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementScreen
 import com.app.zuludin.bookber.ui.quotedetail.QuoteDetailScreen
+import com.app.zuludin.bookber.ui.settings.SettingsScreen
 import com.app.zuludin.bookber.util.components.BookberModalDrawer
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import kotlinx.coroutines.CoroutineScope
@@ -118,6 +119,12 @@ fun BookberNavGraph(
         composable(BookberDestination.FAVORITE_ROUTE) {
             BookberModalDrawer(drawerState, currentRoute, navActions) {
                 FavoriteScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
+            }
+        }
+
+        composable(BookberDestination.SETTING_ROUTE) {
+            BookberModalDrawer(drawerState, currentRoute, navActions) {
+                SettingsScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
             }
         }
 

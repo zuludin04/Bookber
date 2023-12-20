@@ -49,7 +49,7 @@ fun BookberModalDrawer(
                 navigateToCategory = { navigationActions.navigateToCategory() },
                 navigateToFavorite = { navigationActions.navigateToFavorite() },
                 navigateToWidget = {},
-                navigateToSettings = {},
+                navigateToSettings = { navigationActions.navigateToSetting() },
                 closeDrawer = { coroutineScope.launch { drawerState.close() } },
             )
         }

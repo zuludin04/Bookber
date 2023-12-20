@@ -12,4 +12,11 @@
     <string name="empty_book">Book is Empty</string>
     <string name="empty_quote">Quote is Empty</string>
     <string name="update">Update</string>
+    <string name="general">General</string>
+    <string name="about">About</string>
+    <string name="category">Category</string>
+    <string name="theme">Theme</string>
+    <string name="rate">Rate Us</string>
+    <string name="share">Share</string>
+    <string name="app_version">Version: </string>
 </resources>
