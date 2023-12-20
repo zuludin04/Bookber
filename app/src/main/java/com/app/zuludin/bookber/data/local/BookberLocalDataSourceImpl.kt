@@ -42,11 +42,19 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>> {
-        return bookDao.loadBooksByCategory(categoryId).map {
-            Success(it)
+    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookEntity>> =
+        withContext(ioDispatcher) {
+            try {
+                val book = bookDao.loadBooksByCategory(categoryId)
+                if (book.isNotEmpty()) {
+                    return@withContext Success(book)
+                } else {
+                    return@withContext Success(emptyList())
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
+            }
         }
-    }
 
     override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> =
         withContext(ioDispatcher) {
@@ -91,18 +99,19 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> = withContext(ioDispatcher) {
-        try {
-            val quotes = quoteDao.loadQuotesByCategory(categoryId)
-            if (quotes.isNotEmpty()) {
-                return@withContext Success(quotes)
-            } else {
-                return@withContext Success(emptyList())
+    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> =
+        withContext(ioDispatcher) {
+            try {
+                val quotes = quoteDao.loadQuotesByCategory(categoryId)
+                if (quotes.isNotEmpty()) {
+                    return@withContext Success(quotes)
+                } else {
+                    return@withContext Success(emptyList())
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
             }
-        } catch (e: Exception) {
-            return@withContext Error(e)
         }
-    }
 
     override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> =
         withContext(ioDispatcher) {

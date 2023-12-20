@@ -13,7 +13,7 @@ interface BookberLocalDataSource {
 
     suspend fun loadBooks(): Result<List<BookEntity>>
 
-    fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>>
+    suspend fun loadBooksByCategory(categoryId: String): Result<List<BookEntity>>
 
     suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>
 

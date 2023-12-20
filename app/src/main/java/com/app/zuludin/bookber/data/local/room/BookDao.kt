@@ -23,7 +23,7 @@ interface BookDao {
     suspend fun loadBookDetail(bookId: String): BookDetailEntity?
 
     @Query("select * from bookentity where categoryId = :categoryId")
-    fun loadBooksByCategory(categoryId: String): LiveData<List<BookEntity>>
+    suspend fun loadBooksByCategory(categoryId: String): List<BookEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveBook(book: BookEntity)
