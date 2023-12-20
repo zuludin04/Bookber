@@ -13,6 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,10 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
+import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
 import java.io.ByteArrayOutputStream
@@ -71,10 +72,19 @@ fun QuoteBookManagementScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = {
-                        managementState = BookInfoState.ADD_BOOK
-                    }) {
-                        Icon(Icons.Filled.Edit, null)
+                    if (currentBookId != "") {
+                        IconButton(onClick = {
+                            managementState = if (managementState == BookInfoState.DETAIL_BOOK) {
+                                BookInfoState.ADD_BOOK
+                            } else {
+                                BookInfoState.DETAIL_BOOK
+                            }
+                        }) {
+                            Icon(
+                                if (managementState == BookInfoState.DETAIL_BOOK) Icons.Filled.Edit else Icons.Filled.Close,
+                                null
+                            )
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
