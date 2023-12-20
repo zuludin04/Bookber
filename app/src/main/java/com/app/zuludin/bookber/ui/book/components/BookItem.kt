@@ -82,7 +82,12 @@ fun BookItem(
                     .padding(top = 12.dp)
                     .fillMaxWidth()
             ) {
-                Text(text = book.category.category, color = Color.Gray, fontSize = 13.sp, maxLines = 1)
+                Text(
+                    text = book.category?.category ?: "-",
+                    color = Color.Gray,
+                    fontSize = 13.sp,
+                    maxLines = 1
+                )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "${book.quotes.size}",

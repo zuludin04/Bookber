@@ -204,7 +204,7 @@ private fun ShowBookInformation(
                         onSaveBook(
                             titleField,
                             authorField,
-                            categoryField.id,
+                            categoryField?.id ?: "",
                             imageUri
                         )
                     },

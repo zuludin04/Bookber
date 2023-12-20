@@ -32,7 +32,7 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
 
     val bookTitle = MutableLiveData<String>()
     val bookAuthor = MutableLiveData<String>()
-    val bookCategory = MutableLiveData<CategoryEntity>()
+    val bookCategory = MutableLiveData<CategoryEntity?>()
     val bookImage = MutableLiveData<String>()
 
     private fun observeQuoteCategories(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {

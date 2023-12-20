@@ -20,5 +20,5 @@ data class BookDetailEntity(
         parentColumn = "categoryId",
         entityColumn = "categoryId"
     )
-    val category: CategoryEntity
+    val category: CategoryEntity?
 )

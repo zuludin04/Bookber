@@ -20,5 +20,5 @@ data class QuoteDetailEntity(
         parentColumn = "categoryId",
         entityColumn = "categoryId"
     )
-    val categoryEntity: CategoryEntity
+    val categoryEntity: CategoryEntity?
 )

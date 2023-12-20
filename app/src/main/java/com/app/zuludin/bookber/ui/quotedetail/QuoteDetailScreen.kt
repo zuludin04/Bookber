@@ -178,7 +178,7 @@ fun QuoteDetailScreen(
 }
 
 @Composable
-private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity) {
+private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -195,7 +195,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity) {
             val (q, a, c) = createRefs()
 
             Text(
-                text = category.category,
+                text = category?.category ?: "-",
                 fontSize = 12.sp,
                 modifier = Modifier
                     .constrainAs(c) {

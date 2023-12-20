@@ -15,7 +15,7 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
     private val _quoteId = MutableLiveData<String>()
 
     val quoteDetail = MutableLiveData<QuoteEntity>()
-    val quoteCategory = MutableLiveData<CategoryEntity>()
+    val quoteCategory = MutableLiveData<CategoryEntity?>()
     val quoteBookInfo = MutableLiveData<BookEntity?>()
     val bookImage = MutableLiveData<String>()
 

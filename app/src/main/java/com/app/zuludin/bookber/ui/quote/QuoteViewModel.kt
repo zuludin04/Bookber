@@ -68,19 +68,6 @@ class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
 
     fun loadQuotes() = repository.loadAllQuotes()
 
-    fun deleteQuote(quoteId: String) {
-        viewModelScope.launch {
-            repository.deleteQuoteById(quoteId)
-        }
-    }
-
-    fun removeFromBook(quote: QuoteEntity) {
-        quote.bookId = ""
-        viewModelScope.launch {
-            repository.updateQuote(quote)
-        }
-    }
-
     fun updateQuote(quote: QuoteEntity) {
         viewModelScope.launch {
             repository.updateQuote(quote)
