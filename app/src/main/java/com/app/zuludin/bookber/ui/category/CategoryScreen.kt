@@ -38,6 +38,7 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.category.components.CategoryItem
 import com.app.zuludin.bookber.ui.category.components.CategoryManagementSheet
+import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 import kotlinx.coroutines.launch
 
@@ -47,15 +48,19 @@ fun CategoryScreen(
     openDrawer: () -> Unit,
     viewModel: CategoryViewModel = viewModel(factory = getViewModelFactory())
 ) {
-    var tabIndex by remember { mutableIntStateOf(0) }
+
     val tabs = listOf("Quote", "Book")
     val pagerState = rememberPagerState { tabs.size }
+    val coroutineScope = rememberCoroutineScope()
+
+    var selectedCategoryId = ""
+    var tabIndex by remember { mutableIntStateOf(0) }
+    var showCategorySheet by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     val bookCategories by viewModel.bookCategories.observeAsState(initial = emptyList())
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
-    var showCategorySheet by remember { mutableStateOf(false) }
 
-    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -101,12 +106,14 @@ fun CategoryScreen(
                     0 -> CategoryContents(
                         categories = quoteCategories,
                         onDeleteCategory = { id ->
-                            viewModel.deleteSelectedCategory(id)
+                            selectedCategoryId = id
+                            showDeleteConfirmDialog = true
                         })
 
                     1 -> CategoryContents(categories = bookCategories,
                         onDeleteCategory = { id ->
-                            viewModel.deleteSelectedCategory(id)
+                            selectedCategoryId = id
+                            showDeleteConfirmDialog = true
                         })
                 }
             }
@@ -126,6 +133,14 @@ fun CategoryScreen(
                     showCategorySheet = false
                 },
                 onDismissRequest = { showCategorySheet = !showCategorySheet }
+            )
+        }
+
+        if (showDeleteConfirmDialog) {
+            ConfirmAlertDialog(
+                message = "Are you sure want to delete this category?",
+                onDismissRequest = { showDeleteConfirmDialog = false },
+                onConfirm = { viewModel.deleteSelectedCategory(selectedCategoryId) }
             )
         }
     }
