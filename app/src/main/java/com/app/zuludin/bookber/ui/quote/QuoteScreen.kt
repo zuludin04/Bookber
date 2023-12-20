@@ -28,9 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
-import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -70,8 +68,6 @@ fun QuoteScreen(
         val quotes by viewModel.quotes.observeAsState(initial = emptyList())
         val filterQuotes by viewModel.filteredQuotes.observeAsState(initial = emptyList())
 
-        var showEditDialog by remember { mutableStateOf(false) }
-        var editQuote by remember { mutableStateOf(QuoteEntity()) }
         var isFilter by remember { mutableStateOf(false) }
 
         Column(
@@ -93,34 +89,9 @@ fun QuoteScreen(
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                     items(list) { quote ->
-                        QuoteItem(
-                            quote = quote,
-                            onDeleteQuote = { quoteId -> viewModel.deleteQuote(quoteId) },
-                            onRemoveFromBook = { q -> viewModel.removeFromBook(q) },
-                            onEditQuote = {
-                                editQuote = quote
-                                showEditDialog = true
-                            },
-                            onDetailQuote = onOpenDetailQuote,
-                        )
+                        QuoteItem(quote = quote, onDetailQuote = onOpenDetailQuote)
                     }
                 }
-            }
-
-            if (showEditDialog) {
-                SaveQuoteConfirmDialog(
-                    isUpdate = true,
-                    quote = editQuote,
-                    categories = categories,
-                    onSaveQuote = { quote, author, categoryId ->
-                        editQuote.quotes = quote
-                        editQuote.author = author
-                        editQuote.categoryId = categoryId
-                        viewModel.updateQuote(editQuote)
-                        showEditDialog = false
-                    },
-                    onDismissRequest = { showEditDialog = !showEditDialog },
-                )
             }
         }
     }

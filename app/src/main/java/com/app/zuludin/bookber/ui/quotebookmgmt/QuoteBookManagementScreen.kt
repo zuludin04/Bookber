@@ -127,13 +127,6 @@ fun QuoteBookManagementScreen(
                     key = { q -> q.id }) { quote ->
                     QuoteItem(
                         quote = quote,
-                        onDeleteQuote = { id ->
-                            viewModel.deleteQuote(id)
-                        },
-                        onRemoveFromBook = { q ->
-                            viewModel.removeFromBook(q)
-                        },
-                        onEditQuote = {},
                         onDetailQuote = onOpenDetailQuote,
                     )
                 }
