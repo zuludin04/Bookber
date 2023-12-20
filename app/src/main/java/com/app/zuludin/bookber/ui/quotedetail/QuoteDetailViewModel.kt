@@ -70,15 +70,16 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
         }
     }
 
-    fun updateQuote(quote: String, author: String, categoryId: String) {
+    fun updateQuote(quote: String, author: String, category: CategoryEntity) {
         val old = quoteDetail.value!!
         old.quotes = quote
         old.author = author
-        old.categoryId = categoryId
+        old.categoryId = category.id
         quoteDetail.value = old
 
         viewModelScope.launch {
             repository.updateQuote(old)
+            quoteCategory.value = category
         }
     }
 

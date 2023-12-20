@@ -148,8 +148,8 @@ fun QuoteDetailScreen(
                 quote = quote,
                 category = category,
                 categories = categories,
-                onSaveQuote = { quote, author, categoryId ->
-                    viewModel.updateQuote(quote, author, categoryId)
+                onSaveQuote = { quote, author, category ->
+                    viewModel.updateQuote(quote, author, category)
                     showEditQuoteDialog = false
                 },
                 onDismissRequest = { showEditQuoteDialog = false }

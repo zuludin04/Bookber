@@ -44,12 +44,13 @@ fun SaveQuoteConfirmDialog(
     quote: QuoteEntity?,
     category: CategoryEntity? = null,
     categories: List<CategoryEntity>,
-    onSaveQuote: (quote: String, author: String, categoryId: String) -> Unit,
+    onSaveQuote: (quote: String, author: String, category: CategoryEntity) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     var authorField by remember { mutableStateOf(TextFieldValue(quote?.author ?: "")) }
     var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quotes ?: "")) }
     var selectedCategoryId by remember { mutableStateOf(quote?.categoryId ?: "") }
+    var selectedCategory by remember { mutableStateOf(CategoryEntity()) }
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -101,13 +102,25 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
                 preselected = category ?: CategoryEntity(category = "Select Category"),
-                onSelectionChanged = { selectedCategoryId = it.id },
+                onSelectionChanged = {
+                    selectedCategoryId = it.id
+                    selectedCategory = it
+                },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    onSaveQuote(quoteField.text, authorField.text, selectedCategoryId)
+                    val q = QuoteEntity(
+                        quotes = quoteField.text,
+                        author = authorField.text,
+                        categoryId = selectedCategoryId,
+                        bookId = quote?.bookId ?: ""
+                    )
+
+                    if (isUpdate) q.id = quote!!.id
+
+                    onSaveQuote(quoteField.text, authorField.text, selectedCategory)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

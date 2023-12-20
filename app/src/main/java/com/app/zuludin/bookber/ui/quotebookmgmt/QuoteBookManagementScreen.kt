@@ -137,11 +137,11 @@ fun QuoteBookManagementScreen(
                     isUpdate = false,
                     quote = QuoteEntity(quotes = quoteInput),
                     categories = quoteCategories,
-                    onSaveQuote = { quote, author, categoryId ->
+                    onSaveQuote = { quote, author, category ->
                         val newQuote = QuoteEntity(
                             quotes = quote,
                             author = author,
-                            categoryId = categoryId,
+                            categoryId = category.id,
                             bookId = currentBookId
                         )
 
