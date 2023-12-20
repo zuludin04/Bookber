@@ -29,7 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.ui.quote.components.QuoteItem
+import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog

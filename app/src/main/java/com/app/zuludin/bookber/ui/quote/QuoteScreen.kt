@@ -28,7 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.ui.quote.components.QuoteItem
+import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.getViewModelFactory

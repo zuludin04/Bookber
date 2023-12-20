@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.quote.components
+package com.app.zuludin.bookber.util.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

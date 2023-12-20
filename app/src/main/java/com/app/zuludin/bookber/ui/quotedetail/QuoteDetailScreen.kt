@@ -6,7 +6,6 @@ import android.util.Base64
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,17 +20,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -40,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -59,9 +53,9 @@ import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quotedetail.components.SelectBookSheet
+import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuoteDetailScreen(
     quoteId: String,
@@ -174,35 +168,10 @@ fun QuoteDetailScreen(
         }
 
         if (showDeleteDialog) {
-            AlertDialog(
+            ConfirmAlertDialog(
+                message = "Are you sure want to delete this quote?",
                 onDismissRequest = { showDeleteDialog = false },
-                content = {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(Color.White)
-                            .padding(16.dp)
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "Are you sure want to delete this quote?",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Row {
-                                TextButton(onClick = {
-                                    state.onDelete()
-                                    showDeleteDialog = false
-                                }) {
-                                    Text(text = "Yes")
-                                }
-                                TextButton(onClick = { showDeleteDialog = false }) {
-                                    Text(text = "No")
-                                }
-                            }
-                        }
-                    }
-                },
+                onConfirm = state::onDelete
             )
         }
     }
