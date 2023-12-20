@@ -23,6 +23,8 @@ class BookViewModel(private val repository: BookberRepository) : ViewModel() {
             .switchMap { observerCategories(it) }
     val categories: LiveData<List<CategoryEntity>> = _categories
 
+    val filteredBooks: MutableLiveData<List<BookEntity>> = MutableLiveData()
+
     private fun observerBooks(bookResult: Result<List<BookEntity>>): LiveData<List<BookEntity>> {
         val result = MutableLiveData<List<BookEntity>>()
 
@@ -62,5 +64,19 @@ class BookViewModel(private val repository: BookberRepository) : ViewModel() {
         return categoriesToShow
     }
 
-    fun loadBooks() = repository.loadBookStore()
+    fun filterBooksByCategoryId(categoryId: String) {
+        viewModelScope.launch {
+            repository.loadBooksByCategory(categoryId).let { result ->
+                if (result is Result.Success) {
+                    filteredBooks.value = showFilterResult(result.data)
+                }
+            }
+        }
+    }
+
+    private fun showFilterResult(list: List<BookEntity>): List<BookEntity> {
+        val result = ArrayList<BookEntity>()
+        result.addAll(list)
+        return result
+    }
 }

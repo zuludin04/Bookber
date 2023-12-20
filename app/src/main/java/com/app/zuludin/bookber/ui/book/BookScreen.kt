@@ -18,6 +18,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -58,21 +61,29 @@ fun BookScreen(
     ) {
         val categories by viewModel.categories.observeAsState(initial = emptyList())
         val books by viewModel.books.observeAsState(initial = emptyList())
+        val filterBooks by viewModel.filteredBooks.observeAsState(initial = emptyList())
+
+        var isFilter by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            CategoryFilterChips(categories = categories, onFilterQuote = {})
+            CategoryFilterChips(categories = categories, onFilterQuote = { cat ->
+                isFilter = cat.category != "All"
+                viewModel.filterBooksByCategoryId(cat.id)
+            })
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            if (books.isEmpty()) {
+            val list = if (isFilter) filterBooks else books
+
+            if (list.isEmpty()) {
                 EmptyContentLayout(message = "Book is Empty")
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                    items(books) { book ->
+                    items(list) { book ->
                         BookItem(book = book, onClick = { onDetailBook(book) })
                     }
                 }
