@@ -18,7 +18,7 @@ fun FavoriteScreen(openDrawer: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text(text = "Favorite") },
                 backgroundColor = Color.White,
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
