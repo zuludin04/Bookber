@@ -101,7 +101,7 @@ fun SaveQuoteConfirmDialog(
             SampleSpinner(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
-                preselected = category ?: CategoryEntity(category = "Select Category"),
+                preselected = category?.category ?: "Select Category",
                 onSelectionChanged = {
                     selectedCategoryId = it.id
                     selectedCategory = it
@@ -133,19 +133,20 @@ fun SaveQuoteConfirmDialog(
 @Composable
 fun SampleSpinner(
     list: List<CategoryEntity>,
-    preselected: CategoryEntity,
+    preselected: String,
     onSelectionChanged: (myData: CategoryEntity) -> Unit,
     modifier: Modifier = Modifier,
-    enableSpinner: Boolean = true
+    enableSpinner: Boolean = true,
+    editBook: Boolean = false,
 ) {
 
-    var selected by remember { mutableStateOf(preselected) }
+    var selected by remember { mutableStateOf(CategoryEntity(category = preselected)) }
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         Column {
             TextField(
-                value = selected.category,
+                value = if (editBook) preselected else selected.category,
                 onValueChange = { },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
@@ -165,7 +166,6 @@ fun SampleSpinner(
                 onDismissRequest = { expanded = false },
             ) {
                 list.forEach { entry ->
-
                     DropdownMenuItem(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {

@@ -65,7 +65,7 @@ fun CategoryManagementSheet(
             SampleSpinner(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
-                preselected = CategoryEntity(category = type),
+                preselected = type,
                 onSelectionChanged = { categoryType = it.category },
             )
 

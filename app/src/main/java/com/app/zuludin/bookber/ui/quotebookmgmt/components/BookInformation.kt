@@ -94,7 +94,7 @@ private fun ShowBookInformation(
 ) {
     val titleField by viewModel.bookTitle.observeAsState(initial = "")
     val authorField by viewModel.bookAuthor.observeAsState(initial = "")
-    val categoryField by viewModel.bookCategory.observeAsState(initial = CategoryEntity(category = "Select Category"))
+    val categoryField by viewModel.bookCategory.observeAsState(initial = CategoryEntity())
     val imageField by viewModel.bookImage.observeAsState(initial = "")
     val categories by viewModel.bookCategories.observeAsState(initial = emptyList())
 
@@ -188,9 +188,10 @@ private fun ShowBookInformation(
                     SampleSpinner(
                         modifier = Modifier.fillMaxWidth(),
                         list = categories,
-                        preselected = categoryField,
+                        preselected = categoryField?.category ?: "Select Category",
                         onSelectionChanged = { viewModel.bookCategory.value = it },
-                        enableSpinner = bookState != BookInfoState.DETAIL_BOOK
+                        enableSpinner = bookState != BookInfoState.DETAIL_BOOK,
+                        editBook = true
                     )
                 }
             }
