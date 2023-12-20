@@ -56,7 +56,7 @@ class BookberRepositoryImpl(
         return localSource.loadQuotesByBook(bookId)
     }
 
-    override fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>> {
+    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> {
         return localSource.loadQuotesByCategory(categoryId)
     }
 

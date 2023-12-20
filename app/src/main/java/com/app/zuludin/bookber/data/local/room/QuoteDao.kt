@@ -19,7 +19,7 @@ interface QuoteDao {
     fun loadQuotesByBook(bookId: String): LiveData<List<QuoteEntity>>
 
     @Query("select * from quoteentity where categoryId = :categoryId")
-    fun loadQuotesByCategory(categoryId: String): LiveData<List<QuoteEntity>>
+    suspend fun loadQuotesByCategory(categoryId: String): List<QuoteEntity>
 
     @Transaction
     @Query("select * from quoteentity where quoteId = :quoteId")

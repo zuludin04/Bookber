@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.ui.quote.components.QuoteItem
+import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -68,24 +68,31 @@ fun QuoteScreen(
     ) {
         val categories by viewModel.categories.observeAsState(initial = emptyList())
         val quotes by viewModel.quotes.observeAsState(initial = emptyList())
+        val filterQuotes by viewModel.filteredQuotes.observeAsState(initial = emptyList())
 
         var showEditDialog by remember { mutableStateOf(false) }
         var editQuote by remember { mutableStateOf(QuoteEntity()) }
+        var isFilter by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            CategoryFilterChips(categories = categories)
+            CategoryFilterChips(categories = categories, onFilterQuote = { cat ->
+                isFilter = cat.category != "All"
+                viewModel.filterQuotesByCategory(cat.id)
+            })
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            if (quotes.isEmpty()) {
+            val list = if (isFilter) filterQuotes else quotes
+
+            if (list.isEmpty()) {
                 EmptyContentLayout(message = "Quote is Empty")
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                    items(quotes) { quote ->
+                    items(list) { quote ->
                         QuoteItem(
                             quote = quote,
                             onDeleteQuote = { quoteId -> viewModel.deleteQuote(quoteId) },

@@ -26,7 +26,7 @@ import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.util.bottomBorder
 
 @Composable
-fun CategoryFilterChips(categories: List<CategoryEntity>) {
+fun CategoryFilterChips(categories: List<CategoryEntity>, onFilterQuote: (CategoryEntity) -> Unit) {
     var selectedChip by remember { mutableStateOf("All") }
 
     LazyRow(
@@ -39,7 +39,10 @@ fun CategoryFilterChips(categories: List<CategoryEntity>) {
             CategoryChips(
                 title = category.category,
                 isSelected = selectedChip == category.category,
-                onFilterCategory = { selectedChip = it }
+                onFilterCategory = {
+                    selectedChip = it
+                    onFilterQuote(category)
+                }
             )
         }
     }
@@ -75,6 +78,6 @@ private fun CategoryChips(title: String, isSelected: Boolean, onFilterCategory: 
 @Composable
 fun CategoryFilterChipsPreview() {
     MaterialTheme {
-        CategoryFilterChips(arrayListOf(CategoryEntity(category = "All")))
+        CategoryFilterChips(arrayListOf(CategoryEntity(category = "All"))) {}
     }
 }

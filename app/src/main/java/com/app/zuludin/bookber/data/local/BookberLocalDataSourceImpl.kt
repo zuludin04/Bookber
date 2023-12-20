@@ -91,9 +91,16 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>> {
-        return quoteDao.loadQuotesByCategory(categoryId).map {
-            Success(it)
+    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> = withContext(ioDispatcher) {
+        try {
+            val quotes = quoteDao.loadQuotesByCategory(categoryId)
+            if (quotes.isNotEmpty()) {
+                return@withContext Success(quotes)
+            } else {
+                return@withContext Success(emptyList())
+            }
+        } catch (e: Exception) {
+            return@withContext Error(e)
         }
     }
 

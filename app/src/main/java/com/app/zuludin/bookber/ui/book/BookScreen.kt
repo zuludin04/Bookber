@@ -64,7 +64,7 @@ fun BookScreen(
                 .padding(it)
                 .fillMaxSize()
         ) {
-            CategoryFilterChips(categories = categories)
+            CategoryFilterChips(categories = categories, onFilterQuote = {})
 
             Spacer(modifier = Modifier.height(8.dp))
 

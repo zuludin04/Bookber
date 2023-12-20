@@ -23,6 +23,8 @@ class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
             .switchMap { observerCategories(it) }
     val categories: LiveData<List<CategoryEntity>> = _categories
 
+    val filteredQuotes: MutableLiveData<List<QuoteEntity>> = MutableLiveData()
+
     private fun observerQuotes(quoteResult: Result<List<QuoteEntity>>): LiveData<List<QuoteEntity>> {
         val result = MutableLiveData<List<QuoteEntity>>()
 
@@ -83,5 +85,21 @@ class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
         viewModelScope.launch {
             repository.updateQuote(quote)
         }
+    }
+
+    fun filterQuotesByCategory(categoryId: String) {
+        viewModelScope.launch {
+            repository.loadQuotesByCategory(categoryId).let { result ->
+                if (result is Result.Success) {
+                    filteredQuotes.value = showFilterResult(result.data)
+                }
+            }
+        }
+    }
+
+    private fun showFilterResult(list: List<QuoteEntity>): List<QuoteEntity> {
+        val result = ArrayList<QuoteEntity>()
+        result.addAll(list)
+        return result
     }
 }
