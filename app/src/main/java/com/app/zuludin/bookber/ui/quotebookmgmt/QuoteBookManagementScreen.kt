@@ -27,12 +27,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
+import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -43,10 +46,15 @@ import java.io.ByteArrayOutputStream
 fun QuoteBookManagementScreen(
     onBack: () -> Unit,
     onOpenDetailQuote: (String) -> Unit,
+    onDeleteBook: () -> Unit,
     bookId: String?,
     bookState: String,
     viewModel: QuoteBookManagementViewModel = viewModel(factory = getViewModelFactory()),
-    state: QuoteBookManagementState = rememberQuoteBookManagementState(bookId, viewModel)
+    state: QuoteBookManagementState = rememberQuoteBookManagementState(
+        bookId,
+        onDeleteBook,
+        viewModel
+    )
 ) {
     val context = LocalContext.current
     val bookInfoState = convertStringToBookState(bookState)
@@ -56,6 +64,7 @@ fun QuoteBookManagementScreen(
     var showQuoteInput by remember { mutableStateOf(bookInfoState != BookInfoState.ADD_BOOK) }
     var quoteInput by remember { mutableStateOf("") }
     var currentBookId by remember { mutableStateOf(bookId ?: "") }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
     val quotesWithBook by viewModel.bookQuotes.observeAsState(initial = mutableListOf())
@@ -84,6 +93,10 @@ fun QuoteBookManagementScreen(
                                 if (managementState == BookInfoState.DETAIL_BOOK) Icons.Filled.Edit else Icons.Filled.Close,
                                 null
                             )
+                        }
+
+                        IconButton(onClick = { showDeleteConfirmDialog = true }) {
+                            Icon(painterResource(id = R.drawable.ic_delete), null)
                         }
                     }
                 },
@@ -160,6 +173,14 @@ fun QuoteBookManagementScreen(
                         showSaveQuoteDialog = false
                     },
                     onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },
+                )
+            }
+
+            if (showDeleteConfirmDialog) {
+                ConfirmAlertDialog(
+                    message = "Are you sure want to delete this book?",
+                    onDismissRequest = { showDeleteConfirmDialog = false },
+                    onConfirm = state::onDelete
                 )
             }
         }

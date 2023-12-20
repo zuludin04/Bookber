@@ -110,7 +110,8 @@ fun BookberNavGraph(
                 bookState = state!!,
                 onOpenDetailQuote = {
                     navActions.navigateToQuoteDetail(it)
-                }
+                },
+                onDeleteBook = { navController.popBackStack() }
             )
         }
 
