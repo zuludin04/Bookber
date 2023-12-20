@@ -6,6 +6,7 @@ import android.util.Base64
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,13 +21,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -55,6 +61,7 @@ import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialo
 import com.app.zuludin.bookber.ui.quotedetail.components.SelectBookSheet
 import com.app.zuludin.bookber.util.getViewModelFactory
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuoteDetailScreen(
     quoteId: String,
@@ -67,6 +74,7 @@ fun QuoteDetailScreen(
 
     var showEditQuoteDialog by remember { mutableStateOf(false) }
     var showBookSelectDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
     val category by viewModel.quoteCategory.observeAsState(initial = CategoryEntity())
@@ -121,7 +129,7 @@ fun QuoteDetailScreen(
             }
             Spacer(modifier = Modifier.height(48.dp))
             Button(
-                onClick = state::onDelete,
+                onClick = { showDeleteDialog = true },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier
@@ -162,6 +170,39 @@ fun QuoteDetailScreen(
                     viewModel.addBookInfo(book)
                     showBookSelectDialog = false
                 }
+            )
+        }
+
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color.White)
+                            .padding(16.dp)
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "Are you sure want to delete this quote?",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Row {
+                                TextButton(onClick = {
+                                    state.onDelete()
+                                    showDeleteDialog = false
+                                }) {
+                                    Text(text = "Yes")
+                                }
+                                TextButton(onClick = { showDeleteDialog = false }) {
+                                    Text(text = "No")
+                                }
+                            }
+                        }
+                    }
+                },
             )
         }
     }
