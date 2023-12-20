@@ -6,6 +6,7 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.coroutineScope
@@ -14,15 +15,19 @@ import kotlinx.coroutines.launch
 class BookberRepositoryImpl(
     private val localSource: BookberLocalDataSource
 ) : BookberRepository {
-    override fun loadBookStore(): LiveData<Result<List<BookEntity>>> {
+    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
         return localSource.loadBookStore()
     }
 
-    override suspend fun loadBooks(): Result<List<BookEntity>> {
+    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
+        return localSource.loadBookWithQuotes()
+    }
+
+    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> {
         return localSource.loadBooks()
     }
 
-    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookEntity>> {
+    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> {
         return localSource.loadBooksByCategory(categoryId)
     }
 

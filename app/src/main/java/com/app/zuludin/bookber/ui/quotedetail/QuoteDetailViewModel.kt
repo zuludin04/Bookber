@@ -7,6 +7,7 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.launch
 
@@ -19,7 +20,7 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
     val bookImage = MutableLiveData<String>()
 
     val categories = MutableLiveData<List<CategoryEntity>>()
-    val books = MutableLiveData<List<BookEntity>>()
+    val books = MutableLiveData<List<BookWithQuoteTotal>>()
 
     fun start(quoteId: String) {
         _quoteId.value = quoteId
@@ -58,8 +59,8 @@ class QuoteDetailViewModel(private val repository: BookberRepository) : ViewMode
         return cats
     }
 
-    private fun loadedBooks(input: List<BookEntity>): List<BookEntity> {
-        val books = ArrayList<BookEntity>()
+    private fun loadedBooks(input: List<BookWithQuoteTotal>): List<BookWithQuoteTotal> {
+        val books = ArrayList<BookWithQuoteTotal>()
         books.addAll(input)
         return books
     }

@@ -7,12 +7,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.ui.book.components.BookItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectBookSheet(
-    books: List<BookEntity>,
+    books: List<BookWithQuoteTotal>,
     onDismissRequest: () -> Unit,
     onSelectBook: (BookEntity) -> Unit
 ) {

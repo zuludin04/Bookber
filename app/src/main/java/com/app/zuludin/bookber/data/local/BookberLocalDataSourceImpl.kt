@@ -9,6 +9,7 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.data.local.room.BookDao
 import com.app.zuludin.bookber.data.local.room.CategoryDao
@@ -23,13 +24,19 @@ class BookberLocalDataSourceImpl internal constructor(
     private val categoryDao: CategoryDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BookberLocalDataSource {
-    override fun loadBookStore(): LiveData<Result<List<BookEntity>>> {
+    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
         return bookDao.loadBookStore().map {
             Success(it)
         }
     }
 
-    override suspend fun loadBooks(): Result<List<BookEntity>> = withContext(ioDispatcher) {
+    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
+        return bookDao.loadBookWithQuoteTotal().map {
+            Success(it)
+        }
+    }
+
+    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> = withContext(ioDispatcher) {
         try {
             val books = bookDao.loadBooks()
             if (books.isNotEmpty()) {
@@ -42,7 +49,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookEntity>> =
+    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> =
         withContext(ioDispatcher) {
             try {
                 val book = bookDao.loadBooksByCategory(categoryId)

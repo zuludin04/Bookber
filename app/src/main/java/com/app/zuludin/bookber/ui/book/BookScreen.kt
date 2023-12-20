@@ -84,7 +84,7 @@ fun BookScreen(
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                     items(list) { book ->
-                        BookItem(book = book, onClick = { onDetailBook(book) })
+                        BookItem(book = book, onClick = { onDetailBook(book.book) })
                     }
                 }
             }
