@@ -37,7 +37,7 @@ class BookDaoTest {
     fun saveBook_Success() = runTest {
         dao.saveBook(sampleBook)
         val actual = dao.loadBookStore().getOrAwaitValue()
-        Assert.assertEquals(sampleBook.title, actual[0].title)
+        Assert.assertEquals(sampleBook.title, actual[0].book.title)
         Assert.assertTrue(actual.isNotEmpty())
     }
 

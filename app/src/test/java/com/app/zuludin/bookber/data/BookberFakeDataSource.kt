@@ -7,24 +7,33 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
+import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
+import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 
 class BookberFakeDataSource(
     private var books: MutableList<BookEntity>? = mutableListOf(),
+    private var booksWithQuote: MutableList<BookWithQuoteTotal>? = mutableListOf(),
     private var quotes: MutableList<QuoteEntity>? = mutableListOf(),
     private var categories: MutableList<CategoryEntity>? = mutableListOf()
 ) :
     BookberLocalDataSource {
-    override fun loadBookStore(): LiveData<Result<List<BookEntity>>> {
-        val observableBooks = MutableLiveData<Result<List<BookEntity>>>()
-        observableBooks.value = Result.Success(books ?: arrayListOf())
+    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
+        val observableBooks = MutableLiveData<Result<List<BookWithQuoteTotal>>>()
+        observableBooks.value = Result.Success(booksWithQuote ?: arrayListOf())
         return observableBooks
     }
 
-    override fun loadBooksByCategory(categoryId: String): LiveData<Result<List<BookEntity>>> {
-        val observableBooks = MutableLiveData<Result<List<BookEntity>>>()
-        books?.filter { it.categoryId == categoryId }
-            ?.let { observableBooks.value = Result.Success(it) }
-        return observableBooks
+    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
+        return MutableLiveData()
+    }
+
+    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> {
+        return Result.Success(emptyList())
+    }
+
+    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> {
+        val observableBooks = MutableLiveData<Result<List<BookWithQuoteTotal>>>()
+        return observableBooks.value!!
     }
 
     override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
@@ -60,11 +69,19 @@ class BookberFakeDataSource(
         return observableQuotes
     }
 
-    override fun loadQuotesByCategory(categoryId: String): LiveData<Result<List<QuoteEntity>>> {
+    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> {
         val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
         quotes?.filter { it.categoryId == categoryId }
             ?.let { observableQuotes.value = Result.Success(it) }
-        return observableQuotes
+        return observableQuotes.value!!
+    }
+
+    override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> {
+        return Result.Success(emptyList())
+    }
+
+    override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> {
+        return Result.Success(QuoteDetailEntity(QuoteEntity(), BookEntity(), CategoryEntity()))
     }
 
     override suspend fun saveQuote(quote: QuoteEntity) {
