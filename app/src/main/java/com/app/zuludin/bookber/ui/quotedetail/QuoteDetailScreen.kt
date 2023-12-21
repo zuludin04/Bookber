@@ -52,7 +52,6 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.util.components.ManageQuoteSheet
-import com.app.zuludin.bookber.ui.quotedetail.components.SelectBookSheet
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 

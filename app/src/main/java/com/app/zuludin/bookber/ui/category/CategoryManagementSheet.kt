@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.category.components
+package com.app.zuludin.bookber.ui.category
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.book.components
+package com.app.zuludin.bookber.ui.book
 
 import android.graphics.BitmapFactory
 import android.util.Base64

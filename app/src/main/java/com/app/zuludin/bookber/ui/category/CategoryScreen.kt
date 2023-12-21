@@ -37,8 +37,6 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.ui.category.components.CategoryItem
-import com.app.zuludin.bookber.ui.category.components.CategoryManagementSheet
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 import kotlinx.coroutines.launch

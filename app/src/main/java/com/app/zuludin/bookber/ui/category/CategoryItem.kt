@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.category.components
+package com.app.zuludin.bookber.ui.category
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

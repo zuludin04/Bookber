@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.quotedetail.components
+package com.app.zuludin.bookber.ui.quotedetail
 
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -8,7 +8,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
-import com.app.zuludin.bookber.ui.book.components.BookItem
+import com.app.zuludin.bookber.ui.book.BookItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
