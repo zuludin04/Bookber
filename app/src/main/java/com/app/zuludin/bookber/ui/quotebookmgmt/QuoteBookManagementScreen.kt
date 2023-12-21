@@ -29,7 +29,7 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
-import com.app.zuludin.bookber.ui.quotebookmgmt.components.SaveQuoteConfirmDialog
+import com.app.zuludin.bookber.util.components.ManageQuoteSheet
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
@@ -128,7 +128,7 @@ fun QuoteBookManagementScreen(
             }
 
             if (showSaveQuoteDialog) {
-                SaveQuoteConfirmDialog(
+                ManageQuoteSheet(
                     isUpdate = false,
                     quote = QuoteEntity(quotes = quoteInput),
                     categories = quoteCategories,

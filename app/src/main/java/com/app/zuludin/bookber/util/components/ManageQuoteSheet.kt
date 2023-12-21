@@ -1,4 +1,4 @@
-package com.app.zuludin.bookber.ui.quotebookmgmt.components
+package com.app.zuludin.bookber.util.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,11 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SaveQuoteConfirmDialog(
+fun ManageQuoteSheet(
     isUpdate: Boolean,
     quote: QuoteEntity?,
     category: CategoryEntity? = null,
