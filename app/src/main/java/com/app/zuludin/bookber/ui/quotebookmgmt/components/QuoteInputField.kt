@@ -83,7 +83,7 @@ fun QuoteInputField(modifier: Modifier = Modifier, onSaveQuote: (String) -> Unit
                     .weight(1f)
                     .clip(CircleShape)
                     .background(colorResource(id = R.color.colorAccent))
-                    .clickable {
+                    .clickable(enabled = quoteField.text.isNotEmpty()) {
                         onSaveQuote(quoteField.text)
                         quoteField = TextFieldValue("")
                     },
