@@ -1,5 +1,6 @@
 package com.app.zuludin.bookber.util.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +41,7 @@ fun ManageQuoteSheet(
 ) {
     var authorField by remember { mutableStateOf(TextFieldValue(quote?.author ?: "")) }
     var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quotes ?: "")) }
-    var selectedCategory by remember { mutableStateOf(CategoryEntity()) }
+    var selectedCategory by remember { mutableStateOf(category ?: CategoryEntity()) }
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -104,6 +105,9 @@ fun ManageQuoteSheet(
 
             Button(
                 onClick = {
+                    Log.d("UPDATE_QUOTE", "quote ${quoteField.text}")
+                    Log.d("UPDATE_QUOTE", "author ${authorField.text}")
+                    Log.d("UPDATE_QUOTE", "category ${selectedCategory.id} -- ${selectedCategory.category}")
                     if (quoteField.text.isNotEmpty() &&
                         authorField.text.isNotEmpty() &&
                         selectedCategory.id != "" &&
