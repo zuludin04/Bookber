@@ -8,6 +8,8 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Base64
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,6 +25,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -157,15 +160,26 @@ private fun ShowBookInformation(
                                     .height(150.dp)
                             )
                         } else {
-                            Image(
-                                painter = painterResource(id = R.drawable.book_example),
-                                contentDescription = null,
-                                contentScale = ContentScale.FillBounds,
+                            Column(
                                 modifier = Modifier
-                                    .clip(RoundedCornerShape(5.dp))
+                                    .background(Color.Transparent)
+                                    .border(
+                                        width = 2.dp,
+                                        shape = RoundedCornerShape(5.dp),
+                                        color = Color.Black.copy(alpha = 0.5f)
+                                    )
                                     .width(100.dp)
-                                    .height(150.dp)
-                            )
+                                    .height(150.dp),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_books),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(28.dp)
+                                )
+                                Text(text = "Select Image", fontSize = 12.sp)
+                            }
                         }
                     }
                 }
