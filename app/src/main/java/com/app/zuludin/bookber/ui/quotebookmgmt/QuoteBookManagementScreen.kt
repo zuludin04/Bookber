@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -29,8 +28,8 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
-import com.app.zuludin.bookber.util.components.ManageQuoteSheet
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
+import com.app.zuludin.bookber.util.components.ManageQuoteSheet
 import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import com.app.zuludin.bookber.util.getViewModelFactory
@@ -65,7 +64,7 @@ fun QuoteBookManagementScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Management") },
+                title = {},
                 backgroundColor = Color.White,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
