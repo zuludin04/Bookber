@@ -59,6 +59,7 @@ fun QuoteBookManagementScreen(
 
     val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
     val quotesWithBook by viewModel.bookQuotes.observeAsState(initial = mutableListOf())
+    val observeBookId by viewModel.bookId.observeAsState(initial = bookId)
     val quotesWithoutBook = remember { mutableStateListOf<QuoteEntity>() }
 
     Scaffold(
@@ -72,7 +73,7 @@ fun QuoteBookManagementScreen(
                     }
                 },
                 actions = {
-                    if (managementState == BookInfoState.DETAIL_BOOK) {
+                    if (observeBookId != null) {
                         IconButton(onClick = {
                             managementState = if (managementState == BookInfoState.DETAIL_BOOK) {
                                 BookInfoState.ADD_BOOK
@@ -111,7 +112,8 @@ fun QuoteBookManagementScreen(
                     viewModel.saveBook(quotesWithoutBook.toList())
                     showQuoteInput = true
                     managementState = BookInfoState.DETAIL_BOOK
-                }
+                },
+                onInputBook = { managementState = BookInfoState.ADD_BOOK }
             )
 
             LazyColumn {

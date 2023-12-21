@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class QuoteBookManagementViewModel(private val repository: BookberRepository) : ViewModel() {
 
-    private val _bookId = MutableLiveData<String>()
+    val bookId = MutableLiveData<String>()
 
     val quoteCategories = MutableLiveData<List<CategoryEntity>>()
     val bookCategories = MutableLiveData<List<CategoryEntity>>()
@@ -24,7 +24,7 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
     val bookImage = MutableLiveData<String>()
 
     fun start(bookId: String) {
-        _bookId.value = bookId
+        this.bookId.value = bookId
 
         viewModelScope.launch {
             repository.loadBookDetail(bookId).let { result ->
@@ -66,7 +66,7 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
             return
         }
 
-        val bookId = _bookId.value
+        val bookId = bookId.value
 
         val book = BookEntity(
             title = currentTitle,
@@ -77,7 +77,7 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
 
         if (bookId == null) {
             updateQuotesBookId(quotes, book.id)
-            _bookId.value = book.id
+            this.bookId.value = book.id
             viewModelScope.launch {
                 repository.saveBook(book)
             }
@@ -94,17 +94,17 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
     }
 
     fun saveQuote(quote: QuoteEntity) {
-        quote.bookId = _bookId.value ?: ""
+        quote.bookId = bookId.value ?: ""
         viewModelScope.launch {
             repository.saveQuote(quote)
-            if (_bookId.value != null) {
-                start(_bookId.value!!)
+            if (bookId.value != null) {
+                start(bookId.value!!)
             }
         }
     }
 
     suspend fun deleteBook() {
-        _bookId.value?.let {
+        bookId.value?.let {
             repository.deleteBookById(it)
         }
     }

@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.app.zuludin.bookber.ui.quotebookmgmt.components
 
 import android.graphics.Bitmap
@@ -59,12 +57,11 @@ import java.io.ByteArrayOutputStream
 fun BookInformation(
     viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
-    onSaveBook: () -> Unit
+    onSaveBook: () -> Unit,
+    onInputBook: () -> Unit
 ) {
-    var showBookInfo by remember { mutableStateOf(bookState) }
-
     if (bookState == BookInfoState.ADD_QUOTE) {
-        BookEmptyInformation { showBookInfo = BookInfoState.ADD_BOOK }
+        BookEmptyInformation(onInputBook)
     } else {
         ShowBookInformation(viewModel, bookState, onSaveBook)
     }
@@ -96,6 +93,7 @@ private fun BookEmptyInformation(inputBook: () -> Unit) {
     }
 }
 
+@Suppress("DEPRECATION")
 @Composable
 private fun ShowBookInformation(
     viewModel: QuoteBookManagementViewModel,
