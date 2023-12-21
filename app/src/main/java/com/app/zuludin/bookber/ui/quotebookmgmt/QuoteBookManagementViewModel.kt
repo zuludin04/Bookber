@@ -1,10 +1,7 @@
 package com.app.zuludin.bookber.ui.quotebookmgmt
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
@@ -17,55 +14,14 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
 
     private val _bookId = MutableLiveData<String>()
 
-    private val _quoteCategories: LiveData<List<CategoryEntity>> =
-        repository.loadCategoriesByType(1).distinctUntilChanged()
-            .switchMap { observeQuoteCategories(it) }
-    val quoteCategories: LiveData<List<CategoryEntity>> = _quoteCategories
-
-    private val _bookCategories: LiveData<List<CategoryEntity>> =
-        repository.loadCategoriesByType(2).distinctUntilChanged()
-            .switchMap { observeBookCategory(it) }
-    val bookCategories: LiveData<List<CategoryEntity>> = _bookCategories
-
-    private val cacheBookQuotes = ArrayList<QuoteEntity>()
+    val quoteCategories = MutableLiveData<List<CategoryEntity>>()
+    val bookCategories = MutableLiveData<List<CategoryEntity>>()
     val bookQuotes = MutableLiveData<MutableList<QuoteEntity>>()
 
     val bookTitle = MutableLiveData<String>()
     val bookAuthor = MutableLiveData<String>()
     val bookCategory = MutableLiveData<CategoryEntity?>()
     val bookImage = MutableLiveData<String>()
-
-    private fun observeQuoteCategories(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {
-        val result = MutableLiveData<List<CategoryEntity>>()
-
-        if (categoryResult is Result.Success) {
-            viewModelScope.launch {
-                result.value = convertQuoteCategoryList(categoryResult.data)
-            }
-        } else {
-            result.value = emptyList()
-        }
-
-        return result
-    }
-
-    private fun convertQuoteCategoryList(list: List<CategoryEntity>) = list
-
-    private fun observeBookCategory(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {
-        val result = MutableLiveData<List<CategoryEntity>>()
-
-        if (categoryResult is Result.Success) {
-            viewModelScope.launch {
-                result.value = convertBookCategoryList(categoryResult.data)
-            }
-        } else {
-            result.value = emptyList()
-        }
-
-        return result
-    }
-
-    private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
     fun start(bookId: String) {
         _bookId.value = bookId
@@ -78,7 +34,24 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
                     bookCategory.value = result.data.category
                     bookImage.value = result.data.bookEntity.cover
                     bookQuotes.value = result.data.quotes.toMutableList()
-                    cacheBookQuotes.addAll(result.data.quotes)
+                }
+            }
+        }
+    }
+
+    fun populateCategories() {
+        viewModelScope.launch {
+            repository.loadCategories(1).let { result ->
+                if (result is Result.Success) {
+                    quoteCategories.value = convertQuoteCategoryList(result.data)
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            repository.loadCategories(2).let { result ->
+                if (result is Result.Success) {
+                    bookCategories.value = convertBookCategoryList(result.data)
                 }
             }
         }
@@ -116,6 +89,10 @@ class QuoteBookManagementViewModel(private val repository: BookberRepository) : 
             repository.deleteBookById(it)
         }
     }
+
+    private fun convertQuoteCategoryList(list: List<CategoryEntity>) = list
+
+    private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
     private fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
         val result = ArrayList<QuoteEntity>()

@@ -27,6 +27,7 @@ class QuoteBookManagementState(
     private val coroutineScope: CoroutineScope
 ) {
     init {
+        viewModel.populateCategories()
         if (bookId != null) {
             viewModel.start(bookId)
         }
