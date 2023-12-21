@@ -13,6 +13,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -150,10 +151,8 @@ fun CategoryScreen(
 private fun CategoryContents(categories: List<CategoryEntity>, onDeleteCategory: (String) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(categories) { cat ->
-            val index = categories.indexOf(cat)
-            val color = if ((index % 2) == 0) Color.Blue else Color.Green
-
-            CategoryItem(color = color, category = cat, onDeleteCategory = onDeleteCategory)
+            CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
+            Divider()
         }
     }
 }
