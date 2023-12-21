@@ -43,6 +43,7 @@ import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
+import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 import com.app.zuludin.bookber.util.enums.BookInfoState
 
 @Composable
@@ -185,7 +186,7 @@ private fun ShowBookInformation(
                         onValueChange = { viewModel.bookAuthor.value = it },
                         enabled = bookState != BookInfoState.DETAIL_BOOK
                     )
-                    SampleSpinner(
+                    SelectCategorySpinner(
                         modifier = Modifier.fillMaxWidth(),
                         list = categories,
                         preselected = categoryField?.category ?: "Select Category",

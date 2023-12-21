@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.ui.quotebookmgmt.components.SampleSpinner
+import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +62,7 @@ fun CategoryManagementSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            SampleSpinner(
+            SelectCategorySpinner(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
                 preselected = type,
