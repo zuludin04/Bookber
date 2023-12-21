@@ -47,8 +47,8 @@ fun BookberModalDrawer(
                 navigateToQuotes = { navigationActions.navigateToQuotes() },
                 navigateToBooks = { navigationActions.navigateToBooks() },
                 navigateToCategory = { navigationActions.navigateToCategory() },
-                navigateToFavorite = { navigationActions.navigateToFavorite() },
-                navigateToWidget = {},
+//                navigateToFavorite = { navigationActions.navigateToFavorite() },
+//                navigateToWidget = {},
                 navigateToSettings = { navigationActions.navigateToSetting() },
                 closeDrawer = { coroutineScope.launch { drawerState.close() } },
             )
@@ -64,8 +64,8 @@ private fun BookberDrawer(
     navigateToQuotes: () -> Unit,
     navigateToBooks: () -> Unit,
     navigateToCategory: () -> Unit,
-    navigateToFavorite: () -> Unit,
-    navigateToWidget: () -> Unit,
+//    navigateToFavorite: () -> Unit,
+//    navigateToWidget: () -> Unit,
     navigateToSettings: () -> Unit,
     closeDrawer: () -> Unit,
     modifier: Modifier = Modifier
@@ -106,24 +106,24 @@ private fun BookberDrawer(
                 closeDrawer()
             }
         )
-        DrawerMenu(
-            iconId = R.drawable.ic_favorite,
-            title = "Favorite",
-            isSelected = currentRoute == BookberDestination.FAVORITE_ROUTE,
-            action = {
-                navigateToFavorite()
-                closeDrawer()
-            }
-        )
-        DrawerMenu(
-            iconId = R.drawable.ic_widgets,
-            title = "Widget",
-            isSelected = false,
-            action = {
-                navigateToWidget()
-                closeDrawer()
-            }
-        )
+//        DrawerMenu(
+//            iconId = R.drawable.ic_favorite,
+//            title = "Favorite",
+//            isSelected = currentRoute == BookberDestination.FAVORITE_ROUTE,
+//            action = {
+//                navigateToFavorite()
+//                closeDrawer()
+//            }
+//        )
+//        DrawerMenu(
+//            iconId = R.drawable.ic_widgets,
+//            title = "Widget",
+//            isSelected = false,
+//            action = {
+//                navigateToWidget()
+//                closeDrawer()
+//            }
+//        )
         DrawerMenu(
             iconId = R.drawable.ic_settings,
             title = "Settings",
