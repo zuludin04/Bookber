@@ -41,7 +41,6 @@ fun SaveQuoteConfirmDialog(
 ) {
     var authorField by remember { mutableStateOf(TextFieldValue(quote?.author ?: "")) }
     var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quotes ?: "")) }
-    var selectedCategoryId by remember { mutableStateOf(quote?.categoryId ?: "") }
     var selectedCategory by remember { mutableStateOf(CategoryEntity()) }
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
@@ -61,6 +60,7 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 value = quoteField,
                 onValueChange = { quoteField = it },
+                label = { Text(text = "Quote") },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
@@ -68,10 +68,12 @@ fun SaveQuoteConfirmDialog(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledTextColor = Color.Black,
-                    disabledIndicatorColor = Color.Transparent
+                    disabledIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent
                 ),
                 shape = RoundedCornerShape(10.dp),
                 enabled = isUpdate,
+                isError = authorField.text.isEmpty()
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -79,12 +81,14 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 value = authorField,
                 onValueChange = { authorField = it },
+                label = { Text(text = "Author") },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
                     disabledContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent
                 ),
                 shape = RoundedCornerShape(10.dp),
                 isError = authorField.text.isEmpty()
@@ -95,25 +99,20 @@ fun SaveQuoteConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
                 preselected = category?.category ?: "Select Category",
-                onSelectionChanged = {
-                    selectedCategoryId = it.id
-                    selectedCategory = it
-                },
+                onSelectionChanged = { selectedCategory = it },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    val q = QuoteEntity(
-                        quotes = quoteField.text,
-                        author = authorField.text,
-                        categoryId = selectedCategoryId,
-                        bookId = quote?.bookId ?: ""
-                    )
-
-                    if (isUpdate) q.id = quote!!.id
-
-                    onSaveQuote(quoteField.text, authorField.text, selectedCategory)
+                    if (quoteField.text.isNotEmpty() &&
+                        authorField.text.isNotEmpty() &&
+                        selectedCategory.id != "" &&
+                        selectedCategory.category != "Select Category" &&
+                        selectedCategory.category != ""
+                    ) {
+                        onSaveQuote(quoteField.text, authorField.text, selectedCategory)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

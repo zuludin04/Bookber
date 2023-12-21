@@ -46,6 +46,7 @@ fun SelectCategorySpinner(
             TextField(
                 value = if (editBook) preselected else selected.category,
                 onValueChange = { },
+                label = { Text(text = "Category") },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = { Icon(Icons.Outlined.ArrowDropDown, null) },
                 readOnly = true,
@@ -55,8 +56,10 @@ fun SelectCategorySpinner(
                     disabledContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent
                 ),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                isError = preselected == "" || selected.category == "Select Category"
             )
             DropdownMenu(
                 modifier = Modifier.fillMaxWidth(),
