@@ -56,7 +56,8 @@ fun SelectCategorySpinner(
                     disabledContainerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent
+                    errorIndicatorColor = Color.Transparent,
+                    errorContainerColor = Color.White
                 ),
                 shape = RoundedCornerShape(10.dp),
                 isError = preselected == "" || selected.category == "Select Category"

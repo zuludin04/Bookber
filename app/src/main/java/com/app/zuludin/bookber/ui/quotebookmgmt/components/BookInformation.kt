@@ -1,7 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.app.zuludin.bookber.ui.quotebookmgmt.components
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -45,12 +50,13 @@ import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
 import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 import com.app.zuludin.bookber.util.enums.BookInfoState
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun BookInformation(
     viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
-    onSaveBook: (String, String, String, Uri?) -> Unit
+    onSaveBook: () -> Unit
 ) {
     var showBookInfo by remember { mutableStateOf(bookState) }
 
@@ -91,8 +97,10 @@ private fun BookEmptyInformation(inputBook: () -> Unit) {
 private fun ShowBookInformation(
     viewModel: QuoteBookManagementViewModel,
     bookState: BookInfoState,
-    onSaveBook: (String, String, String, Uri?) -> Unit
+    onSaveBook: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val titleField by viewModel.bookTitle.observeAsState(initial = "")
     val authorField by viewModel.bookAuthor.observeAsState(initial = "")
     val categoryField by viewModel.bookCategory.observeAsState(initial = CategoryEntity())
@@ -169,6 +177,15 @@ private fun ShowBookInformation(
                         },
                         onSelectImage = { uri ->
                             imageUri = uri
+
+                            val bitmap =
+                                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                            val stream = ByteArrayOutputStream()
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                            val bytes = stream.toByteArray()
+                            val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
+
+                            viewModel.bookImage.value = bookCoverImage
                         }
                     )
                 }
@@ -178,14 +195,44 @@ private fun ShowBookInformation(
                 Column {
                     TextField(
                         value = titleField,
+                        label = { Text(text = "Title") },
                         onValueChange = { viewModel.bookTitle.value = it },
-                        enabled = bookState != BookInfoState.DETAIL_BOOK
+                        enabled = bookState != BookInfoState.DETAIL_BOOK,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White,
+                            disabledContainerColor = Color.White,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorContainerColor = Color.White,
+                            disabledTextColor = Color.Black,
+                            disabledIndicatorColor = Color.Transparent,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        isError = titleField.isEmpty()
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
                     TextField(
                         value = authorField,
+                        label = { Text(text = "Author") },
                         onValueChange = { viewModel.bookAuthor.value = it },
-                        enabled = bookState != BookInfoState.DETAIL_BOOK
+                        enabled = bookState != BookInfoState.DETAIL_BOOK,
+                        colors = TextFieldDefaults.colors(
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White,
+                            disabledContainerColor = Color.White,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            errorIndicatorColor = Color.Transparent,
+                            errorContainerColor = Color.White,
+                            disabledTextColor = Color.Black,
+                            disabledIndicatorColor = Color.Transparent,
+                        ),
+                        shape = RoundedCornerShape(10.dp),
+                        isError = authorField.isEmpty()
                     )
+                    Spacer(modifier = Modifier.height(12.dp))
                     SelectCategorySpinner(
                         modifier = Modifier.fillMaxWidth(),
                         list = categories,
@@ -202,12 +249,12 @@ private fun ShowBookInformation(
             if (bookState == BookInfoState.ADD_BOOK) {
                 Button(
                     onClick = {
-                        onSaveBook(
-                            titleField,
-                            authorField,
-                            categoryField?.id ?: "",
-                            imageUri
-                        )
+                        if (titleField.isNotEmpty() && authorField.isNotEmpty() && imageField.isNotEmpty() && categoryField?.id != "" &&
+                            categoryField?.category != "Select Category" &&
+                            categoryField?.category != ""
+                        ) {
+                            onSaveBook()
+                        }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
