@@ -127,7 +127,7 @@ private fun BookberDrawer(
         DrawerMenu(
             iconId = R.drawable.ic_settings,
             title = "Settings",
-            isSelected = false,
+            isSelected =  currentRoute == BookberDestination.SETTING_ROUTE,
             action = {
                 navigateToSettings()
                 closeDrawer()
@@ -145,13 +145,13 @@ private fun DrawerMenu(
     modifier: Modifier = Modifier
 ) {
     val selectedText = if (isSelected) {
-        Color.Black
+        MaterialTheme.colorScheme.onSecondary
     } else {
-        Color.Black.copy(alpha = 0.4f)
+        Color.Black.copy(alpha = 0.7f)
     }
 
     val selectedBg = if (isSelected) {
-        Color(0xffFEDBD0)
+        MaterialTheme.colorScheme.secondary
     } else {
         Color.White
     }
@@ -170,7 +170,7 @@ private fun DrawerMenu(
             Icon(
                 painter = painterResource(id = iconId),
                 contentDescription = null,
-                tint = Color.Black
+                tint = selectedText
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = title, style = MaterialTheme.typography.bodyMedium, color = selectedText)

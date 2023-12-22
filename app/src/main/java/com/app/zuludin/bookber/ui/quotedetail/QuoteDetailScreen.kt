@@ -51,8 +51,9 @@ import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.util.components.ManageQuoteSheet
+import com.app.zuludin.bookber.theme.poppinsFamily
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
+import com.app.zuludin.bookber.util.components.ManageQuoteSheet
 import com.app.zuludin.bookber.util.getViewModelFactory
 
 @Composable
@@ -131,7 +132,12 @@ fun QuoteDetailScreen(
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Delete", color = Color.Red, fontSize = 16.sp)
+                    Text(
+                        text = "Delete",
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        fontFamily = poppinsFamily
+                    )
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = null,

@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.app.zuludin.bookber.navs.BookberNavGraph
-import com.google.accompanist.appcompattheme.AppCompatTheme
+import com.app.zuludin.bookber.theme.BookberTheme
 
 class DashboardActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppCompatTheme {
+            BookberTheme {
                 BookberNavGraph()
             }
         }
