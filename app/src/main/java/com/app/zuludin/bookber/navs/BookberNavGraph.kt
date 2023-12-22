@@ -124,7 +124,10 @@ fun BookberNavGraph(
 
         composable(BookberDestination.SETTING_ROUTE) {
             BookberModalDrawer(drawerState, currentRoute, navActions) {
-                SettingsScreen(openDrawer = { coroutineScope.launch { drawerState.open() } })
+                SettingsScreen(
+                    openDrawer = { coroutineScope.launch { drawerState.open() } },
+                    onShowCategory = { navActions.navigateToCategory() }
+                )
             }
         }
 

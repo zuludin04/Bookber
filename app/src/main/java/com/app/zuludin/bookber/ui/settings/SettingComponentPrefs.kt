@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.dp
 fun SettingsClickableComp(
     @DrawableRes icon: Int,
     @StringRes name: Int,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    clickable: Boolean = true,
 ) {
     Surface(
         color = Color.Transparent,
@@ -43,6 +44,7 @@ fun SettingsClickableComp(
             .fillMaxWidth()
             .padding(16.dp),
         onClick = onClick,
+        enabled = clickable
     ) {
         Column {
             Row(
@@ -69,11 +71,13 @@ fun SettingsClickableComp(
                     )
                 }
                 Spacer(modifier = Modifier.weight(1.0f))
-                Icon(
-                    Icons.Rounded.KeyboardArrowRight,
-                    tint = MaterialTheme.colorScheme.surfaceTint,
-                    contentDescription = null
-                )
+                if (clickable) {
+                    Icon(
+                        Icons.Rounded.KeyboardArrowRight,
+                        tint = MaterialTheme.colorScheme.surfaceTint,
+                        contentDescription = null
+                    )
+                }
             }
             Divider()
         }
@@ -128,7 +132,6 @@ fun SettingsSwitchComp(
 @Composable
 fun SettingsGroup(
     @StringRes name: Int,
-    // to accept only composables compatible with column
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
