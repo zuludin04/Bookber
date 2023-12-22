@@ -50,6 +50,7 @@ fun CategoryManagementSheet(
                 modifier = Modifier.fillMaxWidth(),
                 value = categoryField,
                 onValueChange = { categoryField = it },
+                label = { Text(text = "Category") },
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
