@@ -138,7 +138,7 @@ fun SettingsGroup(
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
         Surface(
-            color = Color.White,
+            color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4),
         ) {

@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -30,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
@@ -65,7 +65,7 @@ fun CategoryScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = "Category") },
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colorScheme.background,
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
@@ -85,7 +85,10 @@ fun CategoryScreen(
                 .padding(it)
                 .fillMaxWidth()
         ) {
-            TabRow(selectedTabIndex = tabIndex, containerColor = Color.White) {
+            TabRow(
+                selectedTabIndex = tabIndex,
+                containerColor = MaterialTheme.colorScheme.background
+            ) {
                 tabs.fastForEachIndexed { index, title ->
                     Tab(
                         selected = tabIndex == index,

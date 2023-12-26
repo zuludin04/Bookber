@@ -32,7 +32,7 @@ fun CategoryFilterChips(categories: List<CategoryEntity>, onFilterQuote: (Catego
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.background)
             .bottomBorder(1.dp, Color.Black.copy(alpha = 0.1f))
     ) {
         items(items = categories) { category ->

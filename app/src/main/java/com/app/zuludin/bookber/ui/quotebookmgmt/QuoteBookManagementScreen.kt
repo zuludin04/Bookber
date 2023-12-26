@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -21,7 +22,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.app.zuludin.bookber.R
@@ -62,13 +62,18 @@ fun QuoteBookManagementScreen(
     val quotesWithoutBook = remember { mutableStateListOf<QuoteEntity>() }
 
     Scaffold(
+        backgroundColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {},
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colorScheme.background,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, null)
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            null,
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
                     }
                 },
                 actions = {
@@ -82,12 +87,17 @@ fun QuoteBookManagementScreen(
                         }) {
                             Icon(
                                 if (managementState == BookInfoState.DETAIL_BOOK) Icons.Filled.Edit else Icons.Filled.Close,
-                                null
+                                null,
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                         }
 
                         IconButton(onClick = { showDeleteConfirmDialog = true }) {
-                            Icon(painterResource(id = R.drawable.ic_delete), null)
+                            Icon(
+                                painterResource(id = R.drawable.ic_delete),
+                                null,
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
                         }
                     }
                 },

@@ -25,6 +25,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,7 +83,7 @@ fun QuoteDetailScreen(
         topBar = {
             TopAppBar(
                 title = { Text(text = "") },
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colorScheme.background,
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Filled.ArrowBack, null)
@@ -125,7 +126,7 @@ fun QuoteDetailScreen(
             Button(
                 onClick = { showDeleteDialog = true },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                border = BorderStroke(2.dp, Color.Red),
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.error),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -134,14 +135,14 @@ fun QuoteDetailScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "Delete",
-                        color = Color.Red,
+                        color = MaterialTheme.colorScheme.error,
                         fontSize = 16.sp,
                         fontFamily = poppinsFamily
                     )
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = null,
-                        tint = Color.Red
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -186,7 +187,7 @@ fun QuoteDetailScreen(
 private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
     Card(
         shape = RoundedCornerShape(5.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = Modifier
             .padding(16.dp)
@@ -202,12 +203,13 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
             Text(
                 text = category?.category ?: "-",
                 fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onTertiary,
                 modifier = Modifier
                     .constrainAs(c) {
                         top.linkTo(parent.top)
                         end.linkTo(parent.end)
                     }
-                    .background(Color(0xffFEDBD0), RoundedCornerShape(10.dp))
+                    .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(10.dp))
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             )
             Text(
@@ -243,7 +245,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
 private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -313,7 +315,7 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: ()
 private fun EmptyBookInfo(onInputBook: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = Modifier
             .padding(horizontal = 16.dp)

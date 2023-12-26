@@ -41,6 +41,7 @@ fun BookberModalDrawer(
 ) {
     ModalDrawer(
         drawerState = drawerState,
+        drawerBackgroundColor = MaterialTheme.colorScheme.background,
         drawerContent = {
             BookberDrawer(
                 currentRoute = currentRoute,
@@ -147,13 +148,13 @@ private fun DrawerMenu(
     val selectedText = if (isSelected) {
         MaterialTheme.colorScheme.onSecondary
     } else {
-        Color.Black.copy(alpha = 0.7f)
+        MaterialTheme.colorScheme.onBackground
     }
 
     val selectedBg = if (isSelected) {
         MaterialTheme.colorScheme.secondary
     } else {
-        Color.White
+        MaterialTheme.colorScheme.background
     }
 
     TextButton(
