@@ -50,7 +50,7 @@ fun SettingsScreen(openDrawer: () -> Unit, onShowCategory: () -> Unit) {
                     onClick = onShowCategory
                 )
                 SettingsClickableComp(
-                    icon = R.drawable.ic_quote,
+                    icon = R.drawable.ic_theme,
                     name = R.string.theme,
                     onClick = {}
                 )
@@ -58,7 +58,7 @@ fun SettingsScreen(openDrawer: () -> Unit, onShowCategory: () -> Unit) {
 
             SettingsGroup(name = R.string.about) {
                 SettingsClickableComp(
-                    icon = R.drawable.ic_favorite,
+                    icon = R.drawable.ic_rate,
                     name = R.string.rate,
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW)
@@ -85,7 +85,7 @@ fun SettingsScreen(openDrawer: () -> Unit, onShowCategory: () -> Unit) {
                     }
                 )
                 SettingsClickableComp(
-                    icon = R.drawable.ic_remove,
+                    icon = R.drawable.ic_version,
                     name = R.string.app_version,
                     onClick = {},
                     clickable = false
