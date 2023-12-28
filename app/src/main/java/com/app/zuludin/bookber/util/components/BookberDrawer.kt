@@ -74,7 +74,7 @@ private fun BookberDrawer(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.ic_quotes),
+            painter = painterResource(id = R.drawable.ic_logo),
             contentDescription = null,
             modifier = Modifier
                 .padding(10.dp)
