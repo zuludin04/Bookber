@@ -1,7 +1,10 @@
 package com.app.zuludin.bookber.navs
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.DrawerState
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.DrawerValue
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

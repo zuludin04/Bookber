@@ -9,18 +9,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.IconButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
@@ -41,7 +44,7 @@ import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.getViewModelFactory
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
     openDrawer: () -> Unit,
@@ -64,14 +67,14 @@ fun CategoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.shadow(elevation = 0.dp),
                 title = { Text(text = "Category") },
-                backgroundColor = MaterialTheme.colorScheme.background,
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(Icons.Filled.Menu, contentDescription = null)
                     }
                 },
-                elevation = 0.dp,
             )
         },
         floatingActionButton = {
@@ -153,7 +156,7 @@ private fun CategoryContents(categories: List<CategoryEntity>, onDeleteCategory:
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(categories) { cat ->
             CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
-            Divider()
+            HorizontalDivider()
         }
     }
 }
