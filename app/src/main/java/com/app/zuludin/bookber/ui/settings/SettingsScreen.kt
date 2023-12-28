@@ -52,11 +52,11 @@ fun SettingsScreen(openDrawer: () -> Unit, onShowCategory: () -> Unit) {
                     name = R.string.category,
                     onClick = onShowCategory
                 )
-                SettingsClickableComp(
-                    icon = R.drawable.ic_theme,
-                    name = R.string.theme,
-                    onClick = {}
-                )
+//                SettingsClickableComp(
+//                    icon = R.drawable.ic_theme,
+//                    name = R.string.theme,
+//                    onClick = {}
+//                )
             }
 
             SettingsGroup(name = R.string.about) {

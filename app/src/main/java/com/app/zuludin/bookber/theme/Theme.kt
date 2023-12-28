@@ -70,7 +70,7 @@ private val darkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun BookberTheme(darkTheme: Boolean = true, content: @Composable () -> Unit) {
+fun BookberTheme(darkTheme: Boolean = false, content: @Composable () -> Unit) {
     val appColorScheme  = when {
         darkTheme -> darkColorScheme
         else -> lightColorScheme
