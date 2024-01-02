@@ -1,5 +1,6 @@
 package com.app.zuludin.bookber.ui.quote
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,7 +25,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
@@ -67,19 +69,37 @@ fun QuoteScreen(
         }
     ) {
         val uiState by viewModel.uiState.collectAsState()
-        val categories by viewModel.categories.observeAsState(initial = emptyList())
 
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            CategoryFilterChips(categories = categories, onFilterQuote = { cat ->
+            CategoryFilterChips(categories = uiState.categories, onFilterQuote = { cat ->
                 viewModel.filterQuoteByCategory(cat.id)
             })
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            ShowQuoteContent(uiState = uiState.quotes, onOpenDetailQuote = onOpenDetailQuote)
+        }
+    }
+}
+
+@Composable
+private fun ShowQuoteContent(uiState: QuotesUiState, onOpenDetailQuote: (String) -> Unit) {
+    when (uiState) {
+        QuotesUiState.Error -> Text(text = "Error Load Quote")
+        QuotesUiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is QuotesUiState.Success -> {
             if (uiState.quotes.isEmpty()) {
                 EmptyContentLayout(message = "Quote is Empty")
             } else {

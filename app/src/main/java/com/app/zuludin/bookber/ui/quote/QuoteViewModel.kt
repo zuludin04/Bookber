@@ -1,14 +1,11 @@
 package com.app.zuludin.bookber.ui.quote
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.util.WhileUiSubscribed
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,47 +14,70 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class QuoteUiState(
-    val quotes: List<Quote> = emptyList(),
+data class QuoteScreenUiState(
+    val quotes: QuotesUiState,
+    val categories: List<Category> = listOf(Category(name = "All", id = "-1")),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val filter: String = "-1"
 )
 
+@Immutable
+sealed interface QuotesUiState {
+    data class Success(val quotes: List<Quote>) : QuotesUiState
+    data object Error : QuotesUiState
+    data object Loading : QuotesUiState
+}
+
 @HiltViewModel
 class QuoteViewModel @Inject constructor(private val repository: BookberRepository) : ViewModel() {
 
     private val quotes: Flow<Result<List<Quote>>> = repository.observeAllQuotes()
+    private val categories: Flow<Result<List<Category>>> = repository.observeCategoryByType(1)
     private val filterCategory = MutableStateFlow("-1")
     private val isLoading = MutableStateFlow(false)
     private val isError = MutableStateFlow(false)
 
-    private val _categories: LiveData<List<CategoryEntity>> =
-        repository.loadCategoriesByType(1).distinctUntilChanged()
-            .switchMap { observerCategories(it) }
-    val categories: LiveData<List<CategoryEntity>> = _categories
-
-    val uiState: StateFlow<QuoteUiState> =
-        combine(quotes, isLoading, isError, filterCategory) { quoteResult, loading, error, filter ->
-            when (quoteResult) {
-                Result.Loading -> QuoteUiState(isLoading = true)
-                is Result.Error -> QuoteUiState(isError = true)
-                is Result.Success -> {
-                    QuoteUiState(
-                        quotes = filterQuotes(quoteResult.data, filter),
-                        isLoading = loading,
-                        isError = error,
-                        filter = filter
-                    )
-                }
+    val uiState: StateFlow<QuoteScreenUiState> =
+        combine(
+            quotes,
+            categories,
+            isLoading,
+            isError,
+            filterCategory
+        ) { quoteResult, categoryResult, loading, error, filter ->
+            val categories = mutableListOf<Category>()
+            val quotes = when (quoteResult) {
+                Result.Loading -> QuotesUiState.Loading
+                is Result.Error -> QuotesUiState.Error
+                is Result.Success -> QuotesUiState.Success(filterQuotes(quoteResult.data, filter))
             }
+
+            when (categoryResult) {
+                Result.Loading -> {}
+                is Result.Error -> {}
+                is Result.Success -> categories.addAll(loadCategories(categoryResult.data))
+            }
+
+            QuoteScreenUiState(
+                quotes,
+                categories,
+                loading,
+                error,
+                filter
+            )
         }
             .stateIn(
                 scope = viewModelScope,
-                initialValue = QuoteUiState(isLoading = true, filter = "-1"),
+                initialValue = QuoteScreenUiState(
+                    QuotesUiState.Loading,
+                    listOf(Category(name = "All", id = "-1")),
+                    isLoading = true,
+                    isError = false,
+                    filter = "-1"
+                ),
                 started = WhileUiSubscribed
             )
 
@@ -77,24 +97,10 @@ class QuoteViewModel @Inject constructor(private val repository: BookberReposito
         return showQuotes
     }
 
-    private fun observerCategories(categoryResult: Result<List<CategoryEntity>>): LiveData<List<CategoryEntity>> {
-        val result = MutableLiveData<List<CategoryEntity>>()
+    private fun loadCategories(categories: List<Category>): List<Category> {
+        val categoriesToShow = ArrayList<Category>()
 
-        if (categoryResult is Result.Success) {
-            viewModelScope.launch {
-                result.value = loadCategories(categoryResult.data)
-            }
-        } else {
-            result.value = arrayListOf(CategoryEntity(category = "All", type = 1, id = "-1"))
-        }
-
-        return result
-    }
-
-    private fun loadCategories(categories: List<CategoryEntity>): List<CategoryEntity> {
-        val categoriesToShow = ArrayList<CategoryEntity>()
-
-        categoriesToShow.add(0, CategoryEntity(category = "All", type = 1, id = "-1"))
+        categoriesToShow.add(0, Category(name = "All", id = "-1"))
         categoriesToShow.addAll(categories.toList())
 
         return categoriesToShow
