@@ -1,5 +1,13 @@
 package com.app.zuludin.bookber.data
 
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.retryWhen
+import java.io.IOException
+
 sealed class Result<out R> {
 
     data class Success<out T>(val data: T) : Result<T>()
@@ -15,5 +23,20 @@ sealed class Result<out R> {
     }
 }
 
-val Result<*>.succeeded
-    get() = this is Result.Success && data != null
+fun <T> Flow<T>.asResult(): Flow<Result<T>> {
+    return this
+        .map<T, Result<T>> {
+            Result.Success(it)
+        }
+        .onStart { emit(Result.Loading) }
+        .retryWhen { cause, _ ->
+            if (cause is IOException) {
+                emit(Result.Error(cause))
+                delay(15_000L)
+                true
+            } else {
+                false
+            }
+        }
+        .catch { emit(Result.Error(Exception("Error When Load Data"))) }
+}
