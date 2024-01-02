@@ -14,15 +14,16 @@ import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.data.local.room.BookDao
 import com.app.zuludin.bookber.data.local.room.CategoryDao
 import com.app.zuludin.bookber.data.local.room.QuoteDao
+import com.app.zuludin.bookber.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BookberLocalDataSourceImpl internal constructor(
+class BookberLocalDataSourceImpl @Inject internal constructor(
     private val bookDao: BookDao,
     private val quoteDao: QuoteDao,
     private val categoryDao: CategoryDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) : BookberLocalDataSource {
     override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
         return bookDao.loadBookStore().map {
@@ -36,7 +37,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> = withContext(ioDispatcher) {
+    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> = withContext(dispatcher) {
         try {
             val books = bookDao.loadBooks()
             if (books.isNotEmpty()) {
@@ -50,7 +51,7 @@ class BookberLocalDataSourceImpl internal constructor(
     }
 
     override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             try {
                 val book = bookDao.loadBooksByCategory(categoryId)
                 if (book.isNotEmpty()) {
@@ -64,7 +65,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
 
     override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             try {
                 val book = bookDao.loadBookDetail(bookId)
                 if (book != null) {
@@ -77,15 +78,15 @@ class BookberLocalDataSourceImpl internal constructor(
             }
         }
 
-    override suspend fun saveBook(book: BookEntity) = withContext(ioDispatcher) {
+    override suspend fun saveBook(book: BookEntity) = withContext(dispatcher) {
         bookDao.saveBook(book)
     }
 
-    override suspend fun updateBook(book: BookEntity) = withContext<Unit>(ioDispatcher) {
+    override suspend fun updateBook(book: BookEntity) = withContext<Unit>(dispatcher) {
         bookDao.updateBook(book)
     }
 
-    override suspend fun deleteBookById(bookId: String) = withContext<Unit>(ioDispatcher) {
+    override suspend fun deleteBookById(bookId: String) = withContext<Unit>(dispatcher) {
         bookDao.deleteBookById(bookId)
     }
 
@@ -96,7 +97,7 @@ class BookberLocalDataSourceImpl internal constructor(
     }
 
     override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             quoteDao.batchUpdate(quotes)
         }
 
@@ -107,7 +108,7 @@ class BookberLocalDataSourceImpl internal constructor(
     }
 
     override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             try {
                 val quotes = quoteDao.loadQuotesByCategory(categoryId)
                 if (quotes.isNotEmpty()) {
@@ -121,7 +122,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
 
     override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             try {
                 val categories = categoryDao.loadCategories(type)
                 if (categories.isNotEmpty()) {
@@ -135,7 +136,7 @@ class BookberLocalDataSourceImpl internal constructor(
         }
 
     override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> =
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             try {
                 val book = quoteDao.loadQuoteDetail(quoteId)
                 if (book != null) {
@@ -148,15 +149,15 @@ class BookberLocalDataSourceImpl internal constructor(
             }
         }
 
-    override suspend fun saveQuote(quote: QuoteEntity) = withContext(ioDispatcher) {
+    override suspend fun saveQuote(quote: QuoteEntity) = withContext(dispatcher) {
         quoteDao.saveQuote(quote)
     }
 
-    override suspend fun updateQuote(quote: QuoteEntity) = withContext<Unit>(ioDispatcher) {
+    override suspend fun updateQuote(quote: QuoteEntity) = withContext<Unit>(dispatcher) {
         quoteDao.updateQuote(quote)
     }
 
-    override suspend fun deleteQuoteById(quoteId: String) = withContext<Unit>(ioDispatcher) {
+    override suspend fun deleteQuoteById(quoteId: String) = withContext<Unit>(dispatcher) {
         quoteDao.deleteQuoteById(quoteId)
     }
 
@@ -166,11 +167,11 @@ class BookberLocalDataSourceImpl internal constructor(
         }
     }
 
-    override suspend fun saveCategory(category: CategoryEntity) = withContext(ioDispatcher) {
+    override suspend fun saveCategory(category: CategoryEntity) = withContext(dispatcher) {
         categoryDao.saveCategory(category)
     }
 
-    override suspend fun deleteCategoryById(categoryId: String) = withContext<Unit>(ioDispatcher) {
+    override suspend fun deleteCategoryById(categoryId: String) = withContext<Unit>(dispatcher) {
         categoryDao.deleteCategoryById(categoryId)
     }
 }

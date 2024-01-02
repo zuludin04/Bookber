@@ -29,12 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
-import com.app.zuludin.bookber.util.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +41,7 @@ fun BookScreen(
     openDrawer: () -> Unit,
     onAddBook: () -> Unit,
     onDetailBook: (BookEntity) -> Unit,
-    viewModel: BookViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: BookViewModel = hiltViewModel(),
 ) {
     Scaffold(
         modifier = Modifier.shadow(elevation = 0.dp),

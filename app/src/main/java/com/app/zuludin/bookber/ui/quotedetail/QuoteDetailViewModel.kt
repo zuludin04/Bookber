@@ -9,9 +9,13 @@ import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.domain.BookberRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class QuoteDetailViewModel(private val repository: BookberRepository) : ViewModel() {
+@HiltViewModel
+class QuoteDetailViewModel @Inject constructor(private val repository: BookberRepository) :
+    ViewModel() {
     private val _quoteId = MutableLiveData<String>()
 
     val quoteDetail = MutableLiveData<QuoteEntity>()

@@ -37,18 +37,17 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
-import com.app.zuludin.bookber.util.getViewModelFactory
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
     openDrawer: () -> Unit,
-    viewModel: CategoryViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: CategoryViewModel = hiltViewModel(),
 ) {
 
     val tabs = listOf("Quote", "Book")

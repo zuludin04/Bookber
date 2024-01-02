@@ -13,9 +13,11 @@ import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 
 @Dao
 interface BookDao {
+    @Transaction
     @Query("select * from bookentity")
     fun loadBookStore(): LiveData<List<BookWithQuoteTotal>>
 
+    @Transaction
     @Query("select * from bookentity")
     suspend fun loadBooks(): List<BookWithQuoteTotal>
 
@@ -27,6 +29,7 @@ interface BookDao {
     @Query("select * from bookentity")
     fun loadBookWithQuoteTotal(): LiveData<List<BookWithQuoteTotal>>
 
+    @Transaction
     @Query("select * from bookentity where categoryId = :categoryId")
     suspend fun loadBooksByCategory(categoryId: String): List<BookWithQuoteTotal>
 

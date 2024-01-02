@@ -25,7 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
@@ -34,7 +34,6 @@ import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.components.ManageQuoteSheet
 import com.app.zuludin.bookber.util.components.QuoteItem
 import com.app.zuludin.bookber.util.enums.BookInfoState
-import com.app.zuludin.bookber.util.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +43,7 @@ fun QuoteBookManagementScreen(
     onDeleteBook: () -> Unit,
     bookId: String?,
     bookState: String,
-    viewModel: QuoteBookManagementViewModel = viewModel(factory = getViewModelFactory()),
+    viewModel: QuoteBookManagementViewModel = hiltViewModel(),
     state: QuoteBookManagementState = rememberQuoteBookManagementState(
         bookId,
         onDeleteBook,

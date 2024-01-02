@@ -11,9 +11,12 @@ import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BookberRepositoryImpl(
-    private val localSource: BookberLocalDataSource
+@Singleton
+class BookberRepositoryImpl @Inject constructor(
+    private val localSource: BookberLocalDataSource,
 ) : BookberRepository {
     override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
         return localSource.loadBookStore()

@@ -1,21 +1,12 @@
 package com.app.zuludin.bookber.util
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import com.app.zuludin.bookber.BookberApplication
-
-@Composable
-fun getViewModelFactory(): ViewModelFactory {
-    val repository = (LocalContext.current.applicationContext as BookberApplication).repository
-    return ViewModelFactory(repository)
-}
 
 fun Modifier.bottomBorder(strokeWidth: Dp, color: Color) = composed(
     factory = {

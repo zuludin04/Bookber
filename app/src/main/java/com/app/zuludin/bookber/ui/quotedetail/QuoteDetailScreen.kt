@@ -49,7 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
@@ -57,7 +57,6 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.theme.poppinsFamily
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.components.ManageQuoteSheet
-import com.app.zuludin.bookber.util.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +64,7 @@ fun QuoteDetailScreen(
     quoteId: String,
     onBack: () -> Unit,
     onDeleteQuote: () -> Unit,
-    viewModel: QuoteDetailViewModel = viewModel(factory = getViewModelFactory()),
+    viewModel: QuoteDetailViewModel = hiltViewModel(),
     state: QuoteDetailState = rememberQuoteDetailState(quoteId, onDeleteQuote, viewModel)
 ) {
     val context = LocalContext.current

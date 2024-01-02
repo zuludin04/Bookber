@@ -10,9 +10,12 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class QuoteViewModel(private val repository: BookberRepository) : ViewModel() {
+@HiltViewModel
+class QuoteViewModel @Inject constructor(private val repository: BookberRepository) : ViewModel() {
 
     private val _quotes: LiveData<List<QuoteEntity>> =
         repository.loadAllQuotes().distinctUntilChanged().switchMap { observerQuotes(it) }

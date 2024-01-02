@@ -30,12 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import com.app.zuludin.bookber.util.components.QuoteItem
-import com.app.zuludin.bookber.util.getViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +42,7 @@ fun QuoteScreen(
     openDrawer: () -> Unit,
     onAddQuote: () -> Unit,
     onOpenDetailQuote: (String) -> Unit,
-    viewModel: QuoteViewModel = viewModel(factory = getViewModelFactory())
+    viewModel: QuoteViewModel = hiltViewModel(),
 ) {
     Scaffold(
         topBar = {

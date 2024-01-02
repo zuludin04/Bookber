@@ -9,9 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CategoryViewModel(private val repository: BookberRepository) : ViewModel() {
+@HiltViewModel
+class CategoryViewModel @Inject constructor(private val repository: BookberRepository) : ViewModel() {
 
     private val _quoteCategories: LiveData<List<CategoryEntity>> =
         repository.loadCategoriesByType(1).distinctUntilChanged()
