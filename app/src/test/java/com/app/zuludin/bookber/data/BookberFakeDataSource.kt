@@ -19,10 +19,8 @@ class BookberFakeDataSource(
     private var categories: MutableList<CategoryEntity>? = mutableListOf()
 ) :
     BookberLocalDataSource {
-    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
-        val observableBooks = MutableLiveData<Result<List<BookWithQuoteTotal>>>()
-        observableBooks.value = Result.Success(booksWithQuote ?: arrayListOf())
-        return observableBooks
+    override fun observeAllBooks(): Flow<List<BookWithQuoteTotal>> {
+        TODO("Not yet implemented")
     }
 
     override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
