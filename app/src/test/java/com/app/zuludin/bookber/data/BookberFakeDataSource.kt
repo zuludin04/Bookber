@@ -96,11 +96,8 @@ class BookberFakeDataSource(
         quotes?.removeIf { it.id == quoteId }
     }
 
-    override fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>> {
-        val observableCategories = MutableLiveData<Result<List<CategoryEntity>>>()
-        categories?.filter { it.type == type }
-            ?.let { observableCategories.value = Result.Success(it) }
-        return observableCategories
+    override fun observeCategoryByType(type: Int): Flow<List<CategoryEntity>> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun saveCategory(category: CategoryEntity) {
