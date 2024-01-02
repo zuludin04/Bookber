@@ -9,6 +9,7 @@ import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.util.toModel
 import kotlinx.coroutines.coroutineScope
@@ -102,8 +103,10 @@ class BookberRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>> {
-        return localSource.loadCategoriesByType(type)
+    override fun observeCategoryByType(type: Int): Flow<Result<List<Category>>> {
+        return localSource.observeCategoryByType(type).map { entity ->
+            entity.map(CategoryEntity::toModel)
+        }.asResult()
     }
 
     override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> {

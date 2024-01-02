@@ -45,7 +45,7 @@ interface BookberLocalDataSource {
 
     suspend fun deleteQuoteById(quoteId: String)
 
-    fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>>
+    fun observeCategoryByType(type: Int): Flow<List<CategoryEntity>>
 
     suspend fun saveCategory(category: CategoryEntity)
 

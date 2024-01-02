@@ -8,6 +8,7 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import kotlinx.coroutines.flow.Flow
 
@@ -44,7 +45,7 @@ interface BookberRepository {
 
     suspend fun deleteQuoteById(quoteId: String)
 
-    fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>>
+    fun observeCategoryByType(type: Int): Flow<Result<List<Category>>>
 
     suspend fun loadCategories(type: Int): Result<List<CategoryEntity>>
 

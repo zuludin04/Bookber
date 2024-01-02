@@ -160,10 +160,8 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
         quoteDao.deleteQuoteById(quoteId)
     }
 
-    override fun loadCategoriesByType(type: Int): LiveData<Result<List<CategoryEntity>>> {
-        return categoryDao.loadAllCategories(type).map {
-            Success(it)
-        }
+    override fun observeCategoryByType(type: Int): Flow<List<CategoryEntity>> {
+        return categoryDao.observeCategoryByType(type)
     }
 
     override suspend fun saveCategory(category: CategoryEntity) = withContext(dispatcher) {

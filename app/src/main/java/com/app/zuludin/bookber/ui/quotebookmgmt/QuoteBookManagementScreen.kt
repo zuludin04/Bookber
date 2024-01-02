@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
@@ -132,7 +133,7 @@ fun QuoteBookManagementScreen(
                     if (bookInfoState == BookInfoState.ADD_QUOTE) quotesWithoutBook else quotesWithBook,
                     key = { q -> q.id }) { quote ->
                     QuoteItem(
-                        quote = quote,
+                        quote = Quote(id = "", categoryId = "", bookId = ""),
                         onDetailQuote = onOpenDetailQuote,
                     )
                 }
