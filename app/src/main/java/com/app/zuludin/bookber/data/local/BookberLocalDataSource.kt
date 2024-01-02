@@ -11,7 +11,7 @@ import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import kotlinx.coroutines.flow.Flow
 
 interface BookberLocalDataSource {
-    fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>>
+    fun observeAllBooks(): Flow<List<BookWithQuoteTotal>>
 
     fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>>
 

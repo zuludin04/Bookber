@@ -10,12 +10,13 @@ import androidx.room.Update
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
     @Transaction
     @Query("select * from bookentity")
-    fun loadBookStore(): LiveData<List<BookWithQuoteTotal>>
+    fun observeAllBooks(): Flow<List<BookWithQuoteTotal>>
 
     @Transaction
     @Query("select * from bookentity")

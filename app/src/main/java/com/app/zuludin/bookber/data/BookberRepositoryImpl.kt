@@ -9,6 +9,7 @@ import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.util.toModel
@@ -23,8 +24,10 @@ import javax.inject.Singleton
 class BookberRepositoryImpl @Inject constructor(
     private val localSource: BookberLocalDataSource,
 ) : BookberRepository {
-    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
-        return localSource.loadBookStore()
+    override fun observeAllBooks(): Flow<Result<List<Book>>> {
+        return localSource.observeAllBooks().map { entity ->
+            entity.map(BookWithQuoteTotal::toModel)
+        }.asResult()
     }
 
     override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {

@@ -26,10 +26,8 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
     private val categoryDao: CategoryDao,
     @DefaultDispatcher private val dispatcher: CoroutineDispatcher,
 ) : BookberLocalDataSource {
-    override fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>> {
-        return bookDao.loadBookStore().map {
-            Success(it)
-        }
+    override fun observeAllBooks(): Flow<List<BookWithQuoteTotal>> {
+        return bookDao.observeAllBooks()
     }
 
     override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {

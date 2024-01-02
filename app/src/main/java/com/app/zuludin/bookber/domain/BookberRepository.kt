@@ -8,12 +8,13 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
+import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import kotlinx.coroutines.flow.Flow
 
 interface BookberRepository {
-    fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>>
+    fun observeAllBooks(): Flow<Result<List<Book>>>
 
     fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>>
 
