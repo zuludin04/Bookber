@@ -22,15 +22,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.domain.model.Quote
 
 @Composable
 fun QuoteItem(
-    quote: QuoteEntity,
+    quote: Quote,
     onDetailQuote: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -57,7 +56,7 @@ fun QuoteItem(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = quote.quotes,
+                text = quote.quote,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
                 overflow = TextOverflow.Ellipsis,
@@ -72,16 +71,4 @@ fun QuoteItem(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun QuoteItemPreview() {
-    QuoteItem(
-        quote = QuoteEntity(
-            quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
-            author = "Jurgen Klopp"
-        ),
-        onDetailQuote = {}
-    )
 }

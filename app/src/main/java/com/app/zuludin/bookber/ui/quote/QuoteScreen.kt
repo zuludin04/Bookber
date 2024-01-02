@@ -21,11 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
@@ -68,11 +66,8 @@ fun QuoteScreen(
             }
         }
     ) {
+        val uiState by viewModel.uiState.collectAsState()
         val categories by viewModel.categories.observeAsState(initial = emptyList())
-        val quotes by viewModel.quotes.observeAsState(initial = emptyList())
-        val filterQuotes by viewModel.filteredQuotes.observeAsState(initial = emptyList())
-
-        var isFilter by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -80,19 +75,16 @@ fun QuoteScreen(
                 .fillMaxSize()
         ) {
             CategoryFilterChips(categories = categories, onFilterQuote = { cat ->
-                isFilter = cat.category != "All"
-                viewModel.filterQuotesByCategory(cat.id)
+                viewModel.filterQuoteByCategory(cat.id)
             })
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val list = if (isFilter) filterQuotes else quotes
-
-            if (list.isEmpty()) {
+            if (uiState.quotes.isEmpty()) {
                 EmptyContentLayout(message = "Quote is Empty")
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                    items(list) { quote ->
+                    items(uiState.quotes) { quote ->
                         QuoteItem(quote = quote, onDetailQuote = onOpenDetailQuote)
                     }
                 }
