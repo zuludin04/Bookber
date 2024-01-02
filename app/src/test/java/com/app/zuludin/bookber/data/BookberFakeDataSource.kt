@@ -9,6 +9,8 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
+import com.app.zuludin.bookber.domain.model.Quote
+import kotlinx.coroutines.flow.Flow
 
 class BookberFakeDataSource(
     private var books: MutableList<BookEntity>? = mutableListOf(),
@@ -53,10 +55,8 @@ class BookberFakeDataSource(
         books?.removeIf { it.id == bookId }
     }
 
-    override fun observeAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
-        val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
-        quotes?.let { observableQuotes.value = Result.Success(it) }
-        return observableQuotes
+    override fun observeAllQuotes(): Flow<List<QuoteEntity>> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
