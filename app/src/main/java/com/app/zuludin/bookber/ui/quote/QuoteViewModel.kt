@@ -32,7 +32,7 @@ sealed interface QuotesUiState {
 }
 
 @HiltViewModel
-class QuoteViewModel @Inject constructor(private val repository: BookberRepository) : ViewModel() {
+class QuoteViewModel @Inject constructor(repository: BookberRepository) : ViewModel() {
 
     private val quotes: Flow<Result<List<Quote>>> = repository.observeAllQuotes()
     private val categories: Flow<Result<List<Category>>> = repository.observeCategoryByType(1)
