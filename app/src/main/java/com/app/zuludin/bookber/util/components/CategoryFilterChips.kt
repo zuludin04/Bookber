@@ -22,11 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.util.bottomBorder
 
 @Composable
-fun CategoryFilterChips(categories: List<CategoryEntity>, onFilterQuote: (CategoryEntity) -> Unit) {
+fun CategoryFilterChips(categories: List<Category>, onFilterQuote: (Category) -> Unit) {
     var selectedChip by remember { mutableStateOf("All") }
 
     LazyRow(
@@ -37,8 +37,8 @@ fun CategoryFilterChips(categories: List<CategoryEntity>, onFilterQuote: (Catego
     ) {
         items(items = categories) { category ->
             CategoryChips(
-                title = category.category,
-                isSelected = selectedChip == category.category,
+                title = category.name,
+                isSelected = selectedChip == category.name,
                 onFilterCategory = {
                     selectedChip = it
                     onFilterQuote(category)
@@ -78,6 +78,6 @@ private fun CategoryChips(title: String, isSelected: Boolean, onFilterCategory: 
 @Composable
 fun CategoryFilterChipsPreview() {
     MaterialTheme {
-        CategoryFilterChips(arrayListOf(CategoryEntity(category = "All"))) {}
+        CategoryFilterChips(arrayListOf(Category(name = "All"))) {}
     }
 }

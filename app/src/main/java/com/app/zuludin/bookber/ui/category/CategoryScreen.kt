@@ -1,6 +1,7 @@
 package com.app.zuludin.bookber.ui.category
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -25,13 +27,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
@@ -39,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import kotlinx.coroutines.launch
 
@@ -59,9 +61,7 @@ fun CategoryScreen(
     var showCategorySheet by remember { mutableStateOf(false) }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
-    val bookCategories by viewModel.bookCategories.observeAsState(initial = emptyList())
-    val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
-
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -107,14 +107,15 @@ fun CategoryScreen(
 
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
                 when (index) {
-                    0 -> CategoryContents(
-                        categories = quoteCategories,
+                    0 -> QuoteCategoryContents(
+                        uiState = uiState.quoteCategories,
                         onDeleteCategory = { id ->
                             selectedCategoryId = id
                             showDeleteConfirmDialog = true
                         })
 
-                    1 -> CategoryContents(categories = bookCategories,
+                    1 -> BookCategoryContents(
+                        uiState = uiState.bookCategories,
                         onDeleteCategory = { id ->
                             selectedCategoryId = id
                             showDeleteConfirmDialog = true
@@ -151,11 +152,52 @@ fun CategoryScreen(
 }
 
 @Composable
-private fun CategoryContents(categories: List<CategoryEntity>, onDeleteCategory: (String) -> Unit) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(categories) { cat ->
-            CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
-            HorizontalDivider()
+private fun QuoteCategoryContents(
+    uiState: QuoteCategoryUiState,
+    onDeleteCategory: (String) -> Unit
+) {
+    when (uiState) {
+        QuoteCategoryUiState.Error -> Text(text = "Error When Load Quote Category")
+        QuoteCategoryUiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is QuoteCategoryUiState.Success -> {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(uiState.categories) { cat ->
+                    CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookCategoryContents(uiState: BookCategoryUiState, onDeleteCategory: (String) -> Unit) {
+    when (uiState) {
+        BookCategoryUiState.Error -> Text(text = "Error When Load Book Category")
+        BookCategoryUiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is BookCategoryUiState.Success -> {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(uiState.categories) { cat ->
+                    CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
+                    HorizontalDivider()
+                }
+            }
         }
     }
 }

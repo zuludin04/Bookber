@@ -14,11 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.domain.model.Category
 
 @Composable
 fun CategoryItem(
-    category: CategoryEntity,
+    category: Category,
     onDeleteCategory: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -29,7 +29,7 @@ fun CategoryItem(
     ) {
         val (title, delete) = createRefs()
 
-        Text(text = category.category,
+        Text(text = category.name,
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.9f),
             modifier = Modifier.constrainAs(title) {
@@ -55,6 +55,6 @@ fun CategoryItem(
 @Composable
 fun CategoryItemPreview() {
     CategoryItem(
-        category = CategoryEntity(category = "Fiction"),
+        category = Category(name = "Fiction"),
         onDeleteCategory = {})
 }
