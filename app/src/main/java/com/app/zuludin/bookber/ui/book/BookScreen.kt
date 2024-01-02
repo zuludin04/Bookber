@@ -1,5 +1,6 @@
 package com.app.zuludin.bookber.ui.book
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -20,18 +22,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.BookEntity
+import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.util.components.CategoryFilterChips
 import com.app.zuludin.bookber.util.components.EmptyContentLayout
 
@@ -40,7 +40,7 @@ import com.app.zuludin.bookber.util.components.EmptyContentLayout
 fun BookScreen(
     openDrawer: () -> Unit,
     onAddBook: () -> Unit,
-    onDetailBook: (BookEntity) -> Unit,
+    onDetailBook: (Book) -> Unit,
     viewModel: BookViewModel = hiltViewModel(),
 ) {
     Scaffold(
@@ -62,32 +62,44 @@ fun BookScreen(
             }
         }
     ) {
-        val categories by viewModel.categories.observeAsState(initial = emptyList())
-        val books by viewModel.books.observeAsState(initial = emptyList())
-        val filterBooks by viewModel.filteredBooks.observeAsState(initial = emptyList())
-
-        var isFilter by remember { mutableStateOf(false) }
+        val uiState by viewModel.uiState.collectAsState()
 
         Column(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
         ) {
-            CategoryFilterChips(categories = categories, onFilterQuote = { cat ->
-                isFilter = cat.category != "All"
-                viewModel.filterBooksByCategoryId(cat.id)
+            CategoryFilterChips(categories = uiState.categories, onFilterQuote = { cat ->
+                viewModel.filterBookByCategory(cat.id)
             })
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            val list = if (isFilter) filterBooks else books
+            ShowBookContent(uiState = uiState.books, onDetailBook = onDetailBook)
+        }
+    }
+}
 
-            if (list.isEmpty()) {
+@Composable
+private fun ShowBookContent(uiState: BooksUiState, onDetailBook: (Book) -> Unit) {
+    when (uiState) {
+        BooksUiState.Error -> Text(text = "Error Load Book")
+        BooksUiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is BooksUiState.Success -> {
+            if (uiState.books.isEmpty()) {
                 EmptyContentLayout(message = "Book is Empty")
             } else {
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                    items(list) { book ->
-                        BookItem(book = book, onClick = { onDetailBook(book.book) })
+                    items(uiState.books) { book ->
+                        BookItem(book = book, onClick = { onDetailBook(book) })
                     }
                 }
             }

@@ -32,16 +32,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
+import com.app.zuludin.bookber.domain.model.Book
 
 @Composable
 fun BookItem(
-    book: BookWithQuoteTotal,
-    onClick: (BookEntity) -> Unit,
+    book: Book,
+    onClick: (Book) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val byteArray = Base64.decode(book.book.cover, Base64.DEFAULT)
+    val byteArray = Base64.decode(book.cover, Base64.DEFAULT)
     val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 
     Card(
@@ -49,7 +48,7 @@ fun BookItem(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         modifier = modifier
-            .clickable { onClick(book.book) }
+            .clickable { onClick(book) }
             .padding(10.dp)
     ) {
         Column(
@@ -63,7 +62,7 @@ fun BookItem(
                 modifier = Modifier.clip(RoundedCornerShape(5.dp))
             )
             Text(
-                text = book.book.title,
+                text = book.title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
@@ -71,7 +70,7 @@ fun BookItem(
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
-                text = book.book.author,
+                text = book.author,
                 fontSize = 14.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -84,14 +83,14 @@ fun BookItem(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = book.category?.category ?: "-",
+                    text = book.category,
                     color = Color.Gray,
                     fontSize = 13.sp,
                     maxLines = 1
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "${book.quotes.size}",
+                        text = "${book.totalQuotes}",
                         color = Color.Gray,
                         fontSize = 13.sp,
                         maxLines = 1

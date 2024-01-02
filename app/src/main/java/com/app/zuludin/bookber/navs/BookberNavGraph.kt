@@ -86,7 +86,7 @@ fun BookberNavGraph(
                     onDetailBook = {
                         navActions.navigateToBookQuoteManagement(
                             BookInfoState.DETAIL_BOOK.name,
-                            it.id
+                            it.bookId
                         )
                     }
                 )

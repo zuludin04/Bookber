@@ -33,5 +33,7 @@ fun BookWithQuoteTotal.toModel() = Book(
     title = book.title,
     cover = book.cover,
     category = category?.category ?: "",
-    totalQuotes = quotes.size
+    totalQuotes = quotes.size,
+    author = book.author,
+    categoryId = book.categoryId
 )
