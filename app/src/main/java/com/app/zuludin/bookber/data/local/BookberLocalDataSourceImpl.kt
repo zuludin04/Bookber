@@ -16,6 +16,7 @@ import com.app.zuludin.bookber.data.local.room.CategoryDao
 import com.app.zuludin.bookber.data.local.room.QuoteDao
 import com.app.zuludin.bookber.di.DefaultDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -90,10 +91,8 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
         bookDao.deleteBookById(bookId)
     }
 
-    override fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
-        return quoteDao.loadAllQuotes().map {
-            Success(it)
-        }
+    override fun observeAllQuotes(): Flow<List<QuoteEntity>> {
+        return quoteDao.observeAllQuotes()
     }
 
     override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) =

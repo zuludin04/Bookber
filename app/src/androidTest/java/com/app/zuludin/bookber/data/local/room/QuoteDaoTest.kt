@@ -36,7 +36,7 @@ class QuoteDaoTest {
     @Test
     fun saveQuote_Success() = runTest {
         dao.saveQuote(sampleQuote)
-        val actual = dao.loadAllQuotes().getOrAwaitValue()
+        val actual = dao.observeAllQuotes().getOrAwaitValue()
         Assert.assertEquals(sampleQuote.quotes, actual[0].quotes)
         Assert.assertTrue(actual.isNotEmpty())
     }
@@ -45,7 +45,7 @@ class QuoteDaoTest {
     fun deleteQuote_Success() = runTest {
         dao.saveQuote(sampleQuote)
         dao.deleteQuoteById(sampleQuote.id)
-        val actual = dao.loadAllQuotes().getOrAwaitValue()
+        val actual = dao.observeAllQuotes().getOrAwaitValue()
         Assert.assertTrue(actual.isEmpty())
     }
 }

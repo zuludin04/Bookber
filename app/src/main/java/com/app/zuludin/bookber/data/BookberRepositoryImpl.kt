@@ -9,7 +9,11 @@ import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.BookberRepository
+import com.app.zuludin.bookber.domain.model.Quote
+import com.app.zuludin.bookber.util.toModel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -56,8 +60,10 @@ class BookberRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
-        return localSource.loadAllQuotes()
+    override fun observeAllQuotes(): Flow<Result<List<Quote>>> {
+        return localSource.observeAllQuotes().map { entity ->
+            entity.map(QuoteEntity::toModel)
+        }.asResult()
     }
 
     override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {

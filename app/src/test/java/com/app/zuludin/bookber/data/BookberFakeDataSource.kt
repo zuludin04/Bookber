@@ -53,7 +53,7 @@ class BookberFakeDataSource(
         books?.removeIf { it.id == bookId }
     }
 
-    override fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
+    override fun observeAllQuotes(): LiveData<Result<List<QuoteEntity>>> {
         val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
         quotes?.let { observableQuotes.value = Result.Success(it) }
         return observableQuotes

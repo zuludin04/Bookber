@@ -9,11 +9,12 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuoteDao {
     @Query("select * from quoteentity")
-    fun loadAllQuotes(): LiveData<List<QuoteEntity>>
+    fun observeAllQuotes(): Flow<List<QuoteEntity>>
 
     @Query("select * from quoteentity where bookId = :bookId")
     fun loadQuotesByBook(bookId: String): LiveData<List<QuoteEntity>>

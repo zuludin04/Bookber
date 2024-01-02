@@ -8,6 +8,7 @@ import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
+import kotlinx.coroutines.flow.Flow
 
 interface BookberLocalDataSource {
     fun loadBookStore(): LiveData<Result<List<BookWithQuoteTotal>>>
@@ -26,7 +27,7 @@ interface BookberLocalDataSource {
 
     suspend fun deleteBookById(bookId: String)
 
-    fun loadAllQuotes(): LiveData<Result<List<QuoteEntity>>>
+    fun observeAllQuotes(): Flow<List<QuoteEntity>>
 
     suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
 
