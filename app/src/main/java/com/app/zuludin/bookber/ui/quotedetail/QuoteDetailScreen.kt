@@ -166,10 +166,10 @@ fun QuoteDetailScreen(
 
         if (showBookSelectDialog) {
             SelectBookSheet(
-                books = books,
+                books = emptyList(),
                 onDismissRequest = { showBookSelectDialog = false },
                 onSelectBook = { book ->
-                    viewModel.addBookInfo(book)
+                    viewModel.addBookInfo(BookEntity())
                     showBookSelectDialog = false
                 }
             )
