@@ -77,7 +77,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         }
     }
 
-    fun saveBook(book: Book, quotes: List<Quote>) {
+    fun saveBook(book: Book, category: Category, quotes: List<Quote>) {
         val bookId = bookId.value
 
         if (bookId == null) {
@@ -94,7 +94,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
             }
         }
 
-        _uiState.update { it.copy(book = book) }
+        _uiState.update { it.copy(book = book, category = category) }
     }
 
     fun saveQuote(quote: Quote) {

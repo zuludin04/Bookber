@@ -121,8 +121,8 @@ fun QuoteBookManagementScreen(
                 category = uiState.category,
                 categories = uiState.bookCategories,
                 bookState = managementState,
-                onSaveBook = { book ->
-                    viewModel.saveBook(book, uiState.quotes)
+                onSaveBook = { book, category ->
+                    viewModel.saveBook(book, category, uiState.quotes)
                     showQuoteInput = true
                     managementState = BookInfoState.DETAIL_BOOK
                 },

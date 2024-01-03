@@ -58,7 +58,7 @@ fun BookInformation(
     category: Category?,
     categories: List<Category>,
     bookState: BookInfoState,
-    onSaveBook: (Book) -> Unit,
+    onSaveBook: (Book, Category) -> Unit,
     onInputBook: () -> Unit
 ) {
     if (bookState == BookInfoState.ADD_QUOTE) {
@@ -101,7 +101,7 @@ private fun ShowBookInformation(
     category: Category?,
     categories: List<Category>,
     bookState: BookInfoState,
-    onSaveBook: (Book) -> Unit
+    onSaveBook: (Book, Category) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -273,7 +273,7 @@ private fun ShowBookInformation(
                                 cover = imageField,
                                 categoryId = categoryField?.id ?: ""
                             )
-                            onSaveBook(newBook)
+                            onSaveBook(newBook, categoryField!!)
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
