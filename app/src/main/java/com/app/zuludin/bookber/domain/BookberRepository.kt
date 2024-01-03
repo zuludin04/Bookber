@@ -18,7 +18,7 @@ interface BookberRepository {
 
     suspend fun loadBookDetail(bookId: String): Result<BookDetail>
 
-    suspend fun saveBook(book: Book)
+    suspend fun saveBook(book: Book): String
 
     suspend fun updateBook(book: Book)
 
@@ -30,9 +30,9 @@ interface BookberRepository {
 
     suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetail>
 
-    suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
+    suspend fun insertQuotesIntoBooks(quotes: List<Quote>)
 
-    suspend fun saveQuote(quote: Quote)
+    suspend fun saveQuote(quote: Quote): String
 
     suspend fun updateQuote(quote: Quote)
 

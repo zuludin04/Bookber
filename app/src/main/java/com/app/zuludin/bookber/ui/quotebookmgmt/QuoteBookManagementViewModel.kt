@@ -4,12 +4,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -77,14 +77,14 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         }
     }
 
-    fun saveBook(book: Book, quotes: List<QuoteEntity>) {
+    fun saveBook(book: Book, quotes: List<Quote>) {
         val bookId = bookId.value
 
         if (bookId == null) {
-//            updateQuotesBookId(quotes, book.id)
-//            this.bookId.value = book.id
             viewModelScope.launch {
-                repository.saveBook(book)
+                val id = async { repository.saveBook(book) }.await()
+                updateQuotesBookId(quotes, id)
+                this@QuoteBookManagementViewModel.bookId.value = id
             }
         } else {
             book.bookId = bookId
@@ -95,13 +95,14 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
     }
 
     fun saveQuote(quote: Quote) {
-        quoteCache.add(quote)
-        _uiState.update {
-            it.copy(quotes = quoteCache.toImmutableList())
-        }
-
         viewModelScope.launch {
-            repository.saveQuote(quote)
+            quote.bookId = bookId.value ?: ""
+            val id = async { repository.saveQuote(quote) }.await()
+            quote.id = id
+            quoteCache.add(quote)
+            _uiState.update {
+                it.copy(quotes = quoteCache.toImmutableList())
+            }
         }
     }
 
@@ -111,8 +112,8 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         }
     }
 
-    private fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
-        val result = ArrayList<QuoteEntity>()
+    private fun updateQuotesBookId(quotes: List<Quote>, bookId: String) {
+        val result = ArrayList<Quote>()
         result.addAll(quotes)
 
         result.forEach {

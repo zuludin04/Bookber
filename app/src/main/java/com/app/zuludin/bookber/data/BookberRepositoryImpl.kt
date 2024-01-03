@@ -13,6 +13,7 @@ import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.domain.model.QuoteDetail
 import com.app.zuludin.bookber.util.toEntity
+import com.app.zuludin.bookber.util.toEntityUpdate
 import com.app.zuludin.bookber.util.toModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
@@ -61,15 +62,13 @@ class BookberRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun saveBook(book: Book) {
-        coroutineScope {
-            launch { localSource.saveBook(book.toEntity()) }
-        }
+    override suspend fun saveBook(book: Book): String = withContext(dispatcher) {
+        return@withContext localSource.saveBook(book.toEntity())
     }
 
     override suspend fun updateBook(book: Book) {
         coroutineScope {
-            launch { localSource.updateBook(book.toEntity()) }
+            launch { localSource.updateBook(book.toEntityUpdate()) }
         }
     }
 
@@ -103,16 +102,14 @@ class BookberRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
+    override suspend fun insertQuotesIntoBooks(quotes: List<Quote>) {
         coroutineScope {
-            launch { localSource.insertQuotesIntoBooks(quotes) }
+            launch { localSource.insertQuotesIntoBooks(quotes.map { it.toEntityUpdate() }) }
         }
     }
 
-    override suspend fun saveQuote(quote: Quote) {
-        coroutineScope {
-            launch { localSource.saveQuote(quote.toEntity()) }
-        }
+    override suspend fun saveQuote(quote: Quote): String = withContext(dispatcher) {
+        return@withContext localSource.saveQuote(quote.toEntity())
     }
 
     override suspend fun updateQuote(quote: Quote) {

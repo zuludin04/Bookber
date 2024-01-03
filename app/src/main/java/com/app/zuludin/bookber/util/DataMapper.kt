@@ -19,6 +19,14 @@ fun Quote.toEntity() = QuoteEntity(
     bookId = bookId
 )
 
+fun Quote.toEntityUpdate() = QuoteEntity(
+    id = id,
+    quotes = quote,
+    author = author,
+    categoryId = categoryId,
+    bookId = bookId
+)
+
 fun QuoteEntity.toModel() = Quote(
     id = id,
     quote = quotes,
@@ -50,6 +58,13 @@ fun BookEntity.toModel() = Book(
 )
 
 fun Book.toEntity() = BookEntity(
+    title = title,
+    cover = cover,
+    author = author,
+    categoryId = categoryId
+)
+
+fun Book.toEntityUpdate() = BookEntity(
     id = bookId,
     title = title,
     cover = cover,

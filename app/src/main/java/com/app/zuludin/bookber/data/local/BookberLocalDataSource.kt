@@ -17,7 +17,7 @@ interface BookberLocalDataSource {
 
     suspend fun loadBookDetail(bookId: String): BookDetailEntity?
 
-    suspend fun saveBook(book: BookEntity)
+    suspend fun saveBook(book: BookEntity): String
 
     suspend fun updateBook(book: BookEntity)
 
@@ -33,7 +33,7 @@ interface BookberLocalDataSource {
 
     suspend fun loadQuoteDetail(quoteId: String): QuoteDetailEntity?
 
-    suspend fun saveQuote(quote: QuoteEntity)
+    suspend fun saveQuote(quote: QuoteEntity): String
 
     suspend fun updateQuote(quote: QuoteEntity)
 

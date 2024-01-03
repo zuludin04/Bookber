@@ -31,10 +31,12 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
 
     override suspend fun loadBooks(): List<BookWithQuoteTotal> = bookDao.loadBooks()
 
-    override suspend fun loadBookDetail(bookId: String): BookDetailEntity? = bookDao.loadBookDetail(bookId)
+    override suspend fun loadBookDetail(bookId: String): BookDetailEntity? =
+        bookDao.loadBookDetail(bookId)
 
-    override suspend fun saveBook(book: BookEntity) = withContext(dispatcher) {
+    override suspend fun saveBook(book: BookEntity): String = withContext(dispatcher) {
         bookDao.saveBook(book)
+        return@withContext book.id
     }
 
     override suspend fun updateBook(book: BookEntity) = withContext<Unit>(dispatcher) {
@@ -66,8 +68,9 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
     override suspend fun loadQuoteDetail(quoteId: String): QuoteDetailEntity? =
         quoteDao.loadQuoteDetail(quoteId)
 
-    override suspend fun saveQuote(quote: QuoteEntity) = withContext(dispatcher) {
+    override suspend fun saveQuote(quote: QuoteEntity): String = withContext(dispatcher) {
         quoteDao.saveQuote(quote)
+        return@withContext quote.id
     }
 
     override suspend fun updateQuote(quote: QuoteEntity) = withContext<Unit>(dispatcher) {
