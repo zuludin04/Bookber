@@ -17,92 +17,91 @@ class BookberFakeDataSource(
     private var booksWithQuote: MutableList<BookWithQuoteTotal>? = mutableListOf(),
     private var quotes: MutableList<QuoteEntity>? = mutableListOf(),
     private var categories: MutableList<CategoryEntity>? = mutableListOf()
-) :
-    BookberLocalDataSource {
-    override fun observeAllBooks(): Flow<List<BookWithQuoteTotal>> {
+) {
+     fun observeAllBooks(): Flow<List<BookWithQuoteTotal>> {
         TODO("Not yet implemented")
     }
 
-    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
+     fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
         return MutableLiveData()
     }
 
-    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> {
+     suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> {
         return Result.Success(emptyList())
     }
 
-    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> {
+     suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> {
         val observableBooks = MutableLiveData<Result<List<BookWithQuoteTotal>>>()
         return observableBooks.value!!
     }
 
-    override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
+     suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
         //        books?.firstOrNull { it.id == bookId }?.let { observableBook.value = Result.Success(it) }
         return Result.Success(BookDetailEntity(BookEntity(), emptyList(), CategoryEntity()))
     }
 
-    override suspend fun saveBook(book: BookEntity) {
+     suspend fun saveBook(book: BookEntity) {
         books?.add(book)
     }
 
-    override suspend fun updateBook(book: BookEntity) {
+     suspend fun updateBook(book: BookEntity) {
         books?.firstOrNull { it.id == book.id }?.let { it.title = book.title }
     }
 
-    override suspend fun deleteBookById(bookId: String) {
+     suspend fun deleteBookById(bookId: String) {
         books?.removeIf { it.id == bookId }
     }
 
-    override fun observeAllQuotes(): Flow<List<QuoteEntity>> {
+     fun observeAllQuotes(): Flow<List<QuoteEntity>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
+     suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>) {
 
     }
 
-    override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
+     fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
         val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
         quotes?.filter { it.bookId == bookId }?.let { observableQuotes.value = Result.Success(it) }
         return observableQuotes
     }
 
-    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> {
+     suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> {
         val observableQuotes = MutableLiveData<Result<List<QuoteEntity>>>()
         quotes?.filter { it.categoryId == categoryId }
             ?.let { observableQuotes.value = Result.Success(it) }
         return observableQuotes.value!!
     }
 
-    override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> {
+     suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> {
         return Result.Success(emptyList())
     }
 
-    override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> {
+     suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> {
         return Result.Success(QuoteDetailEntity(QuoteEntity(), BookEntity(), CategoryEntity()))
     }
 
-    override suspend fun saveQuote(quote: QuoteEntity) {
+     suspend fun saveQuote(quote: QuoteEntity) {
         quotes?.add(quote)
     }
 
-    override suspend fun updateQuote(quote: QuoteEntity) {
+     suspend fun updateQuote(quote: QuoteEntity) {
         quotes?.firstOrNull { it.id == quote.id }?.let { it.quotes = quote.quotes }
     }
 
-    override suspend fun deleteQuoteById(quoteId: String) {
+     suspend fun deleteQuoteById(quoteId: String) {
         quotes?.removeIf { it.id == quoteId }
     }
 
-    override fun observeCategoryByType(type: Int): Flow<List<CategoryEntity>> {
+     fun observeCategoryByType(type: Int): Flow<List<CategoryEntity>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveCategory(category: CategoryEntity) {
+     suspend fun saveCategory(category: CategoryEntity) {
         categories?.add(category)
     }
 
-    override suspend fun deleteCategoryById(categoryId: String) {
+     suspend fun deleteCategoryById(categoryId: String) {
         categories?.removeIf { it.id == categoryId }
     }
 }
