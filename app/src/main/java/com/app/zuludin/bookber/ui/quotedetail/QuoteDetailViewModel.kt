@@ -84,7 +84,7 @@ class QuoteDetailViewModel @Inject constructor(private val repository: BookberRe
     }
 
     fun updateQuote(quote: String, author: String, category: Category) {
-        var updatedQuote = Quote()
+        var updatedQuote = _uiState.value.quote
         _uiState.update {
             val new = it.quote.copy(quote = quote, author = author, categoryId = category.id)
             updatedQuote = new
@@ -97,7 +97,7 @@ class QuoteDetailViewModel @Inject constructor(private val repository: BookberRe
     }
 
     fun addBookInfo(book: Book) {
-        var quote = Quote()
+        var quote = _uiState.value.quote
         _uiState.update {
             quote = it.quote.copy(bookId = book.bookId)
             it.copy(book = book)
@@ -108,7 +108,7 @@ class QuoteDetailViewModel @Inject constructor(private val repository: BookberRe
     }
 
     fun removeBookInfo() {
-        var quote = Quote()
+        var quote = _uiState.value.quote
         _uiState.update {
             quote = it.quote.copy(bookId = "")
             it.copy(book = null)

@@ -114,7 +114,7 @@ class BookberRepositoryImpl @Inject constructor(
 
     override suspend fun updateQuote(quote: Quote) {
         coroutineScope {
-            launch { localSource.updateQuote(quote.toEntity()) }
+            launch { localSource.updateQuote(quote.toEntityUpdate()) }
         }
     }
 
