@@ -48,7 +48,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
                     _uiState.update {
                         it.copy(
                             book = result.data.book,
-                            quotes = result.data.quotes.toMutableList(),
+                            quotes = result.data.quotes,
                             category = result.data.category,
                             isLoading = false,
                             isError = false
@@ -85,6 +85,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
                 val id = async { repository.saveBook(book) }.await()
                 updateQuotesBookId(quotes, id)
                 this@QuoteBookManagementViewModel.bookId.value = id
+                book.bookId = id
             }
         } else {
             book.bookId = bookId
@@ -92,6 +93,8 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
                 repository.updateBook(book)
             }
         }
+
+        _uiState.update { it.copy(book = book) }
     }
 
     fun saveQuote(quote: Quote) {
