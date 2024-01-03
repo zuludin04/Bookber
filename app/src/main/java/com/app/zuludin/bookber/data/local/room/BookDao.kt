@@ -1,6 +1,5 @@
 package com.app.zuludin.bookber.data.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -25,14 +24,6 @@ interface BookDao {
     @Transaction
     @Query("select * from bookentity where bookId = :bookId")
     suspend fun loadBookDetail(bookId: String): BookDetailEntity?
-
-    @Transaction
-    @Query("select * from bookentity")
-    fun loadBookWithQuoteTotal(): LiveData<List<BookWithQuoteTotal>>
-
-    @Transaction
-    @Query("select * from bookentity where categoryId = :categoryId")
-    suspend fun loadBooksByCategory(categoryId: String): List<BookWithQuoteTotal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveBook(book: BookEntity)

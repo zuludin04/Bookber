@@ -35,10 +35,6 @@ class BookberRepositoryImpl @Inject constructor(
         }.asResult()
     }
 
-    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
-        return localSource.loadBookWithQuotes()
-    }
-
     override suspend fun loadBooks(): Result<List<Book>> = withContext(dispatcher) {
         try {
             val books = localSource.loadBooks().map { it.toModel() }
@@ -50,10 +46,6 @@ class BookberRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             return@withContext Result.Error(e)
         }
-    }
-
-    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> {
-        return localSource.loadBooksByCategory(categoryId)
     }
 
     override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
@@ -86,10 +78,6 @@ class BookberRepositoryImpl @Inject constructor(
 
     override fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>> {
         return localSource.loadQuotesByBook(bookId)
-    }
-
-    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> {
-        return localSource.loadQuotesByCategory(categoryId)
     }
 
     override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetail> =

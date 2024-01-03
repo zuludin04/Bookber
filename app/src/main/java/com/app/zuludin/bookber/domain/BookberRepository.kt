@@ -6,7 +6,6 @@ import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
@@ -16,11 +15,7 @@ import kotlinx.coroutines.flow.Flow
 interface BookberRepository {
     fun observeAllBooks(): Flow<Result<List<Book>>>
 
-    fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>>
-
     suspend fun loadBooks(): Result<List<Book>>
-
-    suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>>
 
     suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>
 
@@ -33,8 +28,6 @@ interface BookberRepository {
     fun observeAllQuotes(): Flow<Result<List<Quote>>>
 
     fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>>
-
-    suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>>
 
     suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetail>
 

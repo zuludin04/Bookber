@@ -13,11 +13,7 @@ import kotlinx.coroutines.flow.Flow
 interface BookberLocalDataSource {
     fun observeAllBooks(): Flow<List<BookWithQuoteTotal>>
 
-    fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>>
-
     suspend fun loadBooks(): List<BookWithQuoteTotal>
-
-    suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>>
 
     suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>
 
@@ -32,8 +28,6 @@ interface BookberLocalDataSource {
     suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
 
     fun loadQuotesByBook(bookId: String): LiveData<Result<List<QuoteEntity>>>
-
-    suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>>
 
     suspend fun loadCategories(type: Int): List<CategoryEntity>
 

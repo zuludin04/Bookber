@@ -30,27 +30,7 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
         return bookDao.observeAllBooks()
     }
 
-    override fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>> {
-        return bookDao.loadBookWithQuoteTotal().map {
-            Success(it)
-        }
-    }
-
     override suspend fun loadBooks(): List<BookWithQuoteTotal> = bookDao.loadBooks()
-
-    override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> =
-        withContext(dispatcher) {
-            try {
-                val book = bookDao.loadBooksByCategory(categoryId)
-                if (book.isNotEmpty()) {
-                    return@withContext Success(book)
-                } else {
-                    return@withContext Success(emptyList())
-                }
-            } catch (e: Exception) {
-                return@withContext Error(e)
-            }
-        }
 
     override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> =
         withContext(dispatcher) {
@@ -92,20 +72,6 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
             Success(it)
         }
     }
-
-    override suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>> =
-        withContext(dispatcher) {
-            try {
-                val quotes = quoteDao.loadQuotesByCategory(categoryId)
-                if (quotes.isNotEmpty()) {
-                    return@withContext Success(quotes)
-                } else {
-                    return@withContext Success(emptyList())
-                }
-            } catch (e: Exception) {
-                return@withContext Error(e)
-            }
-        }
 
     override suspend fun loadCategories(type: Int): List<CategoryEntity> =
         categoryDao.loadCategories(type)
