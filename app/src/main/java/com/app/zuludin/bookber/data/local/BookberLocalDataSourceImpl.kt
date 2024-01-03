@@ -3,7 +3,6 @@ package com.app.zuludin.bookber.data.local
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.Result.Error
 import com.app.zuludin.bookber.data.Result.Success
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
@@ -32,19 +31,7 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
 
     override suspend fun loadBooks(): List<BookWithQuoteTotal> = bookDao.loadBooks()
 
-    override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> =
-        withContext(dispatcher) {
-            try {
-                val book = bookDao.loadBookDetail(bookId)
-                if (book != null) {
-                    return@withContext Success(book)
-                } else {
-                    return@withContext Error(Exception(""))
-                }
-            } catch (e: Exception) {
-                return@withContext Error(e)
-            }
-        }
+    override suspend fun loadBookDetail(bookId: String): BookDetailEntity? = bookDao.loadBookDetail(bookId)
 
     override suspend fun saveBook(book: BookEntity) = withContext(dispatcher) {
         bookDao.saveBook(book)

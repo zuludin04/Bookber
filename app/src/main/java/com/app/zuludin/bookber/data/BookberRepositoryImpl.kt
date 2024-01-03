@@ -5,11 +5,11 @@ import com.app.zuludin.bookber.data.local.BookberLocalDataSource
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.di.DefaultDispatcher
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.domain.model.Book
+import com.app.zuludin.bookber.domain.model.BookDetail
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.domain.model.QuoteDetail
@@ -48,19 +48,29 @@ class BookberRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity> {
-        return localSource.loadBookDetail(bookId)
-    }
+    override suspend fun loadBookDetail(bookId: String): Result<BookDetail> =
+        withContext(dispatcher) {
+            try {
+                val book = localSource.loadBookDetail(bookId)?.toModel()
+                if (book != null) {
+                    return@withContext Result.Success(book)
+                } else {
+                    return@withContext Result.Error(Exception(""))
+                }
+            } catch (e: Exception) {
+                return@withContext Result.Error(e)
+            }
+        }
 
-    override suspend fun saveBook(bookEntity: BookEntity) {
+    override suspend fun saveBook(book: Book) {
         coroutineScope {
-            launch { localSource.saveBook(bookEntity) }
+            launch { localSource.saveBook(book.toEntity()) }
         }
     }
 
-    override suspend fun updateBook(bookEntity: BookEntity) {
+    override suspend fun updateBook(book: Book) {
         coroutineScope {
-            launch { localSource.updateBook(bookEntity) }
+            launch { localSource.updateBook(book.toEntity()) }
         }
     }
 
@@ -100,9 +110,9 @@ class BookberRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun saveQuote(quote: QuoteEntity) {
+    override suspend fun saveQuote(quote: Quote) {
         coroutineScope {
-            launch { localSource.saveQuote(quote) }
+            launch { localSource.saveQuote(quote.toEntity()) }
         }
     }
 

@@ -17,9 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,7 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.BookInformation
 import com.app.zuludin.bookber.ui.quotebookmgmt.components.QuoteInputField
@@ -59,10 +59,9 @@ fun QuoteBookManagementScreen(
     var quoteInput by remember { mutableStateOf("") }
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
-    val quoteCategories by viewModel.quoteCategories.observeAsState(initial = emptyList())
-    val quotesWithBook by viewModel.bookQuotes.observeAsState(initial = mutableListOf())
     val observeBookId by viewModel.bookId.observeAsState(initial = bookId)
-    val quotesWithoutBook = remember { mutableStateListOf<QuoteEntity>() }
+
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         contentColor = MaterialTheme.colorScheme.background,
@@ -118,10 +117,12 @@ fun QuoteBookManagementScreen(
     ) {
         Column(modifier = Modifier.padding(it)) {
             BookInformation(
-                viewModel = viewModel,
+                book = uiState.book ?: Book(),
+                category = uiState.category,
+                categories = uiState.quoteCategories,
                 bookState = managementState,
                 onSaveBook = {
-                    viewModel.saveBook(quotesWithoutBook.toList())
+                    viewModel.saveBook(it, emptyList())
                     showQuoteInput = true
                     managementState = BookInfoState.DETAIL_BOOK
                 },
@@ -129,11 +130,9 @@ fun QuoteBookManagementScreen(
             )
 
             LazyColumn {
-                items(
-                    if (bookInfoState == BookInfoState.ADD_QUOTE) quotesWithoutBook else quotesWithBook,
-                    key = { q -> q.id }) { quote ->
+                items(uiState.quotes) { quote ->
                     QuoteItem(
-                        quote = Quote(id = "", categoryId = "", bookId = ""),
+                        quote = quote,
                         onDetailQuote = onOpenDetailQuote,
                     )
                 }
@@ -142,17 +141,17 @@ fun QuoteBookManagementScreen(
             if (showSaveQuoteDialog) {
                 ManageQuoteSheet(
                     isUpdate = false,
-                    quote = Quote(),
-                    categories = emptyList(),
+                    quote = Quote(quote = quoteInput),
+                    categories = uiState.quoteCategories,
                     onSaveQuote = { quote, author, category ->
-                        val newQuote = QuoteEntity(
-                            quotes = quote,
+                        val newQuote = Quote(
+                            quote = quote,
                             author = author,
-                            categoryId = category.id
+                            categoryId = category.id,
+                            bookId = bookId ?: ""
                         )
 
                         viewModel.saveQuote(newQuote)
-                        if (bookInfoState == BookInfoState.ADD_QUOTE) quotesWithoutBook.add(newQuote)
                         showSaveQuoteDialog = false
                     },
                     onDismissRequest = { showSaveQuoteDialog = !showSaveQuoteDialog },

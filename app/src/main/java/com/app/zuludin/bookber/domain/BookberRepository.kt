@@ -5,8 +5,8 @@ import com.app.zuludin.bookber.data.Result
 import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookDetailEntity
 import com.app.zuludin.bookber.domain.model.Book
+import com.app.zuludin.bookber.domain.model.BookDetail
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.domain.model.QuoteDetail
@@ -17,11 +17,11 @@ interface BookberRepository {
 
     suspend fun loadBooks(): Result<List<Book>>
 
-    suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>
+    suspend fun loadBookDetail(bookId: String): Result<BookDetail>
 
-    suspend fun saveBook(bookEntity: BookEntity)
+    suspend fun saveBook(book: Book)
 
-    suspend fun updateBook(bookEntity: BookEntity)
+    suspend fun updateBook(book: Book)
 
     suspend fun deleteBookById(bookId: String)
 
@@ -33,7 +33,7 @@ interface BookberRepository {
 
     suspend fun insertQuotesIntoBooks(quotes: List<QuoteEntity>)
 
-    suspend fun saveQuote(quote: QuoteEntity)
+    suspend fun saveQuote(quote: Quote)
 
     suspend fun updateQuote(quote: Quote)
 

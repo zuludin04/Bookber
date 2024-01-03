@@ -15,7 +15,7 @@ interface BookberLocalDataSource {
 
     suspend fun loadBooks(): List<BookWithQuoteTotal>
 
-    suspend fun loadBookDetail(bookId: String): Result<BookDetailEntity>
+    suspend fun loadBookDetail(bookId: String): BookDetailEntity?
 
     suspend fun saveBook(book: BookEntity)
 

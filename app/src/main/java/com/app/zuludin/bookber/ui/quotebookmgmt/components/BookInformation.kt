@@ -29,7 +29,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -47,23 +46,25 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.ui.quotebookmgmt.QuoteBookManagementViewModel
+import com.app.zuludin.bookber.domain.model.Book
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 import com.app.zuludin.bookber.util.enums.BookInfoState
 import java.io.ByteArrayOutputStream
 
 @Composable
 fun BookInformation(
-    viewModel: QuoteBookManagementViewModel,
+    book: Book,
+    category: Category?,
+    categories: List<Category>,
     bookState: BookInfoState,
-    onSaveBook: () -> Unit,
+    onSaveBook: (Book) -> Unit,
     onInputBook: () -> Unit
 ) {
     if (bookState == BookInfoState.ADD_QUOTE) {
         BookEmptyInformation(onInputBook)
     } else {
-        ShowBookInformation(viewModel, bookState, onSaveBook)
+        ShowBookInformation(book, category, categories, bookState, onSaveBook)
     }
 }
 
@@ -96,17 +97,18 @@ private fun BookEmptyInformation(inputBook: () -> Unit) {
 @Suppress("DEPRECATION")
 @Composable
 private fun ShowBookInformation(
-    viewModel: QuoteBookManagementViewModel,
+    book: Book,
+    category: Category?,
+    categories: List<Category>,
     bookState: BookInfoState,
-    onSaveBook: () -> Unit
+    onSaveBook: (Book) -> Unit
 ) {
     val context = LocalContext.current
 
-    val titleField by viewModel.bookTitle.observeAsState(initial = "")
-    val authorField by viewModel.bookAuthor.observeAsState(initial = "")
-    val categoryField by viewModel.bookCategory.observeAsState(initial = CategoryEntity())
-    val imageField by viewModel.bookImage.observeAsState(initial = "")
-    val categories by viewModel.bookCategories.observeAsState(initial = emptyList())
+    var titleField by mutableStateOf(book.title)
+    var authorField by mutableStateOf(book.author)
+    var categoryField by mutableStateOf(category)
+    var imageField by mutableStateOf(book.cover)
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showPickImageSheet by remember { mutableStateOf(false) }
@@ -197,7 +199,7 @@ private fun ShowBookInformation(
                             val bytes = stream.toByteArray()
                             val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
 
-                            viewModel.bookImage.value = bookCoverImage
+                            imageField = bookCoverImage
                         }
                     )
                 }
@@ -208,7 +210,7 @@ private fun ShowBookInformation(
                     TextField(
                         value = titleField,
                         label = { Text(text = "Title") },
-                        onValueChange = { viewModel.bookTitle.value = it },
+                        onValueChange = { titleField = it },
                         enabled = bookState != BookInfoState.DETAIL_BOOK,
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.White,
@@ -228,7 +230,7 @@ private fun ShowBookInformation(
                     TextField(
                         value = authorField,
                         label = { Text(text = "Author") },
-                        onValueChange = { viewModel.bookAuthor.value = it },
+                        onValueChange = { authorField = it },
                         enabled = bookState != BookInfoState.DETAIL_BOOK,
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.White,
@@ -247,9 +249,9 @@ private fun ShowBookInformation(
                     Spacer(modifier = Modifier.height(12.dp))
                     SelectCategorySpinner(
                         modifier = Modifier.fillMaxWidth(),
-                        list = emptyList(),
-                        preselected = categoryField?.category ?: "Select Category",
-                        onSelectionChanged = { /*viewModel.bookCategory.value = it*/ },
+                        list = categories,
+                        preselected = categoryField?.name ?: "Select Category",
+                        onSelectionChanged = { categoryField = it },
                         enableSpinner = bookState != BookInfoState.DETAIL_BOOK,
                         editBook = true
                     )
@@ -262,10 +264,16 @@ private fun ShowBookInformation(
                 Button(
                     onClick = {
                         if (titleField.isNotEmpty() && authorField.isNotEmpty() && imageField.isNotEmpty() && categoryField?.id != "" &&
-                            categoryField?.category != "Select Category" &&
-                            categoryField?.category != ""
+                            categoryField?.name != "Select Category" &&
+                            categoryField?.name != ""
                         ) {
-                            onSaveBook()
+                            val newBook = Book(
+                                title = titleField,
+                                author = authorField,
+                                cover = imageField,
+                                categoryId = categoryField?.id ?: ""
+                            )
+                            onSaveBook(newBook)
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
