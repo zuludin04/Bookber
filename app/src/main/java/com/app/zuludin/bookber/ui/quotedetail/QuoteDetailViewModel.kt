@@ -4,67 +4,75 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
-import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
 import com.app.zuludin.bookber.domain.BookberRepository
+import com.app.zuludin.bookber.domain.model.Book
+import com.app.zuludin.bookber.domain.model.Category
+import com.app.zuludin.bookber.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class QuoteDetailScreenUiState(
+    val quote: Quote = Quote(),
+    val category: Category? = null,
+    val book: Book? = null,
+    val isLoading: Boolean = false,
+    val isError: Boolean = false
+)
 
 @HiltViewModel
 class QuoteDetailViewModel @Inject constructor(private val repository: BookberRepository) :
     ViewModel() {
     private val _quoteId = MutableLiveData<String>()
 
-    val quoteDetail = MutableLiveData<QuoteEntity>()
-    val quoteCategory = MutableLiveData<CategoryEntity?>()
-    val quoteBookInfo = MutableLiveData<BookEntity?>()
-    val bookImage = MutableLiveData<String>()
+    val categories = MutableLiveData<List<Category>>()
+    val books = MutableLiveData<List<Book>>()
 
-    val categories = MutableLiveData<List<CategoryEntity>>()
-    val books = MutableLiveData<List<BookWithQuoteTotal>>()
+    private val _uiState = MutableStateFlow(QuoteDetailScreenUiState())
+    val uiState: StateFlow<QuoteDetailScreenUiState> = _uiState
 
     fun start(quoteId: String) {
         _quoteId.value = quoteId
 
         viewModelScope.launch {
-            repository.loadQuoteDetail(quoteId).let { result ->
-                if (result is Result.Success) {
-                    quoteDetail.value = result.data.quoteEntity
-                    quoteCategory.value = result.data.categoryEntity
-                    quoteBookInfo.value = result.data.bookEntity
-                    bookImage.value = result.data.bookEntity?.cover
-                }
-            }
-        }
+            val detailResult = async { repository.loadQuoteDetail(quoteId) }.await()
+            val categoriesResult = async { repository.loadCategories(1) }.await()
+            val booksResult = async { repository.loadBooks() }.await()
 
-        viewModelScope.launch {
-            repository.loadCategories(1).let { result ->
-                if (result is Result.Success) {
-                    categories.value = loadedCategories(result.data)
+            if (detailResult is Result.Success) {
+                _uiState.update {
+                    it.copy(
+                        quote = detailResult.data.quote,
+                        book = detailResult.data.book,
+                        category = detailResult.data.category
+                    )
                 }
+            } else {
+                _uiState.update { it.copy(isError = true) }
             }
-        }
 
-        viewModelScope.launch {
-            repository.loadBooks().let { result ->
-                if (result is Result.Success) {
-                    books.value = loadedBooks(result.data)
-                }
+            if (categoriesResult is Result.Success) {
+                categories.value = loadedCategories(categoriesResult.data)
+            }
+
+            if (booksResult is Result.Success) {
+                books.value = loadedBooks(booksResult.data)
             }
         }
     }
 
-    private fun loadedCategories(input: List<CategoryEntity>): List<CategoryEntity> {
-        val cats = ArrayList<CategoryEntity>()
+    private fun loadedCategories(input: List<Category>): List<Category> {
+        val cats = ArrayList<Category>()
         cats.addAll(input)
         return cats
     }
 
-    private fun loadedBooks(input: List<BookWithQuoteTotal>): List<BookWithQuoteTotal> {
-        val books = ArrayList<BookWithQuoteTotal>()
+    private fun loadedBooks(input: List<Book>): List<Book> {
+        val books = ArrayList<Book>()
         books.addAll(input)
         return books
     }
@@ -75,38 +83,38 @@ class QuoteDetailViewModel @Inject constructor(private val repository: BookberRe
         }
     }
 
-    fun updateQuote(quote: String, author: String, category: CategoryEntity) {
-        val old = quoteDetail.value!!
-        old.quotes = quote
-        old.author = author
-        old.categoryId = category.id
-        quoteDetail.value = old
+    fun updateQuote(quote: String, author: String, category: Category) {
+        var updatedQuote = Quote()
+        _uiState.update {
+            val new = it.quote.copy(quote = quote, author = author, categoryId = category.id)
+            updatedQuote = new
+            it.copy(quote = new, category = category)
+        }
 
         viewModelScope.launch {
-            repository.updateQuote(old)
-            quoteCategory.value = category
+            repository.updateQuote(updatedQuote)
         }
     }
 
-    fun addBookInfo(book: BookEntity) {
-        quoteBookInfo.value = book
-        bookImage.value = book.cover
-
+    fun addBookInfo(book: Book) {
+        var quote = Quote()
+        _uiState.update {
+            quote = it.quote.copy(bookId = book.bookId)
+            it.copy(book = book)
+        }
         viewModelScope.launch {
-            val old = quoteDetail.value!!
-            old.bookId = book.id
-            repository.updateQuote(old)
+            repository.updateQuote(quote)
         }
     }
 
     fun removeBookInfo() {
-        quoteBookInfo.value = null
-        bookImage.value = ""
-
+        var quote = Quote()
+        _uiState.update {
+            quote = it.quote.copy(bookId = "")
+            it.copy(book = null)
+        }
         viewModelScope.launch {
-            val old = quoteDetail.value!!
-            old.bookId = ""
-            repository.updateQuote(old)
+            repository.updateQuote(quote)
         }
     }
 }

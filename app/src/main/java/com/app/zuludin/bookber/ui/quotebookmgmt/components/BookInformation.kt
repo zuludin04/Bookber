@@ -247,9 +247,9 @@ private fun ShowBookInformation(
                     Spacer(modifier = Modifier.height(12.dp))
                     SelectCategorySpinner(
                         modifier = Modifier.fillMaxWidth(),
-                        list = categories,
+                        list = emptyList(),
                         preselected = categoryField?.category ?: "Select Category",
-                        onSelectionChanged = { viewModel.bookCategory.value = it },
+                        onSelectionChanged = { /*viewModel.bookCategory.value = it*/ },
                         enableSpinner = bookState != BookInfoState.DETAIL_BOOK,
                         editBook = true
                     )

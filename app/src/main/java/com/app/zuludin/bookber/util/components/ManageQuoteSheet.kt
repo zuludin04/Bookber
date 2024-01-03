@@ -1,6 +1,5 @@
 package com.app.zuludin.bookber.util.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,21 +26,22 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.domain.model.Category
+import com.app.zuludin.bookber.domain.model.Quote
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageQuoteSheet(
     isUpdate: Boolean,
-    quote: QuoteEntity?,
-    category: CategoryEntity? = null,
-    categories: List<CategoryEntity>,
-    onSaveQuote: (quote: String, author: String, category: CategoryEntity) -> Unit,
+    quote: Quote?,
+    category: Category? = null,
+    categories: List<Category>,
+    onSaveQuote: (quote: String, author: String, category: Category) -> Unit,
     onDismissRequest: () -> Unit
 ) {
     var authorField by remember { mutableStateOf(TextFieldValue(quote?.author ?: "")) }
-    var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quotes ?: "")) }
-    var selectedCategory by remember { mutableStateOf(category ?: CategoryEntity()) }
+    var quoteField by remember { mutableStateOf(TextFieldValue(quote?.quote ?: "")) }
+    var selectedCategory by remember { mutableStateOf(category ?: Category()) }
 
     ModalBottomSheet(onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -98,21 +98,18 @@ fun ManageQuoteSheet(
             SelectCategorySpinner(
                 modifier = Modifier.fillMaxWidth(),
                 list = categories,
-                preselected = category?.category ?: "Select Category",
+                preselected = category?.name ?: "Select Category",
                 onSelectionChanged = { selectedCategory = it },
             )
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    Log.d("UPDATE_QUOTE", "quote ${quoteField.text}")
-                    Log.d("UPDATE_QUOTE", "author ${authorField.text}")
-                    Log.d("UPDATE_QUOTE", "category ${selectedCategory.id} -- ${selectedCategory.category}")
                     if (quoteField.text.isNotEmpty() &&
                         authorField.text.isNotEmpty() &&
                         selectedCategory.id != "" &&
-                        selectedCategory.category != "Select Category" &&
-                        selectedCategory.category != ""
+                        selectedCategory.name != "Select Category" &&
+                        selectedCategory.name != ""
                     ) {
                         onSaveQuote(quoteField.text, authorField.text, selectedCategory)
                     }

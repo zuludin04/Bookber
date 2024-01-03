@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -51,9 +52,8 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
-import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
-import com.app.zuludin.bookber.data.local.entity.QuoteEntity
+import com.app.zuludin.bookber.domain.model.Book
+import com.app.zuludin.bookber.domain.model.Quote
 import com.app.zuludin.bookber.theme.poppinsFamily
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
 import com.app.zuludin.bookber.util.components.ManageQuoteSheet
@@ -73,10 +73,7 @@ fun QuoteDetailScreen(
     var showBookSelectDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
-    val quote by viewModel.quoteDetail.observeAsState(initial = QuoteEntity())
-    val category by viewModel.quoteCategory.observeAsState(initial = CategoryEntity())
-    val bookInfo by viewModel.quoteBookInfo.observeAsState(initial = BookEntity())
-    val bookImage by viewModel.bookImage.observeAsState(initial = "")
+    val uiState by viewModel.uiState.collectAsState()
 
     val categories by viewModel.categories.observeAsState(initial = emptyList())
     val books by viewModel.books.observeAsState(initial = emptyList())
@@ -96,13 +93,16 @@ fun QuoteDetailScreen(
                         val intent = Intent(Intent.ACTION_SEND)
                         intent.type = "text/plain"
                         val quoteFormat = """
-                        ${quote.quotes}
+                        ${uiState.quote.quote}
                         
-                        - ${quote.author}
+                        - ${uiState.quote.author}
                     """.trimIndent()
                         intent.putExtra(Intent.EXTRA_TEXT, quoteFormat)
                         context.startActivity(
-                            Intent.createChooser(intent, "Share Quote from ${quote.author}")
+                            Intent.createChooser(
+                                intent,
+                                "Share Quote from ${uiState.quote.author}"
+                            )
                         )
                     }) {
                         Icon(Icons.Filled.Share, null)
@@ -118,9 +118,9 @@ fun QuoteDetailScreen(
         }
     ) {
         Column(modifier = Modifier.padding(it)) {
-            QuoteBanner(quote, category)
-            if (bookInfo != null) {
-                QuoteBookInfo(bookInfo, bookImage) { viewModel.removeBookInfo() }
+            QuoteBanner(uiState.quote, uiState.category?.name)
+            if (uiState.book != null) {
+                QuoteBookInfo(uiState.book) { viewModel.removeBookInfo() }
             } else {
                 EmptyBookInfo { showBookSelectDialog = true }
             }
@@ -153,8 +153,8 @@ fun QuoteDetailScreen(
         if (showEditQuoteDialog) {
             ManageQuoteSheet(
                 isUpdate = true,
-                quote = quote,
-                category = category,
+                quote = uiState.quote,
+                category = uiState.category,
                 categories = categories,
                 onSaveQuote = { quote, author, category ->
                     viewModel.updateQuote(quote, author, category)
@@ -166,10 +166,10 @@ fun QuoteDetailScreen(
 
         if (showBookSelectDialog) {
             SelectBookSheet(
-                books = emptyList(),
+                books = books,
                 onDismissRequest = { showBookSelectDialog = false },
                 onSelectBook = { book ->
-                    viewModel.addBookInfo(BookEntity())
+                    viewModel.addBookInfo(book)
                     showBookSelectDialog = false
                 }
             )
@@ -186,7 +186,7 @@ fun QuoteDetailScreen(
 }
 
 @Composable
-private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
+private fun QuoteBanner(quote: Quote, category: String?) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -203,7 +203,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
             val (q, a, c) = createRefs()
 
             Text(
-                text = category?.category ?: "-",
+                text = category ?: "-",
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onTertiary,
                 modifier = Modifier
@@ -215,7 +215,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             )
             Text(
-                text = quote.quotes,
+                text = quote.quote,
                 fontSize = 18.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -244,7 +244,7 @@ private fun QuoteBanner(quote: QuoteEntity, category: CategoryEntity?) {
 }
 
 @Composable
-private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: () -> Unit) {
+private fun QuoteBookInfo(book: Book?, onRemoveBook: () -> Unit) {
     Card(
         shape = RoundedCornerShape(5.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
@@ -260,23 +260,21 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: ()
         ) {
             val (image, infoContainer, removeBook) = createRefs()
 
-            if (bookImage != "") {
-                val byteArray = Base64.decode(bookImage, Base64.DEFAULT)
-                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            val byteArray = Base64.decode(book!!.cover, Base64.DEFAULT)
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds,
-                    modifier = Modifier
-                        .constrainAs(image) {
-                            start.linkTo(parent.start)
-                            top.linkTo(parent.top)
-                        }
-                        .height(80.dp)
-                        .width(80.dp)
-                )
-            }
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .constrainAs(image) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                    }
+                    .height(80.dp)
+                    .width(80.dp)
+            )
             Column(
                 modifier = Modifier
                     .constrainAs(infoContainer) {
@@ -287,14 +285,14 @@ private fun QuoteBookInfo(book: BookEntity?, bookImage: String, onRemoveBook: ()
                     .padding(start = 12.dp)
             ) {
                 Text(
-                    text = book?.title ?: "",
+                    text = book.title,
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = book?.author ?: "",
+                    text = book.author,
                     color = Color.Gray
                 )
             }
@@ -369,16 +367,11 @@ private fun EmptyBookInfo(onInputBook: () -> Unit) {
 @Preview
 @Composable
 fun QuoteBannerPreview() {
-    QuoteBanner(
-        quote = QuoteEntity(
-            quotes = "Giving absolutely everything doesn’t guarantee you get anything but it’s the only chance to get something.",
-            author = "Jurgen Klopp"
-        ), category = CategoryEntity()
-    )
+    QuoteBanner(quote = Quote(), category = "")
 }
 
 @Preview
 @Composable
 fun QuoteBookInfoPreview() {
-    QuoteBookInfo(BookEntity(), "") {}
+    QuoteBookInfo(Book()) {}
 }

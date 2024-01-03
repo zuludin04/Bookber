@@ -26,25 +26,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.domain.model.Category
 
 @Composable
 fun SelectCategorySpinner(
-    list: List<CategoryEntity>,
+    list: List<Category>,
     preselected: String,
-    onSelectionChanged: (CategoryEntity) -> Unit,
+    onSelectionChanged: (Category) -> Unit,
     modifier: Modifier = Modifier,
     enableSpinner: Boolean = true,
     editBook: Boolean = false,
 ) {
 
-    var selected by remember { mutableStateOf(CategoryEntity(category = preselected)) }
+    var selected by remember { mutableStateOf(Category(name = preselected)) }
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         Column {
             TextField(
-                value = if (editBook) preselected else selected.category,
+                value = if (editBook) preselected else selected.name,
                 onValueChange = { },
                 label = { Text(text = "Category") },
                 modifier = Modifier.fillMaxWidth(),
@@ -60,7 +60,7 @@ fun SelectCategorySpinner(
                     errorContainerColor = Color.White
                 ),
                 shape = RoundedCornerShape(10.dp),
-                isError = preselected == "" || selected.category == "Select Category"
+                isError = preselected == "" || selected.name == "Select Category"
             )
             DropdownMenu(
                 modifier = Modifier.fillMaxWidth(),
@@ -77,7 +77,7 @@ fun SelectCategorySpinner(
                         },
                         text = {
                             Text(
-                                text = entry.category,
+                                text = entry.name,
                                 modifier = Modifier
                                     .wrapContentWidth()
                                     .align(Alignment.Start),

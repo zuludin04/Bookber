@@ -65,9 +65,9 @@ fun CategoryManagementSheet(
 
             SelectCategorySpinner(
                 modifier = Modifier.fillMaxWidth(),
-                list = categories,
+                list = emptyList(),
                 preselected = type,
-                onSelectionChanged = { categoryType = it.category },
+                onSelectionChanged = { /*categoryType = it.categoryType*/ },
             )
 
             Spacer(modifier = Modifier.height(24.dp))
