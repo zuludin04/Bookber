@@ -47,7 +47,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         viewModelScope.launch {
             repository.loadCategories(1).let { result ->
                 if (result is Result.Success) {
-                    quoteCategories.value = convertQuoteCategoryList(result.data)
+                    quoteCategories.value = convertQuoteCategoryList(emptyList())
                 }
             }
         }
@@ -55,7 +55,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         viewModelScope.launch {
             repository.loadCategories(2).let { result ->
                 if (result is Result.Success) {
-                    bookCategories.value = convertBookCategoryList(result.data)
+                    bookCategories.value = convertBookCategoryList(emptyList())
                 }
             }
         }

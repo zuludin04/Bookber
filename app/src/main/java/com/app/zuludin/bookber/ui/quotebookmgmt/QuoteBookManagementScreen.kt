@@ -142,8 +142,8 @@ fun QuoteBookManagementScreen(
             if (showSaveQuoteDialog) {
                 ManageQuoteSheet(
                     isUpdate = false,
-                    quote = QuoteEntity(quotes = quoteInput),
-                    categories = quoteCategories,
+                    quote = Quote(),
+                    categories = emptyList(),
                     onSaveQuote = { quote, author, category ->
                         val newQuote = QuoteEntity(
                             quotes = quote,
