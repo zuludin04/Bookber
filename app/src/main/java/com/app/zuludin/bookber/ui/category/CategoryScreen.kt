@@ -43,6 +43,7 @@ import androidx.compose.ui.util.fastForEachIndexed
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.zuludin.bookber.R
 import com.app.zuludin.bookber.util.components.ConfirmAlertDialog
+import com.app.zuludin.bookber.util.components.EmptyContentLayout
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -168,10 +169,14 @@ private fun QuoteCategoryContents(
         }
 
         is QuoteCategoryUiState.Success -> {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(uiState.categories) { cat ->
-                    CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
-                    HorizontalDivider()
+            if (uiState.categories.isEmpty()) {
+                EmptyContentLayout(message = "Quote Category is Empty")
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(uiState.categories) { cat ->
+                        CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
+                        HorizontalDivider()
+                    }
                 }
             }
         }
@@ -192,10 +197,14 @@ private fun BookCategoryContents(uiState: BookCategoryUiState, onDeleteCategory:
         }
 
         is BookCategoryUiState.Success -> {
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(uiState.categories) { cat ->
-                    CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
-                    HorizontalDivider()
+            if (uiState.categories.isEmpty()) {
+                EmptyContentLayout(message = "Book Category is Empty")
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(uiState.categories) { cat ->
+                        CategoryItem(category = cat, onDeleteCategory = onDeleteCategory)
+                        HorizontalDivider()
+                    }
                 }
             }
         }
