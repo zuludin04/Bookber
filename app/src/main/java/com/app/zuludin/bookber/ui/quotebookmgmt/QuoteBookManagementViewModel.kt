@@ -1,12 +1,9 @@
 package com.app.zuludin.bookber.ui.quotebookmgmt
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.BookEntity
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.domain.model.Book
@@ -25,6 +22,7 @@ data class QuoteBookManagementUiState(
     var quotes: List<Quote> = emptyList(),
     val category: Category? = null,
     val quoteCategories: List<Category> = emptyList(),
+    val bookCategories: List<Category> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false
 )
@@ -35,15 +33,7 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
 
     val bookId = MutableLiveData<String>()
 
-    val bookCategories = MutableLiveData<List<CategoryEntity>>()
-    val bookQuotes = MutableLiveData<MutableList<Quote>>()
-
-    val bookTitle = MutableLiveData<String>()
-    val bookAuthor = MutableLiveData<String>()
-    val bookCategory = MutableLiveData<CategoryEntity?>()
-    val bookImage = MutableLiveData<String>()
-
-    val quoteCache = mutableListOf<Quote>()
+    private val quoteCache = mutableListOf<Quote>()
 
     private val _uiState = MutableStateFlow(QuoteBookManagementUiState())
     val uiState: StateFlow<QuoteBookManagementUiState> = _uiState
@@ -55,7 +45,6 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
             repository.loadBookDetail(bookId).let { result ->
                 if (result is Result.Success) {
                     quoteCache.addAll(result.data.quotes)
-                    bookQuotes.value = result.data.quotes.toMutableList()
                     _uiState.update {
                         it.copy(
                             book = result.data.book,
@@ -65,11 +54,6 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
                             isError = false
                         )
                     }
-//                    bookTitle.value = result.data.bookEntity.title
-//                    bookAuthor.value = result.data.bookEntity.author
-//                    bookCategory.value = result.data.category
-//                    bookImage.value = result.data.bookEntity.cover
-//                    bookQuotes.value = result.data.quotes.toMutableList()
                 }
             }
         }
@@ -87,31 +71,18 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
         viewModelScope.launch {
             repository.loadCategories(2).let { result ->
                 if (result is Result.Success) {
-                    bookCategories.value = convertBookCategoryList(emptyList())
+                    _uiState.update { it.copy(bookCategories = result.data) }
                 }
             }
         }
     }
 
     fun saveBook(book: Book, quotes: List<QuoteEntity>) {
-//        val currentTitle = bookTitle.value
-//        val currentAuthor = bookAuthor.value
-//        val currentImage = bookImage.value
-//        val currentCategory = bookCategory.value
-//        if (currentTitle == null || currentAuthor == null || currentImage == null || currentCategory == null) {
-//            return
-//        }
-
         val bookId = bookId.value
 
-//        val book = BookEntity(
-//            title = currentTitle,
-//            author = currentAuthor,
-//            cover = currentImage,
-//            categoryId = currentCategory.id
-//        )
-
         if (bookId == null) {
+//            updateQuotesBookId(quotes, book.id)
+//            this.bookId.value = book.id
             viewModelScope.launch {
                 repository.saveBook(book)
             }
@@ -121,28 +92,9 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
                 repository.updateBook(book)
             }
         }
-
-//        if (bookId == null) {
-//            updateQuotesBookId(quotes, book.id)
-//            this.bookId.value = book.id
-//            viewModelScope.launch {
-//                repository.saveBook(book)
-//            }
-//        } else {
-//            book.id = bookId
-//            updateBook(book)
-//        }
-    }
-
-    fun updateBook(book: BookEntity) {
-        viewModelScope.launch {
-//            repository.updateBook(book)
-        }
     }
 
     fun saveQuote(quote: Quote) {
-//        quote.bookId = bookId.value ?: ""
-
         quoteCache.add(quote)
         _uiState.update {
             it.copy(quotes = quoteCache.toImmutableList())
@@ -158,10 +110,6 @@ class QuoteBookManagementViewModel @Inject constructor(private val repository: B
             repository.deleteBookById(it)
         }
     }
-
-    private fun convertQuoteCategoryList(list: List<CategoryEntity>) = list
-
-    private fun convertBookCategoryList(list: List<CategoryEntity>) = list
 
     private fun updateQuotesBookId(quotes: List<QuoteEntity>, bookId: String) {
         val result = ArrayList<QuoteEntity>()

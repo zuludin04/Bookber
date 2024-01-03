@@ -2,7 +2,6 @@ package com.app.zuludin.bookber.data
 
 import androidx.lifecycle.LiveData
 import com.app.zuludin.bookber.data.local.BookberLocalDataSource
-import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
