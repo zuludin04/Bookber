@@ -119,7 +119,7 @@ fun QuoteBookManagementScreen(
             BookInformation(
                 book = uiState.book ?: Book(),
                 category = uiState.category,
-                categories = uiState.quoteCategories,
+                categories = uiState.bookCategories,
                 bookState = managementState,
                 onSaveBook = { book ->
                     viewModel.saveBook(book, uiState.quotes)
