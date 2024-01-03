@@ -82,20 +82,20 @@ private fun BookberDrawer(
                 .height(100.dp)
         )
         DrawerMenu(
-            iconId = R.drawable.ic_quote,
-            title = "Quotes",
-            isSelected = currentRoute == BookberDestination.QUOTES_ROUTE,
-            action = {
-                navigateToQuotes()
-                closeDrawer()
-            }
-        )
-        DrawerMenu(
             iconId = R.drawable.ic_books,
             title = "Books",
             isSelected = currentRoute == BookberDestination.BOOKS_ROUTE,
             action = {
                 navigateToBooks()
+                closeDrawer()
+            }
+        )
+        DrawerMenu(
+            iconId = R.drawable.ic_quote,
+            title = "Quotes",
+            isSelected = currentRoute == BookberDestination.QUOTES_ROUTE,
+            action = {
+                navigateToQuotes()
                 closeDrawer()
             }
         )

@@ -39,7 +39,7 @@ fun BookberNavGraph(
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    startDestination: String = BookberDestination.QUOTES_ROUTE,
+    startDestination: String = BookberDestination.BOOKS_ROUTE,
     navActions: BookberNavigationActions = remember(navController) {
         BookberNavigationActions(navController)
     }
