@@ -36,18 +36,7 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
         }
     }
 
-    override suspend fun loadBooks(): Result<List<BookWithQuoteTotal>> = withContext(dispatcher) {
-        try {
-            val books = bookDao.loadBooks()
-            if (books.isNotEmpty()) {
-                return@withContext Success(books)
-            } else {
-                return@withContext Success(emptyList())
-            }
-        } catch (e: Exception) {
-            return@withContext Error(e)
-        }
-    }
+    override suspend fun loadBooks(): List<BookWithQuoteTotal> = bookDao.loadBooks()
 
     override suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>> =
         withContext(dispatcher) {
@@ -118,33 +107,11 @@ class BookberLocalDataSourceImpl @Inject internal constructor(
             }
         }
 
-    override suspend fun loadCategories(type: Int): Result<List<CategoryEntity>> =
-        withContext(dispatcher) {
-            try {
-                val categories = categoryDao.loadCategories(type)
-                if (categories.isNotEmpty()) {
-                    return@withContext Success(categories)
-                } else {
-                    return@withContext Success(emptyList())
-                }
-            } catch (e: Exception) {
-                return@withContext Error(e)
-            }
-        }
+    override suspend fun loadCategories(type: Int): List<CategoryEntity> =
+        categoryDao.loadCategories(type)
 
-    override suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity> =
-        withContext(dispatcher) {
-            try {
-                val book = quoteDao.loadQuoteDetail(quoteId)
-                if (book != null) {
-                    return@withContext Success(book)
-                } else {
-                    return@withContext Error(Exception(""))
-                }
-            } catch (e: Exception) {
-                return@withContext Error(e)
-            }
-        }
+    override suspend fun loadQuoteDetail(quoteId: String): QuoteDetailEntity? =
+        quoteDao.loadQuoteDetail(quoteId)
 
     override suspend fun saveQuote(quote: QuoteEntity) = withContext(dispatcher) {
         quoteDao.saveQuote(quote)

@@ -15,7 +15,7 @@ interface BookberLocalDataSource {
 
     fun loadBookWithQuotes(): LiveData<Result<List<BookWithQuoteTotal>>>
 
-    suspend fun loadBooks(): Result<List<BookWithQuoteTotal>>
+    suspend fun loadBooks(): List<BookWithQuoteTotal>
 
     suspend fun loadBooksByCategory(categoryId: String): Result<List<BookWithQuoteTotal>>
 
@@ -35,9 +35,9 @@ interface BookberLocalDataSource {
 
     suspend fun loadQuotesByCategory(categoryId: String): Result<List<QuoteEntity>>
 
-    suspend fun loadCategories(type: Int): Result<List<CategoryEntity>>
+    suspend fun loadCategories(type: Int): List<CategoryEntity>
 
-    suspend fun loadQuoteDetail(quoteId: String): Result<QuoteDetailEntity>
+    suspend fun loadQuoteDetail(quoteId: String): QuoteDetailEntity?
 
     suspend fun saveQuote(quote: QuoteEntity)
 

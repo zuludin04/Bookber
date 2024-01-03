@@ -1,11 +1,14 @@
 package com.app.zuludin.bookber.util
 
+import com.app.zuludin.bookber.data.local.entity.BookEntity
 import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.data.local.entity.relations.BookWithQuoteTotal
+import com.app.zuludin.bookber.data.local.entity.relations.QuoteDetailEntity
 import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.domain.model.Quote
+import com.app.zuludin.bookber.domain.model.QuoteDetail
 
 fun Quote.toEntity() = QuoteEntity(
     id = id,
@@ -36,4 +39,17 @@ fun BookWithQuoteTotal.toModel() = Book(
     totalQuotes = quotes.size,
     author = book.author,
     categoryId = book.categoryId
+)
+
+fun BookEntity.toModel() = Book(
+    bookId = id,
+    title = title,
+    cover = cover,
+    author = author
+)
+
+fun QuoteDetailEntity.toModel() = QuoteDetail(
+    quote = quoteEntity.toModel(),
+    category = categoryEntity?.toModel(),
+    book = bookEntity?.toModel()
 )
