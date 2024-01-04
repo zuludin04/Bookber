@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
+import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,11 +31,11 @@ import com.app.zuludin.bookber.util.components.SelectCategorySpinner
 fun CategoryManagementSheet(
     category: String = "",
     type: String,
-    onSaveCategory: (CategoryEntity) -> Unit,
+    onSaveCategory: (Category) -> Unit,
     onDismissRequest: () -> Unit
 ) {
 
-    val categories = listOf(CategoryEntity(category = "Quote"), CategoryEntity(category = "Book"))
+    val categories = listOf(Category(name = "Quote"), Category(name = "Book"))
 
     var categoryField by remember { mutableStateOf(TextFieldValue(category)) }
     var categoryType by remember { mutableStateOf(type) }
@@ -65,9 +65,9 @@ fun CategoryManagementSheet(
 
             SelectCategorySpinner(
                 modifier = Modifier.fillMaxWidth(),
-                list = emptyList(),
+                list = categories,
                 preselected = type,
-                onSelectionChanged = { /*categoryType = it.categoryType*/ },
+                onSelectionChanged = { categoryType = it.name },
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -75,7 +75,7 @@ fun CategoryManagementSheet(
             Button(
                 onClick = {
                     val selectedType = if (categoryType == "Quote") 1 else 2
-                    val cat = CategoryEntity(category = categoryField.text, type = selectedType)
+                    val cat = Category(name = categoryField.text, type = selectedType)
                     onSaveCategory(cat)
                 },
                 modifier = Modifier.fillMaxWidth()

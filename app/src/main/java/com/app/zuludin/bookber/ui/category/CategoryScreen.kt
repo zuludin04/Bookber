@@ -53,7 +53,7 @@ fun CategoryScreen(
     viewModel: CategoryViewModel = hiltViewModel(),
 ) {
 
-    val tabs = listOf("Quote", "Book")
+    val tabs = listOf("Book", "Quote")
     val pagerState = rememberPagerState { tabs.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -108,15 +108,15 @@ fun CategoryScreen(
 
             HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { index ->
                 when (index) {
-                    0 -> QuoteCategoryContents(
-                        uiState = uiState.quoteCategories,
+                    0 -> BookCategoryContents(
+                        uiState = uiState.bookCategories,
                         onDeleteCategory = { id ->
                             selectedCategoryId = id
                             showDeleteConfirmDialog = true
                         })
 
-                    1 -> BookCategoryContents(
-                        uiState = uiState.bookCategories,
+                    1 -> QuoteCategoryContents(
+                        uiState = uiState.quoteCategories,
                         onDeleteCategory = { id ->
                             selectedCategoryId = id
                             showDeleteConfirmDialog = true
@@ -133,7 +133,7 @@ fun CategoryScreen(
 
         if (showCategorySheet) {
             CategoryManagementSheet(
-                type = if (tabIndex == 0) "Quote" else "Book",
+                type = if (tabIndex == 0) "Book" else "Quote",
                 onSaveCategory = { cat ->
                     viewModel.saveNewCategory(cat)
                     showCategorySheet = false

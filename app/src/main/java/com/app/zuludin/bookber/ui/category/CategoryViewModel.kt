@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.domain.BookberRepository
 import com.app.zuludin.bookber.domain.model.Category
 import com.app.zuludin.bookber.util.WhileUiSubscribed
@@ -70,7 +69,7 @@ class CategoryViewModel @Inject constructor(private val repository: BookberRepos
             )
         )
 
-    fun saveNewCategory(category: CategoryEntity) {
+    fun saveNewCategory(category: Category) {
         viewModelScope.launch {
             repository.saveCategory(category)
         }

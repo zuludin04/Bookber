@@ -144,9 +144,9 @@ class BookberRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun saveCategory(category: CategoryEntity) {
+    override suspend fun saveCategory(category: Category) {
         coroutineScope {
-            launch { localSource.saveCategory(category) }
+            launch { localSource.saveCategory(category.toEntity()) }
         }
     }
 

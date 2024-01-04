@@ -37,7 +37,14 @@ fun QuoteEntity.toModel() = Quote(
 
 fun CategoryEntity.toModel() = Category(
     id = id,
-    name = category
+    name = category,
+    type = type
+)
+
+fun Category.toEntity() = CategoryEntity(
+    id = id,
+    category = name,
+    type = type
 )
 
 fun BookWithQuoteTotal.toModel() = Book(

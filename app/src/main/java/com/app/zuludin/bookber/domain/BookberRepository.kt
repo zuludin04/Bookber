@@ -2,7 +2,6 @@ package com.app.zuludin.bookber.domain
 
 import androidx.lifecycle.LiveData
 import com.app.zuludin.bookber.data.Result
-import com.app.zuludin.bookber.data.local.entity.CategoryEntity
 import com.app.zuludin.bookber.data.local.entity.QuoteEntity
 import com.app.zuludin.bookber.domain.model.Book
 import com.app.zuludin.bookber.domain.model.BookDetail
@@ -42,7 +41,7 @@ interface BookberRepository {
 
     suspend fun loadCategories(type: Int): Result<List<Category>>
 
-    suspend fun saveCategory(category: CategoryEntity)
+    suspend fun saveCategory(category: Category)
 
     suspend fun deleteCategoryById(categoryId: String)
 }
