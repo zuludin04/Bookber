@@ -195,7 +195,7 @@ private fun ShowBookInformation(
                             val bitmap =
                                 MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                             val stream = ByteArrayOutputStream()
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
                             val bytes = stream.toByteArray()
                             val bookCoverImage = Base64.encodeToString(bytes, Base64.DEFAULT)
 
